@@ -1,0 +1,211 @@
+<!-- <h2>Products</h2>
+
+<div *ngFor="let group of groupedProducts" class="category-section">
+
+  <h2 class="category-title">
+    {{ group.category_name }}
+  </h2>
+
+  <div
+    class="product-card"
+    *ngFor="let p of group.items"
+  >
+    <h3>{{ p.name }}</h3>
+    <p>{{ p.description }}</p>
+    <p><b>Price:</b> ₹{{ p.price }}</p>
+
+    <p *ngIf="p.totalStock === 0" class="out-stock">
+      Out of Stock
+    </p>
+    <div *ngIf="p.totalStock > 0" class="qty-box">
+      <button (click)="decrease(p)" [disabled]="!cart[p.id]">−</button>
+
+      <input type="text" [value]="cart[p.id] || 0" readonly />
+
+      <button
+        (click)="increase(p)"
+        [disabled]="(cart[p.id] || 0) >= p.totalStock"
+      >
+        +
+      </button>
+
+      <p
+        *ngIf="(cart[p.id] || 0) >= p.totalStock"
+        style="color:red;font-size:12px;margin:4px 0 0;"
+      >
+        Max stock reached
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<br><br>
+
+<button class="cart-btn" (click)="goToCart()">Go to Cart</button> -->
+
+<div class="mt-6 bg-slate-50 overflow-hidden">
+  <div class="snap-y snap-mandatory">
+    <section class="bg-[#fcfcfd]">
+
+      <!-- ================= CATEGORY LOOP ================= -->
+      <section
+        *ngFor="let group of groupedProducts"
+        class="max-w-[1440px] mx-auto px-4 mb-6"
+      >
+
+        <!-- ================= CATEGORY HEADER ================= -->
+        <div class="flex flex-col md:flex-row gap-3 mb-6">
+
+          <div class="flex-1 bg-white border-2 border-slate-900 rounded-2xl p-3 shadow-lg">
+            <div class="flex items-center gap-4">
+              <div
+                class="w-10 h-10 bg-rose-900 text-white rounded-xl flex items-center justify-center text-xl shadow"
+              >
+                🛒
+              </div>
+              <div>
+                <p class="text-rose-900 text-[10px] uppercase tracking-[0.25em] font-black">
+                  Curated Selection
+                </p>
+                <h2 class="text-xl font-black text-slate-900">
+                  {{ group.category_name }}
+                </h2>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="md:w-44 bg-rose-900 rounded-2xl p-3 text-white flex flex-col items-center justify-center shadow-lg"
+          >
+            <span class="text-xl font-black">
+              {{ group.items.length }}
+            </span>
+            <span class="text-[9px] uppercase tracking-widest text-rose-200 font-bold">
+              Products
+            </span>
+          </div>
+        </div>
+
+        <!-- ================= PRODUCTS ================= -->
+        <div class="flex gap-5 overflow-x-auto pb-4 snap-x snap-mandatory">
+
+          <div
+            *ngFor="let p of group.items; trackBy: trackByProductId"
+            class="min-w-[250px] max-w-[250px] bg-white rounded-xl border border-slate-100 shadow-sm hover:shadow-xl transition-all snap-start"
+          >
+
+            <!-- IMAGE -->
+            <div class="h-48 bg-slate-100 overflow-hidden rounded-t-xl">
+              <img
+                [src]="'https://picsum.photos/seed/' + p.id + '/400/300'"
+                class="w-full h-full object-cover hover:scale-105 transition duration-700"
+                alt="product"
+              />
+            </div>
+
+            <!-- CONTENT -->
+            <div class="p-4 flex flex-col">
+
+              <h3 class="text-base font-extrabold text-slate-900 truncate">
+                {{ p.name }}
+              </h3>
+
+              <p class="text-xs text-slate-500 mt-1 line-clamp-2">
+                {{ p.description }}
+              </p>
+
+              <!-- PRICE + STOCK -->
+              <div class="mt-3 flex justify-between items-end">
+                <div>
+                  <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold">
+                    Price
+                  </p>
+                  <p class="text-xl font-black text-slate-900">
+                    ₹{{ p.price }}
+                  </p>
+                </div>
+
+                <span
+                  *ngIf="
+                    p.totalStock - (cart[p.id] || 0) > 0 &&
+                    p.totalStock - (cart[p.id] || 0) < 5
+                  "
+                  class="text-[9px] font-bold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700"
+                >
+                  {{ p.totalStock - (cart[p.id] || 0) }} LEFT
+                </span>
+
+                <span
+                  *ngIf="p.totalStock - (cart[p.id] || 0) === 0"
+                  class="text-[9px] font-bold px-2.5 py-1 rounded-full bg-rose-50 text-rose-700"
+                >
+                  OUT
+                </span>
+              </div>
+
+              <!-- WARNINGS -->
+              <div class="my-3 space-y-1.5">
+                <div
+                  *ngIf="(cart[p.id] || 0) > p.totalStock"
+                  class="text-[10px] font-bold text-rose-700 bg-rose-50 border border-rose-200 px-2 py-1.5 rounded-md"
+                >
+                  ⚠ Only {{ p.totalStock }} available
+                </div>
+
+                <div
+                  *ngIf="(cart[p.id] || 0) === p.totalStock && p.totalStock > 0"
+                  class="text-[10px] font-bold text-orange-700 bg-orange-50 border border-orange-200 px-2 py-1.5 rounded-md"
+                >
+                  🚫 Max stock reached
+                </div>
+              </div>
+
+              <!-- QUANTITY -->
+              <div class="mt-auto">
+                <div
+                  *ngIf="p.totalStock > 0"
+                  class="bg-slate-900 rounded-lg flex items-center justify-between p-1 text-white shadow"
+                >
+                  <button
+                    *ngIf="(cart[p.id] || 0) > 0"
+                    (click)="decrease(p)"
+                    class="w-8 h-8 rounded-md bg-slate-800 hover:bg-slate-700 transition"
+                  >
+                    −
+                  </button>
+
+                  <span class="font-black text-base px-3">
+                    {{ cart[p.id] || 0 }}
+                  </span>
+
+                  <button
+                    *ngIf="(cart[p.id] || 0) < p.totalStock"
+                    (click)="increase(p)"
+                    class="w-8 h-8 rounded-md bg-rose-700 hover:bg-rose-600 transition"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ================= GO TO CART ================= -->
+      <div class="my-6 flex justify-end max-w-[1440px] mx-auto px-4">
+        <button
+          (click)="goToCart()"
+          class="px-8 py-3 bg-slate-900 text-white rounded-xl font-black uppercase tracking-widest shadow-lg hover:bg-rose-900 transition"
+        >
+          Go To Cart →
+        </button>
+      </div>
+
+    </section>
+  </div>
+</div>
+

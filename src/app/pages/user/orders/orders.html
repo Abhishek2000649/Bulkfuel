@@ -1,0 +1,253 @@
+<!-- <h2>My Orders</h2>
+<hr />
+
+<p *ngIf="orders.length === 0">No orders found.</p>
+
+<div *ngFor="let order of orders" class="order-card">
+  <p><b>Order ID:</b> {{ order.id }}</p>
+  <p><b>Status:</b> {{ order.status }}</p>
+  <p><b>Total:</b> ₹{{ order.total_amount }}</p>
+
+  <h4>Items:</h4>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Price</th>
+        <th>Qty</th>
+        <th>Date</th>
+        <th>Time</th>
+
+        <th *ngIf="order.delivery?.order_status">Delivery Status</th>
+
+        <th *ngIf="order.delivery?.out_for_delivery_at">Out For Delivery Date</th>
+        <th *ngIf="order.delivery?.out_for_delivery_at">Out For Delivery Time</th>
+
+        <th *ngIf="order.delivery?.delivered_at">Delivered Date</th>
+        <th *ngIf="order.delivery?.delivered_at">Delivered Time</th>
+
+        <th *ngIf="order.delivery?.cancelled_at">Cancelled Date</th>
+        <th *ngIf="order.delivery?.cancelled_at">Cancelled Time</th>
+
+        <th *ngIf="order.delivery?.cancel_reason">Cancel Reason</th>
+
+        <th>Subtotal</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let item of order.items">
+        <td>{{ item.product?.name || 'Deleted Product' }}</td>
+        <td>₹{{ item.price }}</td>
+        <td>{{ item.quantity }}</td>
+
+        <td>{{ item.created_at | date: 'dd-MM-yyyy' }}</td>
+        <td>{{ item.created_at | date: 'hh:mm a' }}</td>
+
+        <td *ngIf="order.delivery?.order_status">
+          {{ order.delivery.order_status }}
+        </td>
+
+        <td *ngIf="order.delivery?.out_for_delivery_at">
+          {{ order.delivery.out_for_delivery_at | date: 'dd-MM-yyyy' }}
+        </td>
+        <td *ngIf="order.delivery?.out_for_delivery_at">
+          {{ order.delivery.out_for_delivery_at | date: 'hh:mm a' }}
+        </td>
+
+        <td *ngIf="order.delivery?.delivered_at">
+          {{ order.delivery.delivered_at | date: 'dd-MM-yyyy' }}
+        </td>
+        <td *ngIf="order.delivery?.delivered_at">
+          {{ order.delivery.delivered_at | date: 'hh:mm a' }}
+        </td>
+
+        <td *ngIf="order.delivery?.cancelled_at">
+          {{ order.delivery.cancelled_at | date: 'dd-MM-yyyy' }}
+        </td>
+        <td *ngIf="order.delivery?.cancelled_at">
+          {{ order.delivery.cancelled_at | date: 'hh:mm a' }}
+        </td>
+
+        <td *ngIf="order.delivery?.cancel_reason">
+          {{ order.delivery.cancel_reason }}
+        </td>
+
+        <td>₹{{ item.price * item.quantity }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div> -->
+
+<div class="max-w-[1440px] mx-auto pb-16 font-sans">
+
+  <!-- ================= HEADER ================= -->
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
+    <div>
+      <a
+        [routerLink]="['/user']"
+        class="inline-flex items-center gap-2 text-red-900 font-bold mb-3 text-xs uppercase tracking-widest"
+      >
+        ← Back to Shop
+      </a>
+
+      <h2 class="text-4xl font-black text-gray-900 tracking-tight">
+        Order <span class="text-red-950">History</span>
+      </h2>
+
+      <p class="text-gray-400 text-sm font-medium mt-1">
+        Track & manage your purchases
+      </p>
+    </div>
+
+    <div class="bg-white px-5 py-3 rounded-2xl border border-gray-100 flex items-center gap-4 shadow-sm">
+      <div class="w-9 h-9 bg-red-50 rounded-xl flex items-center justify-center text-red-900 text-sm">
+        📦
+      </div>
+      <div>
+        <p class="text-[9px] font-black text-gray-400 uppercase tracking-widest">
+          Total Orders
+        </p>
+        <p class="text-lg font-black text-gray-900">
+          {{ orders.length }}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= ORDERS GRID ================= -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+    <!-- ================= ORDER CARD ================= -->
+    <div
+      *ngFor="let order of orders"
+      class="bg-white rounded-[2rem] overflow-hidden
+             border border-gray-100
+             shadow-[0_20px_40px_rgba(0,0,0,0.08)]
+             hover:shadow-[0_30px_60px_rgba(0,0,0,0.12)]
+             transition-all duration-300"
+    >
+
+      <!-- ================= CARD HEADER ================= -->
+      <div class="p-5 flex items-center justify-between bg-slate-50">
+        <div class="flex items-center gap-4">
+          <div
+            class="w-12 h-12 rounded-xl flex items-center justify-center text-white text-lg"
+            [ngClass]="order.status === 'Cancelled'
+              ? 'bg-red-600'
+              : 'bg-red-950'"
+          >
+            {{ order.status === 'Cancelled' ? '❌' : '📦' }}
+          </div>
+
+          <div>
+            <h4 class="text-lg font-black text-gray-900">
+              #{{ order.id }}
+            </h4>
+            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+              {{ order.created_at | date:'dd MMM yyyy' }} •
+              {{ order.created_at | date:'hh:mm a' }}
+            </p>
+          </div>
+        </div>
+
+        <div class="text-right">
+          <p class="text-[9px] font-black text-gray-400 uppercase tracking-widest">
+            Paid
+          </p>
+          <p class="text-xl font-black text-red-950">
+            ₹{{ order.total_amount }}
+          </p>
+
+          <span
+            class="inline-block mt-1 px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest"
+            [ngClass]="order.status === 'Cancelled'
+              ? 'bg-red-50 text-red-600'
+              : 'bg-green-50 text-green-600'"
+          >
+            {{ order.status }}
+          </span>
+        </div>
+      </div>
+
+      <!-- ================= CARD BODY ================= -->
+      <div class="p-5 grid gap-5">
+
+        <!-- ================= PRODUCTS ================= -->
+        <div class="bg-slate-50 rounded-xl border border-gray-100 overflow-hidden">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-gray-100/70">
+              <tr>
+                <th class="px-4 py-3 text-[9px] font-black text-gray-400 uppercase tracking-widest">
+                  Product
+                </th>
+                <th class="px-4 py-3 text-center text-[9px] font-black text-gray-400 uppercase tracking-widest">
+                  Qty
+                </th>
+                <th class="px-4 py-3 text-right text-[9px] font-black text-gray-400 uppercase tracking-widest">
+                  Total
+                </th>
+              </tr>
+            </thead>
+
+            <tbody class="divide-y divide-gray-100">
+              <tr *ngFor="let item of order.items">
+                <td class="px-4 py-3 font-semibold text-gray-900">
+                  {{ item.product?.name || 'Deleted Product' }}
+                </td>
+                <td class="px-4 py-3 text-center font-bold text-gray-600">
+                  {{ item.quantity }}
+                </td>
+                <td class="px-4 py-3 text-right font-black text-gray-900">
+                  ₹{{ item.price * item.quantity }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ================= SHIPPING ================= -->
+        <div class="bg-white rounded-xl p-5 border border-red-100">
+          <h5 class="text-[10px] font-black text-red-900 uppercase tracking-widest mb-2">
+            🚚 Shipping
+          </h5>
+
+          <p
+            class="text-xs font-bold"
+            [ngClass]="order.status === 'Delivered'
+              ? 'text-green-700'
+              : order.status === 'Cancelled'
+                ? 'text-red-700'
+                : 'text-gray-600'"
+          >
+            {{ order.status }}
+          </p>
+
+          <ng-container *ngIf="order.status === 'Delivered'">
+            <p class="text-[9px] text-green-600 font-bold uppercase mt-2">
+              {{ order.delivery?.delivered_at | date:'dd MMM yyyy' }}
+            </p>
+          </ng-container>
+
+          <ng-container *ngIf="order.status === 'Cancelled'">
+            <p class="text-[9px] text-red-500 font-bold italic mt-2">
+              "{{ order.delivery?.cancel_reason || 'Order cancelled' }}"
+            </p>
+          </ng-container>
+
+          <button
+            class="w-full mt-4 bg-red-950 text-white py-3 rounded-xl
+                   text-[9px] font-black uppercase tracking-widest
+                   hover:bg-black transition"
+          >
+            Download Invoice
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+

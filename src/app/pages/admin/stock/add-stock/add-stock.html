@@ -1,0 +1,222 @@
+<!-- <h2>Manage Stock</h2>
+
+<ul class="error" *ngIf="errors.length">
+  <li *ngFor="let err of errors">{{ err }}</li>
+</ul>
+
+<form [formGroup]="stockForm" (ngSubmit)="onSubmit()">
+
+  <select formControlName="warehouse_id">
+    <option value="">-- Select Warehouse --</option>
+    <option *ngFor="let w of warehouses" [value]="w.id">
+      {{ w.name }}
+    </option>
+  </select>
+
+  <select formControlName="product_id">
+    <option value="">-- Select Product --</option>
+    <option *ngFor="let p of products" [value]="p.id">
+      {{ p.name }}
+    </option>
+  </select>
+
+  <input
+    type="number"
+    formControlName="stock_quantity"
+    placeholder="Stock"
+  />
+
+  <button type="submit" [disabled]="stockForm.invalid">
+    Save
+  </button>
+</form> -->
+
+
+
+
+<div class="min-h-screen bg-[#fcfcfd] text-slate-900 font-sans">
+
+  <div class="max-w-[1440px] mx-auto p-6 md:p-8 lg:p-12">
+
+    <!-- ================= HEADER ================= -->
+    <section class="mt-20">
+
+      <header class="mb-10">
+        <h2 class="text-4xl font-black uppercase mb-2">Manage Stock</h2>
+        <p class="text-slate-500 text-sm">
+          Assign inventory to warehouses
+        </p>
+      </header>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+
+        <!-- ================= LEFT: FORM ================= -->
+        <div class="lg:col-span-7 bg-white rounded-3xl border shadow-xl p-8">
+
+          <!-- 🔴 ERROR PANEL (ATTRACTIVE) -->
+          <div
+            *ngIf="errors.length"
+            class="mb-8 bg-rose-50 border border-rose-200 rounded-2xl p-5">
+
+            <div class="flex items-center gap-2 mb-3">
+              <div class="w-8 h-8 rounded-xl bg-rose-100 flex items-center justify-center">
+                ⚠️
+              </div>
+              <p class="text-[11px] font-black uppercase tracking-widest text-rose-700">
+                Please fix the following issues
+              </p>
+            </div>
+
+            <ul class="space-y-2">
+              <li
+                *ngFor="let err of errors"
+                class="flex items-start gap-2 text-sm text-rose-800 font-medium">
+                <span class="mt-1 w-1.5 h-1.5 rounded-full bg-rose-600"></span>
+                {{ err }}
+              </li>
+            </ul>
+          </div>
+
+          <!-- FORM -->
+          <form [formGroup]="stockForm" (ngSubmit)="onSubmit()" class="space-y-8">
+
+            <!-- Warehouse -->
+            <div>
+              <label class="block text-[10px] font-black text-slate-400 uppercase tracking-[0.25em]">
+                Warehouse
+              </label>
+              <select
+                formControlName="warehouse_id"
+                class="w-full mt-2 bg-slate-50 py-4 px-5 rounded-2xl font-bold
+                       outline-none focus:bg-white focus:border-red-800
+                       border-2 border-transparent transition">
+                <option value="">-- Select Warehouse --</option>
+                <option *ngFor="let w of warehouses" [value]="w.id">
+                  {{ w.name }}
+                </option>
+              </select>
+            </div>
+
+            <!-- Product -->
+            <div>
+              <label class="block text-[10px] font-black text-slate-400 uppercase tracking-[0.25em]">
+                Product
+              </label>
+              <select
+                formControlName="product_id"
+                class="w-full mt-2 bg-slate-50 py-4 px-5 rounded-2xl font-bold
+                       outline-none focus:bg-white focus:border-red-800
+                       border-2 border-transparent transition">
+                <option value="">-- Select Product --</option>
+                <option *ngFor="let p of products" [value]="p.id">
+                  {{ p.name }}
+                </option>
+              </select>
+            </div>
+
+            <!-- Quantity -->
+            <div class="max-w-xs">
+              <label class="block text-[10px] font-black text-slate-400 uppercase tracking-[0.25em]">
+                Quantity
+              </label>
+              <input
+                type="number"
+                formControlName="stock_quantity"
+                class="w-full mt-2 bg-slate-50 py-4 px-5 rounded-2xl
+                       text-3xl font-black outline-none text-red-900
+                       focus:bg-white focus:border-red-800
+                       border-2 border-transparent transition"/>
+            </div>
+
+            <!-- Button -->
+            <button
+              type="submit"
+              class="px-16 py-5 bg-red-800 text-white font-black
+                     uppercase tracking-widest text-sm rounded-2xl
+                     shadow-2xl shadow-red-100 hover:bg-red-900
+                     hover:-translate-y-1 transition active:translate-y-0">
+              💾 Log Stock Entry
+            </button>
+
+          </form>
+        </div>
+
+        <!-- ================= RIGHT: INSIGHTS ================= -->
+        <div
+          class="lg:col-span-5 bg-gradient-to-br from-red-900 via-red-800 to-red-900
+                 rounded-3xl p-8 text-white shadow-2xl relative overflow-hidden">
+
+          <!-- Decorative Blobs -->
+          <div class="absolute -top-24 -right-24 w-72 h-72 bg-white/5 rounded-full blur-3xl"></div>
+          <div class="absolute -bottom-28 -left-28 w-72 h-72 bg-black/10 rounded-full blur-3xl"></div>
+
+          <!-- Header -->
+          <div class="relative z-10 mb-8">
+            <p class="text-[10px] uppercase tracking-[0.3em] text-red-200 font-black mb-2">
+              System Overview
+            </p>
+            <h3 class="text-lg font-black uppercase tracking-widest">
+              Inventory Insights
+            </h3>
+            <p class="text-xs text-red-200 mt-2 leading-relaxed max-w-sm">
+              Live operational intelligence across all storage locations
+            </p>
+          </div>
+
+          <!-- Health Card -->
+          <div class="relative z-10 bg-white/10 backdrop-blur-xl rounded-2xl p-5 mb-8 border border-white/10">
+            <p class="text-[9px] uppercase tracking-[0.25em] font-black text-red-200 mb-1">
+              Inventory Health
+            </p>
+
+            <div class="flex items-end justify-between">
+              <span class="text-3xl font-black">94.2%</span>
+              <span class="text-[11px] font-bold text-emerald-300">
+                +2.1% ↑
+              </span>
+            </div>
+
+            <div class="mt-3 w-full h-1.5 bg-white/20 rounded-full overflow-hidden">
+              <div class="h-full bg-emerald-400 w-[94%] rounded-full"></div>
+            </div>
+          </div>
+
+          <!-- Mini Stats -->
+          <div class="relative z-10 grid grid-cols-2 gap-4">
+            <div class="bg-white/5 rounded-2xl p-4 border border-white/10">
+              <p class="text-[9px] uppercase tracking-wider font-black text-red-200 mb-1">
+                Active SKUs
+              </p>
+              <span class="text-xl font-black">127</span>
+              <p class="text-[10px] text-red-300 mt-1">
+                Across warehouses
+              </p>
+            </div>
+
+            <div class="bg-white/5 rounded-2xl p-4 border border-white/10">
+              <p class="text-[9px] uppercase tracking-wider font-black text-red-200 mb-1">
+                Low Stock Alerts
+              </p>
+              <span class="text-xl font-black">3</span>
+              <p class="text-[10px] text-red-300 mt-1">
+                Require attention
+              </p>
+            </div>
+          </div>
+
+          <!-- Footer Tip -->
+          <div class="relative z-10 mt-8 pt-6 border-t border-white/10">
+            <p class="text-[10px] text-red-300 leading-relaxed">
+              💡 Tip: Keeping stock above minimum thresholds improves delivery speed
+              and prevents fulfillment delays.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+</div>
+

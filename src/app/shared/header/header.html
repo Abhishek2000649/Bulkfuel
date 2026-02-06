@@ -1,0 +1,420 @@
+<!-- <header>
+  
+  <b>My Shop</b>
+
+  
+  <input type="text" placeholder="Search product" />
+
+  
+  <span class="right-menu">
+    
+    <ng-container *ngIf="!auth.isLoggedIn()">
+      <a routerLink="/login">Login</a>
+      <a routerLink="/signUp">Signup</a>
+    </ng-container>
+
+    <ng-container *ngIf="auth.isLoggedIn()">
+      <a routerLink="/profile-update">My Profile</a>
+    </ng-container>
+
+    
+    <ng-container *ngIf="auth.user$ | async as user">
+      
+      <span class="user-name">
+        {{ user.name }}
+      </span>
+
+      
+      <ng-container *ngIf="user.role === 'USER'">
+        |
+        {{ user.address?.city ? user.address.city + ', ' + user.address.state : 'No Address' }}
+      </ng-container>
+
+      |
+
+      
+      <ng-container *ngIf="user.role === 'USER'">
+        <a routerLink="/user">Home</a>
+        <a routerLink="/user/orders">My Orders</a>
+        <a routerLink="/user/cart">My Cart</a>
+      </ng-container>
+
+      
+      <ng-container *ngIf="user.role === 'ADMIN'">
+        <a routerLink="/admin">Dashboard</a>
+        <a routerLink="/admin/product">Products</a>
+        <a routerLink="/admin/category">Category</a>
+        <a routerLink="/admin/stock">Stock</a>
+        <a routerLink="/admin/warehouse">Warehouse</a>
+        <a routerLink="/admin/userManagement">Users</a>
+        <a routerLink="/admin/order">New Orders</a>
+        <a routerLink="/admin/order-history">Order-history</a>
+      </ng-container>
+
+      
+      <ng-container *ngIf="user.role === 'delivery_agent'">
+        <a routerLink="/delivery">Dashboard</a>
+        <a routerLink="/delivery/available">Available</a>
+        <a routerLink="/delivery/orders">Orders</a>
+      </ng-container>
+
+      
+      <a class="logout" (click)="logout()">Logout</a>
+    </ng-container>
+  </span>
+</header> -->
+
+<!-- <header
+  class="sticky top-0 z-50 w-full
+         bg-gradient-to-r from-[#8B0000] via-[#750000] to-[#600000]
+         text-white shadow-2xl h-16 flex items-center"> -->
+<header
+  class="fixed top-0 left-0 z-[9999] w-full
+         bg-gradient-to-r from-[#8B0000] via-[#750000] to-[#600000]">
+
+  <div class="max-w-[1800px] mx-auto md:px-10 px-2 w-full">
+    <div class="flex items-center justify-between md:gap-x-12 gap-x-6">
+
+      <!-- ================= LOGO ================= -->
+      <div
+        class="flex items-center cursor-pointer"
+        [routerLink]="auth.isLoggedIn() ? '/user' : '/'"
+      >
+        <div class="bg-white/10 p-2 rounded-2xl mr-4 shadow-md">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+          </svg>
+        </div>
+
+        <div class="leading-tight hidden lg:flex flex-col">
+          <p class="lg:text-xl text-[15px] md:text-lg font-extrabold tracking-wide font-['Playfair_Display']">
+            MY SHOP
+          </p>
+          <p class="text-[8px] md:text-[10px] lg:text-[12px] uppercase tracking-[0.35em] text-red-300 font-semibold font-['Inter']">
+            Premium Store
+          </p>
+        </div>
+      </div>
+
+      <!-- ================= ADDRESS + SEARCH ================= -->
+      <div
+        class=" flex items-center gap-x-8 flex-1 max-w-2xl"
+        *ngIf="auth.user$ | async as user"
+      >
+
+        <!-- Address -->
+        <div
+          *ngIf="user.role === 'USER'"
+          class="hidden lg:flex items-center bg-white/10 backdrop-blur-xl
+                 border border-white/20 px-5 py-1 rounded-2xl shadow"
+        >
+          <svg class="w-5 h-5 mr-3 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 11c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 22s8-4.5 8-11a8 8 0 10-16 0c0 6.5 8 11 8 11z"/>
+          </svg>
+
+          <div class="font-['Inter']">
+            <p class="text-[10px] uppercase text-amber-300 font-semibold tracking-wider">
+              Delivering To
+            </p>
+            <p class="text-sm font-semibold">
+              {{
+                user.address?.city
+                  ? user.address.city + ', ' + user.address.state
+                  : 'No Address'
+              }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Search -->
+        <div class="relative w-full max-w-sm">
+  <!-- <span
+    class="absolute left-6 top-1/2 -translate-y-1/2
+           text-gray-400 pointer-events-none"
+  >
+    🔍
+  </span> -->
+
+  <input
+    type="text"
+    [(ngModel)]="searchQuery"
+    placeholder="Search premium products..."
+    class="w-full pl-16 pr-5 py-3 rounded-2xl
+           bg-white/95 text-gray-900
+           text-sm font-medium font-['Inter']
+           placeholder-gray-400
+           shadow-lg
+           focus:outline-none
+           focus:ring-4 focus:ring-amber-400/40
+           transition-all duration-300"
+  />
+</div>
+
+      </div>
+
+      <!-- ================= NAV LINKS ================= -->
+      <nav
+        class="hidden lg:flex items-center space-x-3 font-['Poppins']"
+        *ngIf="auth.user$ | async as user"
+      >
+
+        <!-- USER -->
+        <ng-container *ngIf="user.role === 'USER'">
+          <a routerLink="/user" class="px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-white/10 transition">Home</a>
+          <a routerLink="/user/orders" class="px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-white/10 transition">My Orders</a>
+          <a routerLink="/user/cart" class="px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-white/10 transition">My Cart</a>
+        </ng-container>
+
+        <!-- ADMIN -->
+        <ng-container *ngIf="user.role === 'ADMIN'">
+          <a routerLink="/admin/product" class="px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-white/10 transition">Products</a>
+          <a routerLink="/admin/stock" class="px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-white/10 transition">Stock</a>
+          <a routerLink="/admin/userManagement" class="px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-white/10 transition">Users</a>
+          <a routerLink="/admin/order" class="px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-white/10 transition">New Orders</a>
+          <a routerLink="/admin/order-history" class="px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-white/10 transition">Order History</a>
+          <a routerLink="/admin/settlement" class="px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-white/10 transition"> Settlement</a>
+        </ng-container>
+
+        <!-- DELIVERY -->
+        <ng-container *ngIf="user.role === 'delivery_agent'">
+          <a routerLink="/delivery" class="px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-white/10 transition">Dashboard</a>
+          <a routerLink="/delivery/available" class="px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-white/10 transition">Available</a>
+          <a routerLink="/delivery/orders" class="px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-white/10 transition">Orders</a>
+        </ng-container>
+      </nav>
+
+      <!-- ================= RIGHT ACTIONS (UNCHANGED LOGIC) ================= -->
+      <!-- keep your existing right actions & dropdown exactly same -->
+       <div class="flex items-center space-x-5 pl-6 border-l border-white/10">
+
+        <!-- GUEST -->
+        <ng-container *ngIf="!auth.isLoggedIn()">
+          <a routerLink="/login" class="text-sm font-bold hover:text-red-200">Login</a>
+          <a routerLink="/signUp"
+             class="px-4 py-2 bg-white text-red-900 rounded-xl text-sm font-black">
+             <span class="text-red-800 hover:text-gray-50">Signup</span>
+            
+          </a>
+        </ng-container>
+
+        <!-- LOGGED IN -->
+        <ng-container *ngIf="auth.user$ | async as user">
+
+          <!-- Cart -->
+          <!-- <button *ngIf="user.role === 'USER'"
+                  routerLink="/user/cart"
+                  class="relative p-2 rounded-xl hover:bg-white/10">
+            🛒
+          </button> -->
+
+          <!-- PROFILE DROPDOWN -->
+          <div class="hidden lg:flex lg:space-y-12  relative cursor-pointer" (click)="toggleProfile($event)">
+            <img
+              src="https://i.pravatar.cc/100"
+              class="w-10 h-10 rounded-xl border-2 border-white/30"
+            />
+
+            <!-- DROPDOWN -->
+            <div
+              *ngIf="isProfileOpen"
+              class="absolute right-0 mt-8 w-56 bg-white text-gray-800 rounded-b-2xl rounded-t-lg
+                     shadow-2xl border border-gray-100 overflow-hidden
+                     transform origin-top-right transition-all duration-200
+                     animate-[fadeIn_0.15s_ease-out]"
+            >
+            <p class="flex items-center gap-3 px-4 py-3 font-semibold hover:bg-red-50 hover:text-red-700 transition"> {{user.name}}</p>
+
+              <!-- Profile -->
+              <a
+                routerLink="/profile-update"
+                class="flex items-center gap-3 px-4 py-3 font-semibold
+                       hover:bg-red-50 hover:text-red-700 transition"
+              >
+              <span class="text-gray-700">
+                👤 My Profile
+                </span>
+              </a>
+
+              
+
+              <!-- Settings -->
+              <button
+                (click)="toggleSettings($event)"
+                class="w-full flex items-center justify-between px-2 py-3 font-semibold
+                       hover:bg-red-50 hover:text-red-700 transition"
+              >
+                <span class="flex items-center gap-3">⚙️ Settings</span>
+                <span class="text-xs transition-transform" [class.rotate-90]="isSettingsOpen">▶</span>
+              </button>
+
+              <!-- Settings Submenu -->
+              <div *ngIf="isSettingsOpen"
+                   class="ml-4 mr-2 mb-2 mt-1 pl-3 border-l-2 border-red-100 space-y-1">
+
+                <ng-container *ngIf="user.role === 'ADMIN'">
+                  <a routerLink="/admin/category"
+                     class="block px-3 py-2 rounded-lg text-sm font-medium
+                            hover:bg-red-50 hover:text-red-700">
+                            <span class="text-gray-700">
+                     Category
+                    </span>
+                  </a>
+
+                  <a routerLink="/admin/warehouse"
+                     class="block px-3 py-2 rounded-lg text-sm font-medium
+                            hover:bg-red-50 hover:text-red-700">
+                            <span class="text-gray-700">
+                     Warehouse
+                    </span>
+                  </a>
+                </ng-container>
+              </div>
+
+              <div class="h-px bg-gray-100"></div>
+
+              <!-- Logout -->
+              <button
+                (click)="logout()"
+                class="w-full flex items-center gap-3 px-4 py-3 font-semibold
+                       text-red-600 hover:bg-red-50 transition"
+              >
+               Logout
+              </button>
+            </div>
+          </div>
+        </ng-container>
+
+        <!-- Mobile -->
+        <button class="lg:hidden p-2 rounded-xl bg-white/10"
+                (click)="toggleMobileMenu($event)">
+          ☰
+        </button>
+      </div>
+    </div>
+  </div>
+<!-- <div
+  *ngIf="isMobileMenuOpen"
+  class="lg:hidden w-full top-0 left-0
+         bg-gradient-to-b from-[#750000] to-[#5a0000]
+         text-white shadow-2xl"
+> -->
+
+<div
+  *ngIf="isMobileMenuOpen"
+  class="lg:hidden absolute top-full left-0 w-full
+         bg-gradient-to-b from-[#750000] to-[#5a0000]
+         text-white shadow-2xl"
+>
+
+
+  <div class="px-6 py-6 space-y-6 font-['Inter']">
+
+    <!-- USER INFO -->
+    <ng-container *ngIf="auth.user$ | async as user">
+      <div class="flex items-center gap-4 pb-4 border-b border-white/20">
+        <img
+          src="https://i.pravatar.cc/100"
+          class="w-12 h-12 rounded-xl border-2 border-white/30"
+        />
+        <div>
+          <p class="font-semibold text-lg">{{ user.name }}</p>
+          <p class="text-xs text-red-200 uppercase tracking-wider">
+            {{ user.role }}
+          </p>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- USER -->
+    <ng-container *ngIf="auth.user$ | async as user">
+      <ng-container *ngIf="user.role === 'USER'">
+        <a routerLink="/user" (click)="isMobileMenuOpen=false"
+           class="block px-5 py-3 rounded-xl font-medium hover:bg-white/10 transition">
+          Home
+        </a>
+        <a routerLink="/user/orders" (click)="isMobileMenuOpen=false"
+           class="block px-5 py-3 rounded-xl font-medium hover:bg-white/10 transition">
+          My Orders
+        </a>
+        <a routerLink="/user/cart" (click)="isMobileMenuOpen=false"
+           class="block px-5 py-3 rounded-xl font-medium hover:bg-white/10 transition">
+          My Cart
+        </a>
+      </ng-container>
+
+      <!-- ADMIN -->
+      <ng-container *ngIf="user.role === 'ADMIN'">
+        <a routerLink="/admin/product" (click)="isMobileMenuOpen=false"
+           class="block px-5 py-3 rounded-xl font-medium hover:bg-white/10 transition">
+          Products
+        </a>
+        <a routerLink="/admin/stock" (click)="isMobileMenuOpen=false"
+           class="block px-5 py-3 rounded-xl font-medium hover:bg-white/10 transition">
+          Stock
+        </a>
+        <a routerLink="/admin/userManagement" (click)="isMobileMenuOpen=false"
+           class="block px-5 py-3 rounded-xl font-medium hover:bg-white/10 transition">
+          Users
+        </a>
+        <a routerLink="/admin/order" (click)="isMobileMenuOpen=false"
+           class="block px-5 py-3 rounded-xl font-medium hover:bg-white/10 transition">
+          New Orders
+        </a>
+        <a routerLink="/admin/order-history" (click)="isMobileMenuOpen=false"
+           class="block px-5 py-3 rounded-xl font-medium hover:bg-white/10 transition">
+          Order History
+        </a>
+      </ng-container>
+
+      <!-- DELIVERY -->
+      <ng-container *ngIf="user.role === 'delivery_agent'">
+        <a routerLink="/delivery" (click)="isMobileMenuOpen=false"
+           class="block px-5 py-3 rounded-xl font-medium hover:bg-white/10 transition">
+          Dashboard
+        </a>
+        <a routerLink="/delivery/available" (click)="isMobileMenuOpen=false"
+           class="block px-5 py-3 rounded-xl font-medium hover:bg-white/10 transition">
+          Available
+        </a>
+        <a routerLink="/delivery/orders" (click)="isMobileMenuOpen=false"
+           class="block px-5 py-3 rounded-xl font-medium hover:bg-white/10 transition">
+          Orders
+        </a>
+      </ng-container>
+    </ng-container>
+
+    <!-- GUEST -->
+    <ng-container *ngIf="!auth.isLoggedIn()">
+      <a routerLink="/login" (click)="isMobileMenuOpen=false"
+         class="block px-5 py-3 rounded-xl font-semibold hover:bg-white/10 transition">
+        Login
+      </a>
+      <a routerLink="/signUp" (click)="isMobileMenuOpen=false"
+         class="block text-center px-5 py-3 rounded-xl
+                bg-white text-red-900 font-bold">
+        Signup
+      </a>
+    </ng-container>
+
+    <!-- LOGOUT -->
+    <ng-container *ngIf="auth.isLoggedIn()">
+      <button
+        (click)="logout(); isMobileMenuOpen=false"
+        class="w-full text-left px-5 py-3 rounded-xl
+               font-semibold text-red-300 hover:bg-white/10 transition"
+      >
+        Logout
+      </button>
+    </ng-container>
+
+  </div>
+</div>
+
+</header>
+
+
+

@@ -1,0 +1,160 @@
+<!-- <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()" class="category-form">
+
+  <input
+    type="text"
+    formControlName="name"
+    placeholder="Category name"
+  />
+
+  <div class="error"
+       *ngIf="categoryForm.get('name')?.touched && categoryForm.get('name')?.invalid">
+    Category name is required
+  </div>
+
+  <button type="submit" [disabled]="categoryForm.invalid">
+    Add
+  </button>
+
+</form> -->
+
+<div
+  class="min-h-screen bg-[#f9fafb]  font-['Inter'] flex justify-center items-center"
+>
+  <div class="max-w-[1200px]">
+    <!-- Back -->
+    <a
+      routerLink="/admin/category"
+      class="flex items-center text-sm text-gray-500 mb-10 hover:text-black transition"
+    >
+      ← Back to Categories
+    </a>
+
+    <!-- Header -->
+    <!-- <h1 class="text-4xl font-extrabold text-gray-900 mb-2">
+    Create Category
+  </h1>
+  <p class="text-gray-500 max-w-2xl mb-16 leading-relaxed">
+    Define and deploy a new category into your inventory architecture with secure,
+    real-time synchronization and system-wide availability.
+  </p> -->
+
+    <!-- MAIN GRID -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-x-24 gap-y-16 items-center">
+      <!-- ================= LEFT : FORM ================= -->
+      <div class="max-w-xl lg:order-1 px-2 sm:px-4 lg:px-6">
+        <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()" class="space-y-12">
+          <!-- FORM INTRO -->
+          <div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">Category Configuration</h3>
+            <p class="text-sm text-gray-500 leading-relaxed">
+              Enter a clear and descriptive category name. This category will be immediately
+              available across products, inventory, and analytics.
+            </p>
+          </div>
+
+          <!-- DIVIDER -->
+          <div class="border-t border-gray-200"></div>
+
+          <!-- CATEGORY NAME -->
+          <div>
+            <label class="block text-xs font-bold tracking-widest text-gray-400 mb-2">
+              CATEGORY NAME
+            </label>
+
+            <input
+              type="text"
+              formControlName="name"
+              placeholder="New Category Name"
+              class="w-full border-b border-gray-300 bg-transparent py-3 text-2xl font-semibold outline-none focus:border-black transition"
+            />
+
+            <!-- ERROR -->
+            <p
+              class="mt-2 text-sm text-red-600"
+              *ngIf="categoryForm.get('name')?.touched && categoryForm.get('name')?.invalid"
+            >
+              Category name is required
+            </p>
+          </div>
+
+          <!-- HELPER CARD -->
+          <!-- <div class="rounded-2xl bg-gray-100 px-8 py-6">
+          <p class="text-sm font-semibold text-gray-800 mb-1">
+            Naming Tip
+          </p>
+          <p class="text-sm text-gray-500 leading-relaxed">
+            Keep names short and meaningful. This improves search accuracy,
+            reporting clarity, and team collaboration.
+          </p>
+        </div> -->
+
+          <!-- ACTIONS -->
+          <div class="flex items-center gap-8">
+            <button
+              type="submit"
+              [disabled]="categoryForm.invalid"
+              class="px-20 py-4 rounded-full font-semibold shadow-xl transition bg-[#7f1d1d] text-white hover:bg-[#991b1b] hover:-translate-y-1 disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              Add Category
+            </button>
+
+            <span class="text-sm text-gray-400"> Auto-synced instantly </span>
+          </div>
+        </form>
+      </div>
+
+      <!-- ================= RIGHT : CONTENT CARD ================= -->
+      <div
+        class="relative rounded-[2.5rem] bg-gradient-to-br from-[#0b1220] to-[#020617] text-white px-14 py-14 xl:px-20 xl:py-16 shadow-2xl lg:order-2"
+      >
+        <span
+          class="inline-block px-5 py-1.5 mb-6 text-xs font-bold tracking-widest rounded-full bg-white/10"
+        >
+          LIVE INVENTORY CORE
+        </span>
+
+        <h2 class="text-4xl font-extrabold leading-tight mb-12">
+          Expanding the <span class="text-red-500">Global Mesh.</span>
+        </h2>
+
+        <!-- STATS -->
+        <div class="flex gap-8 mb-14">
+          <div class="bg-white/10 rounded-2xl px-7 py-6 w-44">
+            <p class="text-3xl font-extrabold">142+</p>
+            <p class="text-xs text-gray-300 mt-1">ACTIVE CATEGORIES</p>
+          </div>
+
+          <div class="bg-white/10 rounded-2xl px-7 py-6 w-44">
+            <p class="text-3xl font-extrabold text-red-400">99.9%</p>
+            <p class="text-xs text-gray-300 mt-1">UPTIME SLA</p>
+          </div>
+        </div>
+
+        <!-- FEATURES -->
+        <div class="space-y-8">
+          <div class="flex items-start gap-5">
+            <div class="w-11 h-11 rounded-full bg-red-500 flex items-center justify-center">⚡</div>
+            <div>
+              <p class="font-semibold">Instant Sync</p>
+              <p class="text-sm text-gray-300 leading-relaxed">
+                Categories propagate across all modules in real time.
+              </p>
+            </div>
+          </div>
+
+          <!-- <div class="flex items-start gap-5">
+            <div class="w-11 h-11 rounded-full bg-blue-500 flex items-center justify-center">
+              🛡️
+            </div>
+            <div>
+              <p class="font-semibold">Secure Structure</p>
+              <p class="text-sm text-gray-300 leading-relaxed">
+                Encrypted, validated, and role-protected data flows.
+              </p>
+            </div>
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

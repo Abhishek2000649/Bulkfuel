@@ -1,0 +1,200 @@
+
+<!-- <form [formGroup]="warehouseForm" (ngSubmit)="onSubmit()" class="warehouse-form">
+
+  <input type="text" formControlName="name" placeholder="Warehouse Name" />
+  <input type="text" formControlName="address" placeholder="Enter address" />
+  <input type="text" formControlName="city" placeholder="City" />
+  <input type="text" formControlName="state" placeholder="State" />
+  <input type="text" formControlName="pincode" placeholder="Pincode" />
+
+  <div class="error" *ngIf="warehouseForm.invalid && warehouseForm.touched">
+    All fields are required
+  </div>
+
+  <button type="submit" [disabled]="warehouseForm.invalid">
+    Add
+  </button>
+
+</form> -->
+
+
+
+
+
+
+
+
+<div class="bg-[#f6f7f9] min-h-screen font-sans">
+  
+
+  <!-- ================= PAGE HEADER ================= -->
+  <div class="max-w-7xl mx-auto pt-14 pb-10 px-6">
+    <button
+      type="button"
+      routerLink="/admin/warehouse"
+      class="flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-red-900 transition mb-6"
+    >
+      <span class="text-xl">←</span>
+      Back to Warehouses
+    </button>
+    <h1 class="text-4xl font-black text-gray-900 mb-3">
+      Create Warehouse
+    </h1>
+    <p class="text-gray-500 max-w-3xl">
+      Register a new warehouse node to expand your logistics network with
+      real-time inventory synchronization and secure infrastructure.
+    </p>
+  </div>
+
+  <!-- ================= MAIN LAYOUT ================= -->
+  <div class="max-w-7xl mx-auto px-6 pb-20 grid grid-cols-1 lg:grid-cols-2 gap-12">
+
+    <!-- ================= LEFT (MODAL TYPE CARD) ================= -->
+    <div
+      class="relative rounded-[2.5rem] shadow-2xl overflow-hidden
+             bg-gradient-to-br from-[#0b1326] via-[#121b33] to-[#1b1430]
+             p-12 text-white flex flex-col justify-between"
+    >
+
+      <!-- Top Content -->
+      <div>
+        <span class="inline-block px-4 py-2 text-[10px] tracking-[0.2em] uppercase font-bold rounded-full bg-white/10 border border-white/10 mb-8">
+          Live Network Intelligence
+        </span>
+
+        <h2 class="text-4xl font-extrabold tracking-tight mb-10">
+          Expanding the <span class="text-red-500">Global Mesh.</span>
+        </h2>
+
+        <div class="flex gap-6">
+          <div class="bg-white/5 border border-white/10 rounded-2xl px-6 py-5 w-40">
+            <div class="text-3xl font-black">142+</div>
+            <div class="text-[10px] uppercase tracking-widest text-gray-400 mt-1">
+              Active Hubs
+            </div>
+          </div>
+
+          <div class="bg-white/5 border border-white/10 rounded-2xl px-6 py-5 w-40">
+            <div class="text-3xl font-black text-red-500">99.9%</div>
+            <div class="text-[10px] uppercase tracking-widest text-gray-400 mt-1">
+              Uptime SLA
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Features -->
+      <div class="mt-16 space-y-6">
+        <div class="flex gap-4">
+          <div class="w-10 h-10 rounded-2xl bg-red-600 flex items-center justify-center">⚡</div>
+          <div>
+            <p class="font-bold">Instant Synchronization</p>
+            <p class="text-sm text-gray-400">
+              Millisecond latency across global inventory nodes.
+            </p>
+          </div>
+        </div>
+
+        <div class="flex gap-4">
+          <div class="w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center">🛡️</div>
+          <div>
+            <p class="font-bold">AES-256 Security</p>
+            <p class="text-sm text-gray-400">
+              Enterprise-grade encryption for logistics data.
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ================= RIGHT (NORMAL PAGE STYLE) ================= -->
+    <div class="pt-8">
+
+      <form [formGroup]="warehouseForm" (ngSubmit)="onSubmit()" class="space-y-10 max-w-xl">
+
+        <!-- Warehouse Name -->
+        <div>
+          <label class="block text-[11px] font-black uppercase tracking-[0.2em] text-gray-400 mb-2">
+            Main Hub Alias
+          </label>
+          <input
+            type="text"
+            formControlName="name"
+            placeholder="New Warehouse Name"
+            class="w-full border-b border-gray-200 focus:border-red-900 outline-none py-4 text-3xl font-extrabold bg-transparent"
+          />
+        </div>
+
+        <!-- Address -->
+        <div>
+          <label class="block text-[11px] font-black uppercase tracking-[0.2em] text-gray-400 mb-2">
+            Deployment Location
+          </label>
+          <input
+            type="text"
+            formControlName="address"
+            placeholder="Street address or zone"
+            class="w-full border-b border-gray-200 focus:border-red-900 outline-none py-4 bg-transparent"
+          />
+        </div>
+
+        <!-- City / State -->
+        <div class="grid grid-cols-2 gap-10">
+          <div>
+            <label class="block text-[11px] font-black uppercase tracking-[0.2em] text-gray-400 mb-2">
+              City
+            </label>
+            <input
+              type="text"
+              formControlName="city"
+              class="w-full border-b border-gray-200 focus:border-red-900 outline-none py-4 bg-transparent"
+            />
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-black uppercase tracking-[0.2em] text-gray-400 mb-2">
+              State
+            </label>
+            <input
+              type="text"
+              formControlName="state"
+              class="w-full border-b border-gray-200 focus:border-red-900 outline-none py-4 bg-transparent"
+            />
+          </div>
+        </div>
+
+        <!-- Pincode -->
+        <div>
+          <label class="block text-[11px] font-black uppercase tracking-[0.2em] text-gray-400 mb-2">
+            Postal Code
+          </label>
+          <input
+            type="text"
+            formControlName="pincode"
+            class="w-full border-b border-gray-200 focus:border-red-900 outline-none py-4 bg-transparent"
+          />
+        </div>
+
+        <!-- Submit -->
+        <button
+          type="submit"
+          class="mt-12 bg-red-900 hover:bg-[#1a0303] text-white font-black text-lg px-12 py-5 rounded-full shadow-lg transition"
+        >
+          Deploy Infrastructure
+        </button>
+
+      </form>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+
+
+
+

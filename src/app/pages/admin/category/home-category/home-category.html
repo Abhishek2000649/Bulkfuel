@@ -1,0 +1,99 @@
+<div class="bg-[#FAFAFA]">
+  <div class="relative min-h-screen w-full px-4 md:px-12 py-10 selection:bg-amber-100">
+    <div class="max-w-[1400px] mx-auto">
+      <!-- Success Toast -->
+      <div class="fixed top-28 right-12 z-[100] animate-pulse">
+        <div
+          *ngIf="successMessage"
+          class="bg-[#1a0303] text-white px-6 py-3 rounded-2xl shadow-xl flex items-center gap-4 border border-white/10 backdrop-blur-md"
+        >
+          <div class="w-2 h-2 rounded-full bg-amber-400"></div>
+          <p class="text-[10px] font-montserrat font-black uppercase tracking-widest">
+            Category Added Successfully
+          </p>
+        </div>
+      </div>
+
+      <!-- Header -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+        <div>
+          <h1 class="font-serif-premium text-4xl md:text-5xl text-gray-900 tracking-tighter">
+            The <span class="italic text-[#8B0000]">Registry.</span>
+          </h1>
+          <p class="text-gray-400 text-sm font-light uppercase tracking-[0.3em] font-montserrat">
+            Streamlined Archive Control
+          </p>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <input
+            type="text"
+            placeholder="Find..."
+            class="w-40 md:w-56 bg-white border border-gray-100 px-5 py-3 rounded-full outline-none focus:ring-4 focus:ring-[#8B0000]/5 focus:border-[#8B0000] transition-all text-xs font-medium shadow-sm"
+          />
+
+          <a
+            routerLink="/admin/category/add"
+            class="group flex items-center gap-3 px-6 py-3 bg-[#1a0303] text-white rounded-full shadow-lg hover:shadow-[#8B0000]/20 transition-all active:scale-95"
+          >
+            <span class="font-montserrat font-black uppercase tracking-widest text-[9px]">
+              Add New
+            </span>
+            <div
+              class="w-5 h-5 rounded-full bg-amber-400 flex items-center justify-center text-black"
+            >
+              +
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- ✅ CARD GRID VIEW -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Category Card -->
+        <div
+          *ngFor="let c of categories"
+          class="bg-white rounded-2xl shadow-sm hover:shadow-md border border-gray-100 flex flex-col overflow-hidden"
+        >
+          <!-- ID Bar -->
+          <div class="w-full bg-[#1a0303] flex items-center justify-center py-4">
+            <span
+              class="text-[8px] font-montserrat font-black text-white/30 uppercase tracking-widest mr-2"
+            >
+              ID
+            </span>
+            <span class="text-sm font-montserrat font-black text-amber-400">
+              {{ c.id }}
+            </span>
+          </div>
+
+          <!-- Content -->
+          <div class="flex-grow px-6 py-6 flex flex-col justify-between gap-6">
+            <h3
+              class="font-serif-premium text-xl md:text-2xl text-gray-800 hover:text-[#8B0000] transition-colors"
+            >
+              {{ c.name }}
+            </h3>
+
+            <!-- Actions -->
+            <div class="flex items-center justify-end gap-2">
+              <a
+                [routerLink]="['/admin/category/edit', c.id]"
+                class="w-9 h-9 rounded-xl bg-gray-50 text-gray-400 hover:bg-[#1a0303] hover:text-white flex items-center justify-center"
+              >
+                ✏️
+              </a>
+              <button
+                (click)="deleteCategory(c.id)"
+                class="w-9 h-9 rounded-xl bg-gray-50 text-gray-400 hover:bg-[#8B0000] hover:text-white flex items-center justify-center"
+              >
+                🗑️
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ✅ END GRID -->
+    </div>
+  </div>
+</div>

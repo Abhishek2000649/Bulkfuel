@@ -1,0 +1,153 @@
+<footer class="bg-gradient-to-b from-[#3a0808] to-[#1a0303] text-white pt-8 pb-4 relative overflow-hidden">
+
+  <!-- ambient glow -->
+  <div class="absolute top-0 right-0 w-48 h-48 bg-red-600/5 blur-[90px] rounded-full -mr-24 -mt-24"></div>
+
+  <div class="max-w-[1700px] mx-auto px-4 relative z-10">
+
+    <!-- ================= NEWSLETTER ================= -->
+    <div class="mb-8">
+      <div
+        class="bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-2xl
+               p-4 md:p-6 flex flex-col lg:flex-row items-center justify-between shadow-lg"
+      >
+
+        <div class="max-w-xl text-center lg:text-left mb-4 lg:mb-0">
+          <h2 class="text-2xl md:text-3xl font-semibold mb-1">
+            The <span class="italic text-amber-400">Inner Circle</span>
+          </h2>
+          <p class="text-red-100/50 text-sm max-w-sm mx-auto lg:mx-0">
+            Limited drops and private collections.
+          </p>
+        </div>
+
+        <div
+          class="flex flex-col sm:flex-row gap-1.5 bg-black/20 p-1 rounded-xl
+                 border border-white/5"
+        >
+          <input
+            type="email"
+            placeholder="Your email..."
+            class="px-4 py-2.5 bg-transparent text-white placeholder-red-100/20
+                   focus:outline-none w-full lg:min-w-[240px] text-xs"
+          />
+          <button
+            class="px-6 py-2.5 bg-amber-400 text-black font-black uppercase
+                   tracking-[0.2em] text-[9px] rounded-lg
+                   hover:bg-white transition"
+          >
+            Join
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ================= FOOTER LINKS ================= -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-y-6 lg:gap-x-10 mb-8">
+
+      <!-- Brand -->
+      <div class="lg:col-span-4 space-y-3">
+        <span class="text-2xl font-black">MY SHOP.</span>
+        <p class="text-red-100/40 text-sm max-w-xs">
+          Luxury digital commerce with performance delivery.
+        </p>
+      </div>
+
+      <!-- Static -->
+      <div class="lg:col-span-2">
+        <h4 class="text-[8px] uppercase tracking-[0.3em] text-amber-400 mb-4">
+          House
+        </h4>
+        <ul class="space-y-2">
+          <li><a class="text-red-100/60 hover:text-white text-sm">Legacy</a></li>
+          <li><a class="text-red-100/60 hover:text-white text-sm">Philosophy</a></li>
+          <li><a class="text-red-100/60 hover:text-white text-sm">Ateliers</a></li>
+          <li><a class="text-red-100/60 hover:text-white text-sm">Careers</a></li>
+        </ul>
+      </div>
+
+      <div class="lg:col-span-2">
+        <h4 class="text-[8px] uppercase tracking-[0.3em] text-amber-400 mb-4">
+          Support
+        </h4>
+        <ul class="space-y-2">
+          <li><a class="text-red-100/60 hover:text-white text-sm">Contact</a></li>
+          <li><a class="text-red-100/60 hover:text-white text-sm">Returns</a></li>
+          <li><a class="text-red-100/60 hover:text-white text-sm">Sizing</a></li>
+          <li><a class="text-red-100/60 hover:text-white text-sm">FAQ</a></li>
+        </ul>
+      </div>
+
+      <!-- ================= PORTAL ================= -->
+      <div class="lg:col-span-4" *ngIf="auth.user$ | async as user">
+        <div class="bg-white/[0.02] border border-white/5 p-4 rounded-xl">
+
+          <h4 class="text-[8px] uppercase tracking-[0.3em] text-amber-400 mb-4">
+            {{
+              user.role === 'GUEST'
+                ? 'Start'
+                : (user.name.split(' ')[0] + '\'s Portal')
+            }}
+          </h4>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+
+            <ng-container *ngIf="user.role === 'USER'">
+              <a class="footer-btn">Order Archive</a>
+              <a class="footer-btn">Venture Rewards</a>
+              <a class="footer-btn">Premium Lounge</a>
+              <a class="footer-btn">Help & Concierge</a>
+            </ng-container>
+
+            <ng-container *ngIf="user.role === 'ADMIN'">
+              <a class="footer-btn">Control Center</a>
+              <a class="footer-btn">Security Audit</a>
+              <a class="footer-btn">Revenue Streams</a>
+              <a class="footer-btn">Global Inventory</a>
+            </ng-container>
+
+            <ng-container *ngIf="user.role === 'delivery_agent'">
+              <a class="footer-btn">Route Optimizer</a>
+              <a class="footer-btn">Safety Protocol</a>
+              <a class="footer-btn">Earnings Portal</a>
+              <a class="footer-btn">Agent Support</a>
+            </ng-container>
+
+            <ng-container *ngIf="!user.role">
+              <a class="footer-btn">Start Selling</a>
+              <a class="footer-btn">Logistics Partner</a>
+              <a class="footer-btn">Curated Gifts</a>
+              <a class="footer-btn">Privilege Club</a>
+            </ng-container>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ================= BOTTOM ================= -->
+    <div
+      class="pt-5 border-t border-white/5 flex flex-col lg:flex-row
+             items-center justify-between gap-4"
+    >
+      <div class="flex gap-x-6 gap-y-2">
+        <a class="text-[8px] uppercase tracking-[0.2em] text-red-100/20 hover:text-amber-400">
+          Privacy
+        </a>
+        <a class="text-[8px] uppercase tracking-[0.2em] text-red-100/20 hover:text-amber-400">
+          Terms
+        </a>
+        <a class="text-[8px] uppercase tracking-[0.2em] text-red-100/20 hover:text-amber-400">
+          Access
+        </a>
+      </div>
+
+      <p class="text-[8px] uppercase tracking-[0.3em] text-red-100/10">
+        © {{ currentYear }} MY SHOP.
+      </p>
+    </div>
+
+  </div>
+</footer>

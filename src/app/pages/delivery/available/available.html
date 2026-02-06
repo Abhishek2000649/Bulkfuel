@@ -1,0 +1,214 @@
+<!-- <h3>Available Orders for Delivery</h3>
+<hr />
+<p *ngIf="successMessage" class="success">{{ successMessage }}</p>
+<p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+<p *ngIf="orders.length === 0">No available orders right now.</p>
+<div *ngFor="let delivery of orders" class="order-card">
+  <p><b>Order ID:</b> {{ delivery.order.id }}</p>
+  <p><b>Customer:</b> {{ delivery.order.user.name }}</p>
+  <p><b>Payment Mode:</b> {{ delivery.order.payment_method }}</p>
+  <h4>Warehouses & Products</h4>
+  <div
+    *ngFor="let wh of delivery.order.warehouses"
+    class="warehouse-box"
+    style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
+    <p>
+      <b>Warehouse:</b>
+      {{ wh.name }} <br />
+
+      <b>Address: </b>{{ wh.address }}, {{ wh.city }}, {{ wh.state }} - {{ wh.pincode }}
+    </p>
+   <ul>
+  <ng-container *ngFor="let item of delivery.order.items">
+    <ng-container *ngFor="let wp of item.product.warehouse_products">
+      <li *ngIf="wp.warehouse_id === wh.id">
+        {{ item.product.name }} × {{ item.quantity }}
+      </li>
+    </ng-container>
+  </ng-container>
+</ul>
+
+  </div>
+  <p>
+    <b>Delivery Address:</b><br />
+    {{ delivery.order.address }},
+    {{ delivery.order.city }},
+    {{ delivery.order.state }} -
+    {{ delivery.order.pincode }}
+  </p>
+  <div class="action-buttons">
+    <button class="accept" (click)="acceptOrder(delivery.id)">
+      Accept
+    </button>
+  </div>
+
+</div> -->
+
+
+<div class="bg-gray-50 text-gray-900">
+  
+
+  <div class="max-w-[1400px] mx-auto px-6 py-10 space-y-8">
+
+    <!-- HEADER -->
+    <div class="flex items-start justify-between">
+      <div>
+        <h1 class="text-3xl font-bold">Available Orders</h1>
+        <p class="text-gray-500 mt-1">
+          Manage pending deliveries and finalize warehouse settlements.
+        </p>
+      </div>
+
+      <!-- <div class="flex items-center gap-3">
+        <span class="text-xs font-semibold text-gray-500 border px-3 py-1 rounded-full">
+          SYSTEM STATUS
+        </span>
+        <span class="flex items-center gap-2 bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full">
+          <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+          ONLINE
+        </span>
+      </div> -->
+    </div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- MAIN CARD -->
+    <div *ngFor="let delivery of orders" class="bg-white rounded-xl shadow border">
+
+      <!-- TOP BAR -->
+      <div class="flex items-center justify-between px-6 py-5 border-b">
+        <div class="flex items-center gap-4">
+          <div class="w-10 h-10 flex items-center justify-center bg-red-100 text-red-700 font-bold rounded-lg">
+            #
+          </div>
+          <div>
+            <p class="text-xs text-gray-500 uppercase tracking-wide">
+              Delivery Reference
+            </p>
+            <p class="font-bold text-lg">{{ delivery.order.id }}</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <span class="flex items-center gap-2 text-sm border rounded-full px-4 py-2">
+            🕒 {{ delivery.order.createdAt | date:'dd/MM/yyyy' }}
+          </span>
+          <span class="flex items-center gap-2 text-sm border rounded-full px-4 py-2">
+            {{ delivery.order.payment_method }}
+          </span>
+        </div>
+      </div>
+
+      <!-- CONTENT -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 px-6 py-6">
+
+        <!-- LEFT COLUMN -->
+        <div class="space-y-6">
+
+          <!-- CUSTOMER PROFILE -->
+          <div>
+            <p class="text-xs font-semibold text-gray-400 uppercase mb-2">
+              Customer Profile
+            </p>
+            <div class="border rounded-lg p-4">
+              <p class="font-semibold">{{ delivery.order.user.name }}</p>
+              <p class="text-sm text-gray-500">{{ delivery.order.user.email }}</p>
+            </div>
+          </div>
+
+          <!-- DELIVERY DESTINATION -->
+          <div>
+            <p class="text-xs font-semibold text-gray-400 uppercase mb-2">
+              Delivery Destination
+            </p>
+            <div class="border border-red-200 bg-red-50 rounded-lg p-4 text-sm">
+              <p>{{ delivery.order.address }},</p>
+              <p>
+                {{ delivery.order.city }}, {{ delivery.order.state }} -
+                <span class="font-bold text-red-700">{{ delivery.order.pincode }}</span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN -->
+        <div class="space-y-6  h-96 overflow-y-auto hide-scrollbar">
+
+          <p class="text-xs font-semibold text-gray-400 uppercase">
+            Warehouse Logistics
+          </p>
+
+          <!-- WAREHOUSE 1 -->
+          <div  *ngFor="let wh of delivery.order.warehouses" class=" border rounded-lg">
+            <div class="flex items-center justify-between px-4 py-3 border-b">
+              <p class="font-semibold text-red-700">
+                {{ wh.name }} 
+              </p>
+              <span class="text-xs text-gray-400">#{{wh.id}}</span>
+            </div>
+
+            <p class="text-xs text-gray-500 px-4 py-2">
+              {{ wh.address }}, {{ wh.city }}, {{ wh.state }} - {{ wh.pincode }}
+            </p>
+            <div *ngFor="let item of delivery.order.items">
+              <div *ngFor="let wp of item.product.warehouse_products">
+            <div *ngIf="wp.warehouse_id === wh.id" class="flex items-center my-1 justify-between bg-gray-50 mx-4 mb-4 p-3 rounded-lg">
+              
+              <div class="flex items-center gap-3">
+                <div class="w-9 h-9 flex items-center justify-center border rounded-md bg-white">
+                  📦
+                </div>
+                <p class="text-sm font-medium">{{ item.product.name }}</p>
+              </div>
+              <span class="bg-red-700 text-white text-xs font-bold px-3 py-1 rounded-full">
+                × {{ item.quantity }}
+              </span>
+            </div>
+            </div>
+            </div>
+          </div>
+
+          <!-- WAREHOUSE 2 -->
+          <!-- <div class="border rounded-lg">
+            <div class="flex items-center justify-between px-4 py-3 border-b">
+              <p class="font-semibold text-red-700">
+                Satellite Storage B
+              </p>
+              <span class="text-xs text-gray-400">WH-02</span>
+            </div>
+
+            <p class="text-xs text-gray-500 px-4 py-2">
+              99 Export Way, Queens, NY 11101
+            </p>
+
+            <div class="flex items-center justify-between bg-gray-50 mx-4 mb-4 p-3 rounded-lg">
+              <div class="flex items-center gap-3">
+                <div class="w-9 h-9 flex items-center justify-center border rounded-md bg-white">
+                  ⌨️
+                </div>
+                <p class="text-sm font-medium">
+                  Mechanical Keyboard RGB
+                </p>
+              </div>
+              <span class="bg-red-700 text-white text-xs font-bold px-3 py-1 rounded-full">
+                ×1
+              </span>
+            </div>
+          </div> -->
+
+        </div>
+      </div>
+
+      <!-- FOOTER -->
+      <div class="flex justify-end px-6 py-6 border-t">
+        <button (click)="acceptOrder(delivery.id)"
+          class="bg-red-700 hover:bg-red-800 text-white font-semibold px-6 py-3 rounded-lg flex items-center gap-2"
+        >
+          ✔ Accept Order Delivery →
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+</div>

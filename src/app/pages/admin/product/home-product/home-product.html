@@ -1,0 +1,173 @@
+<!-- <h2>All Products</h2>
+
+<a routerLink="/admin/product/add" class="add-link">
+  ➕ Add Product
+</a>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Price</th>
+      <th>Date</th>
+      <th>Time</th>
+      <th>Stock</th>
+      <th>Category</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let p of products; trackBy: trackById">
+      <td>{{ p.name }}</td>
+      <td>₹{{ p.price }}</td>
+      <td>{{ p.created_at | date:'dd-MM-yyyy' }}</td>
+      <td>{{ p.created_at | date:'hh:mm a' }}</td>
+      <td>{{ p.stock }}</td>
+      <td>{{ p.category?.name }}</td>
+      <td>
+        <a [routerLink]="['/admin/product/edit', p.id]">Edit</a> |
+        <button (click)="deleteProduct(p.id)">Delete</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+ -->
+
+
+
+<div class="bg-[#FAFAFA] min-h-screen font-['Inter']">
+  <div class="p-6 md:p-10">
+    <div class="max-w-[1400px] mx-auto">
+
+      <!-- Header -->
+      <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-10 gap-6">
+        <div>
+          <h1 class="font-serif-premium text-4xl text-gray-900 tracking-tight">
+            Product <span class="italic text-[#8B0000]">Catalog.</span>
+          </h1>
+          <p class="text-sm text-gray-400 font-medium">
+            Manage your global inventory and collection visibility.
+          </p>
+        </div>
+
+        <a
+          routerLink="/admin/product/add"
+          class="bg-[#1a0303] text-white px-8 py-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-[#8B0000] transition-all shadow-xl shadow-red-900/10 flex items-center gap-3">
+          <span class="bg-[#8B0000] w-5 h-5 rounded-lg flex items-center justify-center">+</span>
+          Establish Product
+        </a>
+      </div>
+
+      <!-- Filters -->
+      <div class="bg-white p-4 rounded-3xl border border-gray-100 shadow-sm mb-8 flex flex-col md:flex-row gap-4">
+
+        <!-- Search -->
+        <input
+          type="text"
+          placeholder="Search product name..."
+          [(ngModel)]="searchText"
+          (input)="applyFilters()"
+          class="w-full pl-4 pr-4 py-3 bg-gray-50 rounded-2xl text-xs font-semibold focus:outline-none"
+        />
+
+        <!-- Category -->
+        <select
+          class="w-full md:w-64 px-5 py-3 bg-gray-50 rounded-2xl text-xs font-bold text-gray-600 appearance-none"
+          (change)="onCategoryChange($any($event.target).value)">
+          <option value="ALL">All Categories</option>
+          <option *ngFor="let c of categories" [value]="c.id">
+            {{ c.name }}
+          </option>
+        </select>
+
+      </div>
+
+      <!-- Table -->
+      <!-- Cards -->
+<div
+  class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+
+  <div
+    *ngFor="let p of filteredProducts; trackBy: trackById"
+    class="bg-white rounded-3xl border border-gray-100 shadow-xl hover:shadow-2xl transition-all group">
+
+    <!-- Image -->
+    <div class="p-6 flex justify-center">
+      <div
+        class="w-[100px] h-[100px] rounded-2xl overflow-hidden bg-gray-50 border shadow-sm">
+        <img
+          [src]="'https://picsum.photos/seed/' + p.id + '/400/300'"
+          class="w-full h-full object-cover"
+          alt="product-image" />
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="px-6 pb-6">
+
+      <h3 class="font-serif-premium text-lg font-black text-gray-900 truncate">
+        {{ p.name }}
+      </h3>
+
+      <p class="text-[10px] font-mono text-gray-300 mb-2">
+        #{{ p.id }}
+      </p>
+
+      <!-- Category -->
+      <span
+        class="inline-block mb-3 px-3 py-1 rounded-full text-[10px] font-black uppercase bg-gray-50 text-gray-400 border">
+        {{ p.category?.name }}
+      </span>
+
+      <!-- Price -->
+      <div class="text-xl font-black text-[#8B0000]">
+        ₹{{ p.price | number }}
+      </div>
+
+      <!-- Stock -->
+      <div class="mt-3">
+        <span class="text-xs font-black text-gray-700">
+          {{ p.stock }} Units
+        </span>
+
+        <div class="w-full h-1 bg-gray-100 rounded-full mt-1">
+          <div
+            class="h-full bg-emerald-500 rounded-full"
+            [style.width.%]="p.stock > 100 ? 100 : p.stock">
+          </div>
+        </div>
+      </div>
+
+      <!-- Created -->
+      <div class="mt-4 text-[10px] uppercase text-gray-400 font-bold">
+        {{ p.created_at | date:'dd MMM yyyy' }}
+      </div>
+
+      <!-- Actions -->
+      <div class="flex justify-between items-center mt-6">
+
+        <a
+          [routerLink]="['/admin/product/edit', p.id]"
+          class="px-4 py-2 rounded-xl bg-gray-50 hover:bg-black hover:text-white text-xs font-black transition">
+          Edit
+        </a>
+
+        <button
+          (click)="deleteProduct(p.id)"
+          class="px-4 py-2 rounded-xl bg-gray-50 hover:bg-[#8B0000] hover:text-white text-xs font-black transition">
+          Delete
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+    </div>
+  </div>
+</div>
+

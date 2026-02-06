@@ -1,0 +1,184 @@
+<!-- <h2>Add New Product</h2>
+
+<ul class="error" *ngIf="errors.length">
+  <li *ngFor="let err of errors">{{ err }}</li>
+</ul>
+
+<form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+
+  <input type="text" formControlName="name" placeholder="Product Name" />
+
+  <input type="number" formControlName="price" placeholder="Price" />
+
+  <input type="number" formControlName="stock" placeholder="Stock" />
+
+  <select formControlName="category_id">
+    <option value="">-- Select Category --</option>
+    <option *ngFor="let c of categories" [value]="c.id">
+      {{ c.name }}
+    </option>
+  </select>
+
+  <textarea
+    formControlName="description"
+    placeholder="Description">
+  </textarea>
+
+  <button type="submit" [disabled]="productForm.invalid">
+    Add Product
+  </button>
+</form> -->
+<div class="min-h-screen bg-slate-50 text-slate-900 p-4 md:p-8 lg:p-12">
+
+<div class="max-w-[1400px] mx-auto">
+  <div class="mb-14">
+      <a  routerLink="/admin/product"
+        class="inline-flex items-center text-gray-400 hover:text-[#8B0000]
+        font-black text-xl uppercase tracking-[0.30em] transition-all group">
+        <svg class="w-4 h-4 mr-4 group-hover:-translate-x-2 transition-transform"
+          fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-width="3" stroke-linecap="round" stroke-linejoin="round"
+            d="M15 19l-7-7 7-7" />
+        </svg>
+        Registry System Back
+      </a>
+    </div>
+
+  <!-- Header -->
+  <header class="mb-12 flex items-center gap-3">
+    <div class="w-12 h-12 bg-red-800 rounded-xl flex items-center justify-center text-white shadow-lg shadow-red-200">
+      🛍️
+    </div>
+    <div>
+      <h1 class="text-3xl font-black tracking-tight uppercase">
+        Add New Product
+      </h1>
+      <p class="text-slate-500 font-medium">
+        Create a stunning listing for your catalog
+      </p>
+    </div>
+  </header>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
+
+    <!-- FORM -->
+    <div class="space-y-10">
+
+      <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="space-y-10">
+
+        <!-- Product Name -->
+        <div class="space-y-2">
+          <label class="text-xs font-bold text-slate-400 uppercase tracking-widest">
+            Product Name
+          </label>
+          <input
+            type="text"
+            formControlName="name"
+            placeholder="e.g. Premium Wireless Headphones"
+            class="w-full bg-transparent text-4xl font-bold placeholder:text-slate-300 py-3 input-underline"
+          />
+        </div>
+
+        <!-- Image Upload (Static) -->
+        <div class="space-y-4">
+          <label class="text-xs font-bold text-slate-400 uppercase tracking-widest">
+            Product Visuals
+          </label>
+
+          <div class="border-2 border-dashed border-slate-300 rounded-2xl bg-white px-6 py-10 text-center">
+            <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto text-slate-400 mb-4">
+              ⬆️
+            </div>
+            <p class="text-lg font-bold text-slate-700">
+              Drop image here or click to upload
+            </p>
+            <p class="text-sm text-slate-400">
+              PNG, JPG or WebP (max. 5MB)
+            </p>
+            <input type="file" class="hidden" />
+          </div>
+        </div>
+
+        <!-- Price & Stock -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+          <div class="space-y-2">
+            <label class="text-xs font-bold text-slate-400 uppercase tracking-widest">
+              Unit Price ($)
+            </label>
+            <input
+              type="number"
+              formControlName="price"
+              placeholder="0.00"
+              class="w-full bg-transparent text-xl font-semibold py-3 input-underline"
+            />
+          </div>
+
+          <div class="space-y-2">
+            <label class="text-xs font-bold text-slate-400 uppercase tracking-widest">
+              Stock Level
+            </label>
+            <input
+              type="number"
+              formControlName="stock"
+              placeholder="100"
+              class="w-full bg-transparent text-xl font-semibold py-3 input-underline"
+            />
+          </div>
+        </div>
+
+        <!-- Category -->
+        <div class="space-y-2">
+          <label class="text-xs font-bold text-slate-400 uppercase tracking-widest">
+            Product Category
+          </label>
+          <select formControlName="category_id"
+            class="w-full bg-transparent text-lg font-medium py-3 input-underline cursor-pointer">
+            <option value="">-- Select Category --</option>
+    <option *ngFor="let c of categories" [value]="c.id">
+      {{ c.name }}
+    </option>
+          </select>
+        </div>
+
+        <!-- Description -->
+        <div class="space-y-3">
+          <div class="flex justify-between items-center">
+            <label class="text-xs font-bold text-slate-400 uppercase tracking-widest">
+              Description
+            </label>
+            <span class="text-xs font-bold text-red-800">
+              ✨ Magic Enhance with AI
+            </span>
+          </div>
+
+          <textarea
+          formControlName="description"
+            rows="5"
+            placeholder="Describe your product's unique value..."
+            class="w-full bg-transparent text-lg leading-relaxed py-3 input-underline resize-none min-h-[160px]">
+          </textarea>
+        </div>
+
+        <!-- Submit -->
+        <div class="pt-6">
+          <button
+            type="submit"
+            class="px-12 py-5 bg-red-800 text-white font-bold rounded-2xl shadow-xl shadow-red-100 hover:bg-red-900 transition">
+            💾 Publish Product
+          </button>
+        </div>
+
+      </form>
+    </div>
+
+    <!-- PREVIEW PLACEHOLDER -->
+    <div class="hidden lg:flex items-center justify-center bg-white rounded-2xl border border-slate-200 text-slate-400 text-xl font-semibold">
+      Product Preview
+    </div>
+
+  </div>
+</div>
+
+</div>
+
+

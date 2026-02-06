@@ -1,0 +1,7 @@
+ .input-underline {
+      border-bottom: 2px solid #e5e7eb;
+      outline: none;
+    }
+    .input-underline:focus {
+      border-bottom-color: #991b1b;
+    }

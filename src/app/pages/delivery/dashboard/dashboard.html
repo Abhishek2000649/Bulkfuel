@@ -1,0 +1,233 @@
+<!-- <h3>My Assigned Deliveries</h3>
+<hr />
+
+<p *ngIf="successMessage" class="success">{{ successMessage }}</p>
+<p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+
+<p *ngIf="deliveries.length === 0">No active deliveries.</p>
+
+<div *ngFor="let delivery of deliveries" class="card">
+  <p><b>Order ID:</b> {{ delivery.order.id }}</p>
+  <p><b>Customer:</b> {{ delivery.order.user.name }}</p>
+  <p>
+  <b>Customer Address:</b>
+  {{ delivery.order.address }},
+  {{ delivery.order.city }},
+  {{ delivery.order.state }} -
+  {{ delivery.order.pincode }}
+</p>
+
+  <p><b>Status:</b> {{ delivery.order_status }}</p>
+  <p><b>Payment Mode:</b> {{ delivery.order.payment_method }}</p>
+  <div
+    *ngFor="let wh of delivery.order.warehouses"
+    class="warehouse-box"
+  >
+    <p>
+      <b>Warehouse:</b> {{ wh.name }} <br />
+      <b>Address:</b>
+      {{ wh.address }}, {{ wh.city }},
+      {{ wh.state }} - {{ wh.pincode }}
+    </p>
+    <ul>
+      <li
+        *ngFor="let item of getProductsByWarehouse(delivery.order.items, wh.id)"
+      >
+        {{ item.product.name }} × {{ item.quantity }}
+      </li>
+    </ul>
+  </div>
+  <div *ngIf="delivery.order_status === 'OUT_FOR_DELIVERY'" class="actions">
+    <button class="btn success" (click)="markDelivered(delivery.id)">
+      Mark Delivered
+    </button>
+
+    <div class="cancel-box">
+      <input
+        type="text"
+        placeholder="Cancel reason"
+        [(ngModel)]="delivery.cancel_reason"
+      />
+      <button
+        class="btn danger"
+        (click)="cancelDelivery(delivery.id, delivery.cancel_reason)"
+      >
+        Cancel
+      </button>
+    </div>
+  </div>
+
+</div> -->
+
+
+
+
+<div class="bg-[#f7f8fa] font-sans">
+
+  <div class="max-w-[1200px] mx-auto px-6 py-10">
+
+    <!-- Page Header -->
+    <h1 class="text-3xl font-bold text-[#0f172a]">
+      My Assigned Deliveries
+    </h1>
+    <p class="text-gray-500 mt-1">
+      Manage and track your active delivery tasks for today.
+    </p>
+
+    <!-- Main Card -->
+     <div class="grid grid-cols-1 lg:grid-cols-1 gap-6">
+    <div *ngFor="let delivery of deliveries" class="bg-white rounded-xl border shadow-sm mt-8">
+
+      <!-- Card Header -->
+      <div class="flex items-center justify-between px-6 py-4 border-b">
+        <div class="flex items-center gap-4">
+          <div class="w-10 h-10 rounded-lg bg-[#9b1c1c] flex items-center justify-center text-white text-lg">
+            ⬢
+          </div>
+          <div>
+            <p class="font-semibold text-gray-900">
+               {{ delivery.order.id }}
+            </p>
+            <p class="text-sm text-gray-500">
+              Assignment ID: DEL-001
+            </p>
+          </div>
+        </div>
+
+        <span class="px-4 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">
+          {{ delivery.order_status }}
+        </span>
+      </div>
+
+      <!-- Card Body -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 px-6 py-6">
+
+        <!-- Left Details -->
+        <div class="space-y-6">
+
+          <div class="flex gap-3">
+            <div class="text-gray-400">👤</div>
+            <div>
+              <p class="text-xs font-semibold text-gray-400 uppercase">
+                Customer
+              </p>
+              <p class="text-gray-900 font-medium">
+                {{ delivery.order.user.name }}
+              </p>
+            </div>
+          </div>
+
+          <div class="flex gap-3">
+            <div class="text-gray-400">📍</div>
+            <div>
+              <p class="text-xs font-semibold text-gray-400 uppercase">
+                Delivery Address
+              </p>
+              <p class="text-gray-900">
+                {{ delivery.order.address }},
+  {{ delivery.order.city }},
+  {{ delivery.order.state }} -
+  {{ delivery.order.pincode }}
+              </p>
+            </div>
+          </div>
+
+          <div class="flex gap-3">
+            <div class="text-gray-400">💳</div>
+            <div>
+              <p class="text-xs font-semibold text-gray-400 uppercase">
+                Payment Method
+              </p>
+              <p class="text-gray-900 font-medium">
+                {{ delivery.order.payment_method }}
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right Pickup Section -->
+        <div class="bg-[#f9fafb] rounded-lg border p-5">
+
+          <div class="flex items-center gap-2 mb-4">
+            <span class="text-gray-700">🏬</span>
+            <h3 class="font-semibold text-gray-900">
+              Pickup Warehouses
+            </h3>
+          </div>
+
+          <!-- Warehouse 1 -->
+           <div class=" max-h-96 overflow-y-auto hide-scrollbar">
+          <div *ngFor="let wh of delivery.order.warehouses" class="bg-white rounded-lg border p-4 mb-4">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="w-2 h-2 bg-red-600 rounded-full"></span>
+              <p class="font-semibold text-gray-900">
+                {{ wh.name }} 
+              </p>
+            </div>
+
+            <p class="text-sm text-gray-500 ml-4 mb-3">
+              {{ wh.address}} 
+            </p>
+            <p class="text-sm text-gray-500 ml-4 mb-3">
+              {{wh.state}} {{wh.city}} {{wh.pincode}}
+            </p>
+
+            <p class="text-xs font-semibold text-gray-400 uppercase mb-2 ml-4">
+              Items to pick
+            </p>
+            
+            <div *ngFor="let item of getProductsByWarehouse(delivery.order.items, wh.id)" class="space-y-2 my-1 ml-4">
+              <div class="flex justify-between text-sm bg-gray-50 px-3 py-1 rounded">
+                <span> {{ item.product.name }}</span>
+                <span class="bg-gray-200 px-2 rounded">x{{ item.quantity }}</span>
+              </div>
+            </div>
+          </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div *ngIf="delivery.order_status === 'OUT_FOR_DELIVERY'" class="flex items-center justify-between px-6 py-4 border-t">
+
+        <button (click)="markDelivered(delivery.id)" class="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg font-semibold">
+          ✔ Mark Delivered
+        </button>
+
+       <div class="flex items-center gap-3">
+  <div class="relative">
+    <input
+      type="text"
+      placeholder="Enter reason for cancellation..."
+      [(ngModel)]="delivery.cancel_reason"
+      [ngClass]="delivery.cancel_reason?.length > 0
+    ? 'border-red-400 bg-red-50'
+    : 'border-gray-400 bg-gray-50'"
+      class="border placeholder-red-400
+             rounded-lg px-4 py-2 text-sm w-64 focus:outline-none"
+    />
+    <span class="absolute left-[-22px] top-2 text-red-500">⚠</span>
+  </div>
+
+  <button
+    (click)="cancelDelivery(delivery.id, delivery.cancel_reason)"
+    [disabled]="!delivery.cancel_reason"
+    [ngClass]="delivery.cancel_reason 
+      ? 'bg-red-600 hover:bg-red-700 cursor-pointer' 
+      : 'bg-red-300 cursor-not-allowed'"
+    class="text-white px-4 py-2 rounded-lg text-sm font-semibold transition"
+  >
+    Cancel
+  </button>
+</div>
+
+
+      </div>
+
+    </div>
+  </div>
+  </div>
+
+</div>

@@ -1,0 +1,155 @@
+<!-- <a routerLink="/admin/warehouse/add" class="add-link"> Add Warehouse </a>
+
+<table>
+  <thead>
+    <tr>
+      <th>Warehouse Name</th>
+      <th>Address</th>
+      <th>City</th>
+      <th>State</th>
+      <th>Pincode</th>
+      <th>Date</th>
+      <th>Time</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let w of warehouses; trackBy: trackById">
+      <td>{{ w.name }}</td>
+      <td>{{ w.address }}</td>
+      <td>{{ w.city }}</td>
+      <td>{{ w.state }}</td>
+      <td>{{ w.pincode }}</td>
+      <td>{{ w.created_at | date: 'dd-MM-yy' }}</td>
+      <td>{{ w.created_at | date: 'hh:mm a' }}</td>
+      <td>
+        <a [routerLink]="['/admin/warehouse/edit', w.id]">Edit</a>
+        <button (click)="deleteWarehouse(w.id)">Delete</button>
+      </td>
+    </tr>
+  </tbody>
+</table> -->
+
+<div class="bg-[#FAFAFA]">
+  <div class="relative min-h-screen w-full px-4 md:px-12 py-10 selection:bg-amber-100">
+    <div class="max-w-[1400px] mx-auto">
+      <!-- Header -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+        <div>
+          <h1 class="font-serif-premium text-4xl md:text-5xl text-gray-900 tracking-tighter">
+            The <span class="italic text-[#8B0000]">Nodes.</span>
+          </h1>
+          <p class="text-gray-400 text-sm uppercase tracking-[0.3em] font-montserrat">
+            Global Logistics Registry
+          </p>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <input
+            type="text"
+            placeholder="Find node..."
+            class="w-40 md:w-56 bg-white border border-gray-100 px-5 py-3 rounded-full outline-none focus:ring-4 focus:ring-[#8B0000]/5 text-xs shadow-sm"
+          />
+
+          <a
+            routerLink="/admin/warehouse/add"
+            class="flex items-center gap-3 px-6 py-3 bg-[#1a0303] text-white rounded-full shadow-lg active:scale-95"
+          >
+            <span class="font-montserrat font-black uppercase tracking-widest text-[9px]">
+              Establish Node
+            </span>
+            <div
+              class="w-5 h-5 rounded-full bg-amber-400 flex items-center justify-center text-black"
+            >
+              +
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- ✅ CARD GRID VIEW -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Warehouse Card -->
+        <div
+          *ngFor="let w of warehouses; let i = index; trackBy: trackById"
+          class="bg-white rounded-2xl shadow-sm border border-gray-100 flex flex-col overflow-hidden"
+        >
+          <!-- ID Bar -->
+          <div class="w-full bg-[#1a0303] flex items-center justify-center py-3">
+            <span
+              class="text-[8px] font-montserrat font-black text-white/30 uppercase tracking-widest mr-2"
+            >
+              NODE
+            </span>
+            <span class="text-sm font-montserrat font-black text-amber-400">
+              {{ i + 1 | number: '1.0' }}
+            </span>
+          </div>
+
+          <!-- Content -->
+          <div class="flex-grow px-6 py-4 flex flex-col justify-between gap-6">
+            <!-- Name + Address -->
+            <div>
+              <h3 class="font-serif-premium text-xl text-gray-800">
+                {{ w.name }}
+              </h3>
+
+              <div class="flex items-start gap-2 mt-1">
+                <span class="text-amber-500 mt-[2px]">📍</span>
+                <div class="leading-tight">
+                  <p class="text-[11px] text-gray-500 font-medium">
+                    {{ w.address }}
+                  </p>
+                  <p class="text-[10px] text-gray-400 tracking-wide">
+                    {{ w.city }}, {{ w.state }}
+                    <span class="text-gray-300">• {{ w.pincode }}</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Date / Time -->
+            <div class="flex justify-between border-t border-gray-50 pt-4">
+              <div>
+                <span class="text-[8px] font-black font-montserrat text-gray-300 uppercase">
+                  Registered
+                </span>
+                <p class="text-xs font-bold text-gray-700 font-montserrat">
+                  {{ w.created_at | date: 'dd-MM-yy' }}
+                </p>
+              </div>
+
+              <div>
+                <span class="text-[8px] font-black font-montserrat text-gray-300 uppercase">
+                  System Time
+                </span>
+                <p class="text-xs font-bold text-[#8B0000] font-montserrat">
+                  {{ w.created_at | date: 'hh:mm a' }}
+                </p>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex items-center gap-2 justify-end">
+              <a
+                [routerLink]="['/admin/warehouse/edit', w.id]"
+                class="w-10 h-10 rounded-xl bg-gray-50 hover:bg-[#1a0303] hover:text-white text-gray-400 flex items-center justify-center"
+              >
+                ✏️
+              </a>
+
+              <button
+                (click)="deleteWarehouse(w.id)"
+                class="w-10 h-10 rounded-xl bg-gray-50 hover:bg-[#8B0000] hover:text-white text-gray-400 flex items-center justify-center"
+              >
+                🗑️
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ✅ END GRID -->
+    </div>
+  </div>
+</div>

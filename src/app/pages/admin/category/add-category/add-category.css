@@ -1,0 +1,20 @@
+.category-form {
+  width: 300px;
+}
+
+.category-form input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 8px;
+}
+
+.category-form button {
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+.error {
+  color: red;
+  font-size: 13px;
+  margin-bottom: 8px;
+}

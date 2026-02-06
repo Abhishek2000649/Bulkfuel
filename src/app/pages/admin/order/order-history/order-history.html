@@ -1,0 +1,255 @@
+<!-- <h2 class="title">Order History (Admin)</h2>
+
+<div *ngFor="let order of orders" class="order-card">
+
+  
+  <div class="order-header">
+    <div>
+      <b>Order ID:</b> #{{ order.id }} <br />
+      <b>Status:</b>
+      <span class="status" [ngClass]="order.status.toLowerCase()">
+        {{ order.status }}
+      </span>
+    </div>
+
+    <div>
+      <b>Order Date:</b><br />
+      {{ order.created_at | date:'dd MMM yyyy, hh:mm a' }}
+    </div>
+  </div>
+
+  
+  <div class="section">
+    <h4>User Details</h4>
+    <p><b>Name:</b> {{ order.user?.name }}</p>
+    <p><b>Email:</b> {{ order.user?.email }}</p>
+  </div>
+
+  
+  <div class="section">
+    <h4>Delivery Address</h4>
+    <p>
+      {{ order.address }},
+      {{ order.city }},
+      {{ order.state }} -
+      {{ order.pincode }}
+    </p>
+  </div>
+
+  
+  <div class="section">
+    <h4>Products</h4>
+
+    <table class="order-table">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Subtotal</th>
+          <th>Warehouse</th>
+          
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let item of order.items">
+          <td>{{ item.product?.name || 'Deleted Product' }}</td>
+          <td>₹{{ item.price }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>₹{{ item.price * item.quantity }}</td>
+
+          <td>{{ item.warehouse?.name }}</td>
+
+          
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  
+  <div class="section" *ngIf="order.delivery">
+    <p><b>Delivery Status:</b> {{ order.delivery.order_status }}</p>
+    <p *ngIf="order.delivery.order_status === 'DELIVERED'">
+      <b>Delivered By:</b><br/>
+      <b>Name: </b> {{ order.delivery.agent?.name }}  ||
+      <b>Id: </b> {{order.delivery.agent?.id}} <br />
+    </p>
+
+    <p *ngIf="order.delivery.order_status === 'CANCELLED'">
+      <b>Cancelled By:</b> {{ order.delivery.agent?.name }} <br />
+      <b>Cancel Reason:</b> {{ order.delivery.cancel_reason }}
+    </p>
+  </div>
+
+  
+  <div class="section">
+    <p *ngIf="order.delivered_at">
+      <b>Delivered At:</b>
+      {{ order.delivered_at | date:'dd MMM yyyy, hh:mm a' }}
+    </p>
+
+    <p *ngIf="order.cancelled_at">
+      <b>Cancelled At:</b>
+      {{ order.cancelled_at | date:'dd MMM yyyy, hh:mm a' }}
+    </p>
+  </div>
+
+</div> -->
+
+<div class="bg-[#FAFAFA] min-h-screen px-4 md:px-8 py-8">
+  <div class="max-w-[1400px] mx-auto">
+    <!-- ================= HEADER ================= -->
+    <div
+      class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 border-b border-gray-100 pb-8"
+    >
+      <div>
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-10 h-1 bg-[#8B0000] rounded-full"></div>
+          <p class="text-[10px] font-black uppercase tracking-[0.4em] text-gray-400">
+            Archive Terminal 4
+          </p>
+        </div>
+        <h1 class="text-5xl font-serif-premium tracking-tight">
+          Order <span class="italic text-[#8B0000]">History</span>
+        </h1>
+      </div>
+
+      <!-- ================= FILTER ================= -->
+      <div class="flex flex-wrap items-center gap-1.5 p-1 bg-white rounded-full border shadow-sm">
+        <button
+          *ngFor="let status of statuses"
+          (click)="filterOrders(status)"
+          [ngClass]="
+            selectedStatus === status ? 'bg-[#1a0303] text-white' : 'text-gray-400 hover:bg-gray-50'
+          "
+          class="px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-widest"
+        >
+          {{ status.replace('_', ' ') }}
+        </button>
+      </div>
+    </div>
+
+    <!-- ================= ORDER GRID ================= -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- ================= ORDER CARD ================= -->
+      <div
+        *ngFor="let order of filteredOrders"
+        class="bg-white rounded-2xl border border-gray-100 shadow-[0_25px_45px_-12px_rgba(0,0,0,0.08)] overflow-hidden"
+      >
+        <!-- TOP BAR -->
+        <div class="bg-[#1a0303] px-6 py-4 flex justify-between items-center">
+          <div>
+            <p class="text-[9px] font-black uppercase tracking-[0.3em] text-white/40">
+              Tracking Ref
+            </p>
+            <p class="text-xl font-black text-amber-400">
+              {{ order.id }}
+            </p>
+          </div>
+
+          <div class="text-right">
+            <span
+              class="inline-flex px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-emerald-50 text-emerald-700 border border-emerald-100"
+            >
+              {{ order.status }}
+            </span>
+            <p class="text-[10px] text-gray-400 mt-1">
+              {{ order.created_at | date: 'dd MMM yyyy, hh:mm a' }}
+            </p>
+          </div>
+        </div>
+
+        <!-- INFO GRID -->
+        <div
+          class="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-100"
+        >
+          <!-- USER -->
+          <div class="p-5">
+            <p class="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400">User</p>
+            <p class="text-lg font-serif-premium">
+              {{ order.user?.name }}
+            </p>
+            <p class="text-xs text-gray-400">
+              {{ order.user?.email }}
+            </p>
+          </div>
+
+          <!-- ADDRESS -->
+          <div class="p-5">
+            <p class="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400">Shipment</p>
+            <p class="text-xs italic text-gray-600">
+              {{ order.address }}
+            </p>
+            <span
+              class="inline-block text-[10px] font-black uppercase tracking-widest text-[#8B0000] bg-red-50 px-2 py-1 rounded-md"
+            >
+              {{ order.city }}, {{ order.state }} - {{ order.pincode }}
+            </span>
+          </div>
+
+          <!-- DELIVERY -->
+          <div class="p-5">
+            <p class="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400">Delivery</p>
+            <div class="bg-gray-50 p-3 rounded-xl border text-xs">
+              <p class="font-bold">
+                Agent:
+                <span class="text-gray-600">
+                  {{ order.delivery?.agent?.name || 'Pending' }}
+                </span>
+              </p>
+              <p class="text-[10px] text-gray-400">ID: {{ order.delivery?.agent?.id || '—' }}</p>
+              <p
+                *ngIf="order.delivery?.order_status === 'CANCELLED'"
+                class="text-[10px] text-red-500 mt-1"
+              >
+                Reason: {{ order.delivery?.cancel_reason }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ITEMS -->
+        <div class="p-5">
+          <div class="bg-gray-50 rounded-xl border overflow-hidden">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-white">
+                <tr class="border-b">
+                  <th class="px-4 py-3">Product</th>
+                  <th class="px-4 py-3">Price</th>
+                  <th class="px-4 py-3">Qty</th>
+                  <th class="px-4 py-3">Warehouse</th>
+                  <th class="px-4 py-3 text-right">Total</th>
+                </tr>
+              </thead>
+
+              <tbody class="divide-y">
+                <tr *ngFor="let item of order.items; trackBy: trackByItemId">
+                  <td class="px-4 py-3">
+                    {{ item.product?.name || 'Deleted Product' }}
+                  </td>
+                  <td class="px-4 py-3">₹{{ item.price }}</td>
+                  <td class="px-4 py-3">{{ item.quantity }}</td>
+                  <td class="px-4 py-3">
+                    {{ item.warehouse?.name }}
+                  </td>
+                  <td class="px-4 py-3 text-right font-bold">₹{{ item.price * item.quantity }}</td>
+                </tr>
+              </tbody>
+
+              <tfoot class="bg-white border-t">
+                <tr>
+                  <td colspan="4" class="px-4 py-4 text-right">Total</td>
+                  <td class="px-4 py-4 text-right text-xl font-serif-premium text-[#8B0000]">
+                    ₹{{ getOrderTotal(order) }}
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- END CARD -->
+    </div>
+  </div>
+</div>

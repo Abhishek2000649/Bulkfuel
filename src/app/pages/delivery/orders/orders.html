@@ -1,0 +1,221 @@
+<!-- <h3>Delivery History</h3>
+<hr />
+
+<p *ngIf="deliveries.length === 0">No delivery history</p>
+
+<div *ngFor="let delivery of deliveries" class="card">
+  <p><b>Order ID:</b> {{ delivery.order.id }}</p>
+  <p><b>Customer:</b> {{ delivery.order.user.name }}</p>
+  <div
+    *ngFor="let wh of delivery.order.warehouses"
+    class="warehouse-box"
+    style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px"
+  >
+    <p>
+      <b>Warehouse:</b>
+      {{ wh.name }} <br />
+      <b>Address: </b>{{ wh.address }}, {{ wh.city }}, {{ wh.state }} - {{ wh.pincode }}
+    </p>
+    <ul>
+      <ng-container *ngFor="let item of delivery.order.items">
+        <ng-container *ngFor="let wp of item.product.warehouse_products">
+          <li *ngIf="wp.warehouse_id === wh.id">{{ item.product.name }} × {{ item.quantity }}</li>
+        </ng-container>
+      </ng-container>
+    </ul>
+  </div>
+
+  <p>
+    <b>Delivery Address:</b><br />
+    {{ delivery.order.address }}, {{ delivery.order.city }}, {{ delivery.order.state }} -
+    {{ delivery.order.pincode }}
+  </p>
+  <p>
+    <b>Status:</b>
+    <span [style.color]="delivery.order_status === 'DELIVERED' ? 'green' : 'red'">
+      {{ delivery.order_status }}
+    </span>
+  </p>
+
+  <p *ngIf="delivery.order_status === 'CANCELLED'">
+    <b>Cancel Reason:</b> {{ delivery.cancel_reason }}
+  </p>
+
+  <p>
+    <b>Date:</b>
+    {{ delivery.updated_at | date: 'dd MMM yyyy, hh:mm a' }}
+  </p>
+  <hr />
+</div> -->
+
+<div class="bg-gray-50 font-sans">
+  <div class="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-2 ">
+  <div *ngFor="let delivery of deliveries" class=" mx-auto px-4 py-4">
+    <!-- Card -->
+    <div class="bg-white rounded-xl border shadow-sm">
+      <!-- Header -->
+      <div class="flex items-center justify-between px-6 py-4 border-b">
+        <div class="flex items-center gap-3">
+          <div
+            class="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center text-gray-600 font-bold"
+          >
+            #
+          </div>
+          <div>
+            <p class="text-xs text-gray-500">Order Reference</p>
+            <p class="font-semibold text-gray-900">{{ delivery.order.id }}</p>
+          </div>
+        </div>
+
+        <div
+          class="flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold border"
+          [ngClass]="{
+            'border-red-200 bg-red-50 text-red-700': delivery.order_status === 'CANCELLED',
+            'border-green-200 bg-green-50 text-green-700': delivery.order_status === 'DELIVERED',
+            'border-blue-200 bg-blue-50 text-blue-700':
+              delivery.order_status === 'OUT FOR DELIVERY',
+            'border-yellow-200 bg-yellow-50 text-yellow-700': delivery.order_status === 'PENDING',
+          }"
+        >
+          <span
+            class="w-4 h-4 flex items-center justify-center rounded-full text-xs border"
+            [ngClass]="{
+              'border-red-600 text-red-600': delivery.order_status === 'CANCELLED',
+              'border-green-600 text-green-600': delivery.order_status === 'DELIVERED',
+              'border-blue-600 text-blue-600': delivery.order_status === 'OUT FOR DELIVERY',
+              'border-yellow-600 text-yellow-600': delivery.order_status === 'PENDING',
+            }"
+          >
+            {{ delivery.order_status === 'CANCELLED' ? '✕' : '✓' }}
+          </span>
+
+          {{ delivery.order_status }}
+        </div>
+      </div>
+
+      <!-- Body -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 px-6 py-6">
+        <!-- Left Section -->
+        <div class="space-y-6">
+          <!-- Customer -->
+          <div class="flex gap-3">
+            <div
+              class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center text-gray-500"
+            >
+              👤
+            </div>
+            <div>
+              <p class="text-xs text-gray-400 uppercase font-semibold">Customer Name</p>
+              <p class="font-medium text-gray-900">{{ delivery.order.user.name }}</p>
+            </div>
+          </div>
+
+          <!-- Address -->
+          <div class="flex gap-3">
+            <div
+              class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center text-gray-500"
+            >
+              📍
+            </div>
+            <div>
+              <p class="text-xs text-gray-400 uppercase font-semibold">Delivery Destination</p>
+              <p class="text-gray-900">
+                {{ delivery.order.address }},<br />
+                {{ delivery.order.city }}, {{ delivery.order.state }} -
+                {{ delivery.order.pincode }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Updated -->
+          <div class="flex gap-3">
+            <div
+              class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center text-gray-500"
+            >
+              📅
+            </div>
+            <div>
+              <p class="text-xs text-gray-400 uppercase font-semibold">Last Updated</p>
+              <p class="text-gray-900">
+                {{ delivery.updated_at | date: 'dd MMM yyyy, hh:mm a' }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Cancellation Reason -->
+          <div
+            *ngIf="delivery.order_status === 'CANCELLED'"
+            class="border border-red-200 bg-red-50 rounded-lg p-4 flex gap-3"
+          >
+            <div class="text-red-600 mt-0.5">⚠</div>
+            <div>
+              <p class="font-semibold text-red-700">Cancellation Reason</p>
+              <p class="text-sm text-red-600">
+                {{ delivery.cancel_reason }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Section -->
+        <div>
+          <p class="text-sm font-semibold text-gray-500 uppercase mb-3">Shipment Logistics →</p>
+          <div class="h-72 overflow-y-auto hide-scrollbar">
+            <div
+              *ngFor="let wh of delivery.order.warehouses"
+              class="border rounded-lg p-5 bg-white my-2"
+            >
+              <div class="flex gap-3 mb-3">
+                <div
+                  class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center text-gray-600"
+                >
+                  🏬
+                </div>
+                <div>
+                  <p class="font-semibold text-gray-900">{{ wh.name }}</p>
+                  <p class="text-sm text-gray-500">
+                    {{ wh.address }}, {{ wh.city }}, {{ wh.state }} - {{ wh.pincode }}
+                  </p>
+                </div>
+              </div>
+
+              <p class="text-xs text-gray-400 uppercase font-semibold mb-2">
+                Items from this location:
+              </p>
+              <ng-container *ngFor="let item of delivery.order.items">
+                <ng-container *ngFor="let wp of item.product.warehouse_products">
+                  <div
+                    *ngIf="wp.warehouse_id === wh.id"
+                    class="flex items-center gap-2 text-sm bg-gray-50 px-3 py-2 my-1 rounded"
+                  >
+                    <span>🪑</span>
+                    <span class="text-gray-900"> {{ item.product.name }}</span>
+                    <span class="ml-auto bg-gray-200 px-2 rounded text-xs font-semibold">
+                      × {{ item.quantity }}
+                    </span>
+                  </div>
+                </ng-container>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="flex items-center justify-end gap-3 px-6 py-4 border-t">
+        <button
+          class="border px-4 py-2 rounded-lg text-sm font-semibold text-gray-700 hover:bg-gray-100"
+        >
+          View Receipt
+        </button>
+
+        <button
+          class="bg-red-700 hover:bg-red-800 text-white px-4 py-2 rounded-lg text-sm font-semibold"
+        >
+          Contact Support
+        </button>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>

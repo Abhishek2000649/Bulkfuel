@@ -1,0 +1,236 @@
+<!-- <h2>My Profile</h2>
+
+<div class="buttons">
+  <button (click)="openBasic()">Update Name & Email</button>
+  <button (click)="openAddress()">Update Address</button>
+  <button (click)="openPassword()">Change Password</button>
+</div>
+
+<p class="success" *ngIf="message">{{ message }}</p>
+<p class="error" *ngIf="error">{{ error }}</p>
+
+
+<div *ngIf="showBasic" class="card">
+  <h3>Update Name & Email</h3>
+  <form (ngSubmit)="updateBasic()">
+    <input type="text" [(ngModel)]="user.name" name="name" required>
+    <input type="email" [(ngModel)]="user.email" name="email" required>
+    <button type="submit">Save</button>
+  </form>
+</div>
+
+
+<div *ngIf="showAddress" class="card">
+  <h3>Update Address</h3>
+  <form (ngSubmit)="updateAddress()">
+    <textarea [(ngModel)]="address.address" name="address" required></textarea>
+    <input type="text" [(ngModel)]="address.city" name="city" required>
+    <input type="text" [(ngModel)]="address.state" name="state" required>
+    <input type="text" [(ngModel)]="address.pincode" name="pincode" required>
+    <button type="submit">Save Address</button>
+  </form>
+</div>
+
+
+<div *ngIf="showPassword" class="card">
+  <h3>Change Password</h3>
+  <form (ngSubmit)="updatePassword()">
+    <input type="password" [(ngModel)]="passwordData.current_password"
+           name="current_password" placeholder="Current Password" required>
+
+    <input type="password" [(ngModel)]="passwordData.password"
+           name="password" placeholder="New Password" required>
+
+    <input type="password" [(ngModel)]="passwordData.password_confirmation"
+           name="password_confirmation" placeholder="Confirm Password" required>
+
+    <button type="submit">Update Password</button>
+  </form>
+</div> -->
+
+
+
+
+<div class="min-h-screen pb-20 bg-gray-100 font-sans">
+
+<!-- ================= MAIN ================= -->
+<main class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 pt-12">
+
+  <!-- Heading -->
+  <div class="mb-10 border-l-4 border-red-800 pl-6 py-2">
+    <h1 class="text-4xl font-black text-gray-900 uppercase italic">Profile</h1>
+    <p class="text-gray-500 mt-2 text-lg font-medium">
+      Manage your personal information and preferences.
+    </p>
+  </div>
+
+  <div class="flex flex-col lg:flex-row gap-8">
+
+    <!-- Sidebar -->
+    <nav class="space-y-2">
+  <div
+    (click)="openBasic()"
+    [ngClass]="showBasic
+      ? 'bg-red-50 text-red-800'
+      : 'text-gray-500 hover:bg-gray-50'"
+    class="px-5 py-3 rounded-xl font-bold uppercase text-xs tracking-widest cursor-pointer">
+    Basic Info
+  </div>
+
+  <div
+    (click)="openAddress()"
+    [ngClass]="showAddress
+      ? 'bg-red-50 text-red-800'
+      : 'text-gray-500 hover:bg-gray-50'"
+    class="px-5 py-3 rounded-xl font-bold uppercase text-xs tracking-widest cursor-pointer">
+    Address
+  </div>
+
+  <div
+    (click)="openPassword()"
+    [ngClass]="showPassword
+      ? 'bg-red-50 text-red-800'
+      : 'text-gray-500 hover:bg-gray-50'"
+    class="px-5 py-3 rounded-xl font-bold uppercase text-xs tracking-widest cursor-pointer">
+    Password
+  </div>
+</nav>
+
+
+    <!-- Content -->
+    <section class="lg:w-3/4 space-y-12">
+
+      <!-- ================= BASIC INFO ================= -->
+      <div *ngIf="showBasic" class="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="px-10 py-8 border-b border-gray-50">
+          <h2 class="text-2xl font-black uppercase italic">Basic Info</h2>
+          <p class="text-sm text-gray-500 mt-2 font-medium">
+            Update your name, contact info, and bio.
+          </p>
+        </div>
+
+        <div class="p-10 space-y-10">
+          <!-- Avatar -->
+          <div class="flex items-center space-x-6">
+            <div class="w-28 h-28 rounded-2xl overflow-hidden border border-gray-200">
+              <img src="https://picsum.photos/seed/user123/200/200" class="w-full h-full object-cover">
+            </div>
+            <button class="px-6 py-3 bg-gray-100 border border-gray-300 rounded-xl font-bold text-sm">
+              Change Photo
+            </button>
+          </div>
+
+          <form (ngSubmit)="updateBasic()" class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div class="sm:col-span-2">
+              <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">Full Name</label>
+              <input [(ngModel)]="user.name" name="name" class="w-full px-4 py-3 rounded-xl border border-gray-300" >
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">Email</label>
+              <input [(ngModel)]="user.email" name="email"  class="w-full px-4 py-3 rounded-xl border border-gray-300" >
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">Phone</label>
+              <input class="w-full px-4 py-3 rounded-xl border border-gray-300" >
+            </div>
+
+            <div class="sm:col-span-2">
+              <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">Bio</label>
+              <textarea rows="4" class="w-full px-4 py-3 rounded-xl border border-gray-300 resize-none">
+                  
+              </textarea>
+            </div>
+
+            <div class="sm:col-span-2">
+              <button type="submit" class="px-10 py-4 bg-red-800 text-white font-bold rounded-xl">
+                Save Profile
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- ================= ADDRESS ================= -->
+      <div *ngIf="showAddress" class="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="px-10 py-8 border-b border-gray-50">
+          <h2 class="text-2xl font-black uppercase italic">Address</h2>
+          <p class="text-sm text-gray-500 mt-2 font-medium">
+            Set your primary mailing coordinates.
+          </p>
+        </div>
+
+        <div class="p-10">
+          <form (ngSubmit)="updateAddress()" class="grid grid-cols-1 sm:grid-cols-6 gap-6">
+            <div class="sm:col-span-6">
+              <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">Street</label>
+              <input [(ngModel)]="address.address" name="address" class="w-full px-4 py-3 rounded-xl border border-gray-300"
+                     value="123 Innovation Drive, Suite 400">
+            </div>
+
+            <div class="sm:col-span-2">
+              <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">City</label>
+              <input [(ngModel)]="address.city" name="city"  class="w-full px-4 py-3 rounded-xl border border-gray-300" >
+            </div>
+
+            <div class="sm:col-span-2">
+              <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">State</label>
+              <input [(ngModel)]="address.state" name="state" class="w-full px-4 py-3 rounded-xl border border-gray-300" >
+            </div>
+
+            <div class="sm:col-span-2">
+              <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">ZIP</label>
+              <input [(ngModel)]="address.pincode" name="pincode" class="w-full px-4 py-3 rounded-xl border border-gray-300" >
+            </div>
+
+            <div class="sm:col-span-6">
+              <button type="submit" class="px-10 py-4 bg-red-800 text-white font-bold rounded-xl">
+                Save Address
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- ================= PASSWORD ================= -->
+      <div *ngIf="showPassword" class="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="px-10 py-8 border-b border-gray-50">
+          <h2 class="text-2xl font-black uppercase italic">Password</h2>
+          <p class="text-sm text-gray-500 mt-2 font-medium">
+            Change your login credentials.
+          </p>
+        </div>
+
+        <div class="p-10 max-w-xl">
+          <form (ngSubmit)="updatePassword()" class="space-y-6">
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">Current Password</label>
+              <input [(ngModel)]="passwordData.current_password"
+           name="current_password"  type="password" class="w-full px-4 py-3 rounded-xl border border-gray-300">
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">New Password</label>
+              <input [(ngModel)]="passwordData.password"
+           name="password" type="password" class="w-full px-4 py-3 rounded-xl border border-gray-300">
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">Confirm Password</label>
+              <input [(ngModel)]="passwordData.password_confirmation"
+           name="password_confirmation" type="password" class="w-full px-4 py-3 rounded-xl border border-gray-300">
+            </div>
+
+            <button type="submit" class="px-10 py-4 bg-red-800 text-white font-bold rounded-xl">
+              Change Password
+            </button>
+          </form>
+        </div>
+      </div>
+
+    </section>
+  </div>
+</main>
+
+</div>

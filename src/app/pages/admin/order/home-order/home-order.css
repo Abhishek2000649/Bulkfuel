@@ -1,0 +1,20 @@
+.order-card {
+  border: 1px solid #ccc;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  border: 1px solid #999;
+  padding: 6px;
+}
+
+select {
+  margin-right: 10px;
+}

@@ -1,0 +1,216 @@
+<!-- <h2>Agent Settlement</h2>
+<label>Select Delivery Agent</label>
+<select [(ngModel)]="selectedAgentId" (change)="onAgentChange()">
+  <option value="">-- Select Agent --</option>
+  <option *ngFor="let agent of agents" [value]="agent.id">
+    {{ agent.name }}
+  </option>
+</select>
+
+<hr />
+<div *ngIf="settlement">
+  <h3>Settlement Details</h3>
+  <p><b>Total Amount:</b> ₹{{ settlement.total_amount }}</p>
+  <p><b>From Date:</b> {{ settlement.from_date | date }}</p>
+  <p><b>To Date:</b> {{ settlement.to_date | date }}</p>
+  <p><b>Status:</b> {{ settlement.status }}</p>
+
+  <hr />
+
+  <label>Settlement Mode</label>
+  <select [(ngModel)]="settlementMode">
+    <option value="">-- Select Mode --</option>
+    <option value="CASH">Cash</option>
+    <option value="BANK">Bank</option>
+    <option value="UPI">UPI</option>
+  </select>
+
+  <br /><br />
+
+  <button (click)="submitSettlement()">
+    Complete Settlement
+  </button>
+</div>
+
+<p *ngIf="loading">Loading settlement...</p> -->
+
+
+
+<div class="min-h-screen bg-gray-100 flex flex-col items-center py-12 px-4 sm:px-6 lg:px-8">
+
+  <!-- ================= HEADER ================= -->
+  <div class="max-w-4xl w-full mb-8">
+    <h1 class="text-3xl font-extrabold text-gray-900 flex items-center gap-3">
+      <span class="p-2 bg-red-800 rounded-lg text-white">💼</span>
+      Agent Settlement Portal
+    </h1>
+    <p class="mt-2 text-gray-600">
+      Securely manage and reconcile delivery agent payments.
+    </p>
+  </div>
+
+  <!-- ================= LAYOUT ================= -->
+  <div class="max-w-4xl w-full grid grid-cols-1 md:grid-cols-3 gap-8">
+
+    <!-- ========== LEFT SIDEBAR ========== -->
+    <div class="md:col-span-1 space-y-6">
+
+      <!-- Agent Select -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+        <label class="block text-sm font-semibold text-gray-700 mb-3">
+          Select Delivery Agent
+        </label>
+
+        <select
+          [(ngModel)]="selectedAgentId"
+          (change)="onAgentChange()"
+          class="block w-full py-3 px-3 border border-gray-300 rounded-xl bg-gray-50 focus:outline-none"
+        >
+          <option value="">-- Select Agent --</option>
+          <option *ngFor="let agent of agents" [value]="agent.id">
+            {{ agent.name }}
+          </option>
+        </select>
+
+        <!-- Selected Agent -->
+        <div
+          *ngIf="selectedAgent"
+          class="mt-6 p-4 bg-red-50 rounded-xl border border-red-100 flex items-center gap-4"
+        >
+          <img
+            [src]="selectedAgent.avatar || 'https://i.pravatar.cc/100'"
+            class="w-12 h-12 rounded-full border-2 border-white"
+          />
+          <div>
+            <h4 class="font-bold text-gray-900">{{ selectedAgent.name }}</h4>
+            <p class="text-xs text-gray-500">{{ selectedAgent.email }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Stats -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 hidden md:block">
+        <h5 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">
+          Quick Stats
+        </h5>
+        <div class="space-y-4">
+          <div class="flex justify-between">
+            <span class="text-sm text-gray-600">Pending Agents</span>
+            <span class="font-bold text-red-800">{{ agents.length }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-sm text-gray-600">Today's Volume</span>
+            <span class="font-bold text-red-800">₹{{ settlement?.total_amount || 0 }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== RIGHT CONTENT (ALWAYS VISIBLE) ========== -->
+    <div class="md:col-span-2">
+
+      <div class="bg-white rounded-2xl shadow-xl border overflow-hidden">
+
+        <!-- Header -->
+        <div class="bg-red-800 p-6 text-white flex justify-between items-center">
+          <div>
+            <span class="text-xs bg-white/20 px-2 py-1 rounded">
+              Reference: {{ settlement?.id || '—' }}
+            </span>
+            <h2 class="text-2xl font-bold mt-2">
+              ₹{{ settlement?.total_amount || 0 }}
+            </h2>
+          </div>
+
+          <span
+            class="px-4 py-1 rounded-full text-xs font-bold"
+            [ngClass]="settlement?.status === 'COMPLETED'
+              ? 'bg-green-500 text-white'
+              : 'bg-yellow-400 text-yellow-900'"
+          >
+            {{ settlement?.status || 'NO DATA' }}
+          </span>
+        </div>
+
+        <!-- Body -->
+        <div class="p-8 space-y-8">
+
+          <!-- Dates -->
+          <div class="grid grid-cols-2 gap-6">
+            <div>
+              <p class="text-xs text-gray-500 uppercase font-semibold">From Date</p>
+              <p class="font-medium">
+                {{ settlement?.from_date ? (settlement.from_date | date) : '—' }}
+              </p>
+            </div>
+
+            <div>
+              <p class="text-xs text-gray-500 uppercase font-semibold">To Date</p>
+              <p class="font-medium">
+                {{ settlement?.to_date ? (settlement.to_date | date) : '—' }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Payment Mode -->
+          <div class="border-t border-b py-6">
+            <h3 class="text-sm font-bold uppercase mb-4 flex items-center gap-2">
+              <span class="w-1.5 h-4 bg-red-800 rounded-full"></span>
+              Settlement Mode
+            </h3>
+
+            <div class="grid grid-cols-3 gap-4">
+
+              <div
+                (click)="selectMode('CASH')"
+                class="p-4 rounded-xl border-2 text-center cursor-pointer transition"
+                [ngClass]="settlementMode === 'CASH'
+                  ? 'border-red-800 bg-red-50'
+                  : 'border-gray-200 bg-gray-50 opacity-60 hover:opacity-100'"
+              >
+                💵
+                <p class="text-xs font-bold mt-2">Cash</p>
+              </div>
+
+              <div
+                (click)="selectMode('BANK')"
+                class="p-4 rounded-xl border-2 text-center cursor-pointer transition"
+                [ngClass]="settlementMode === 'BANK'
+                  ? 'border-red-800 bg-red-50'
+                  : 'border-gray-200 bg-gray-50 opacity-60 hover:opacity-100'"
+              >
+                🏦
+                <p class="text-xs font-bold mt-2">Bank</p>
+              </div>
+
+              <div
+                (click)="selectMode('UPI')"
+                class="p-4 rounded-xl border-2 text-center cursor-pointer transition"
+                [ngClass]="settlementMode === 'UPI'
+                  ? 'border-red-800 bg-red-50'
+                  : 'border-gray-200 bg-gray-50 opacity-60 hover:opacity-100'"
+              >
+                📱
+                <p class="text-xs font-bold mt-2">UPI</p>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Action -->
+          <button
+            (click)="submitSettlement()"
+            [disabled]="!settlement || !settlementMode || submitting"
+            class="w-full py-4 rounded-xl text-lg font-bold transition"
+            [ngClass]="(!settlement || !settlementMode)
+              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              : 'bg-red-800 text-white hover:bg-red-900'"
+          >
+            ✔ Complete Settlement
+          </button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
