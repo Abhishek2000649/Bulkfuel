@@ -1,11 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import {environment} from '../../../environments/environment'
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserManagement {
-   private apiUrl = 'http://127.0.0.1:8000/api/admin';
+  //  private apiUrl = 'http://127.0.0.1:8000/api/admin';
+  private apiUrl = environment.apiBaseUrl+ '/admin';
 
   constructor(private http: HttpClient) {}
 

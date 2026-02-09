@@ -1,12 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
-
+import {environment} from '../../../environments/environment';
 @Injectable({
   providedIn: 'root',
 })
 export class Auth {
-  private apiUrl = 'http://127.0.0.1:8000/api';
+  // private apiUrl = 'http://127.0.0.1:8000/api';
+  private apiUrl = environment.apiBaseUrl;
   private userSubject = new BehaviorSubject<any>(null);
   user$ = this.userSubject.asObservable();
   constructor(private http: HttpClient) {}

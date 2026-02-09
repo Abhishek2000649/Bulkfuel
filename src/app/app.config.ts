@@ -9,13 +9,11 @@ import { authInterceptor } from './core/interceptors/auth-interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideAnimations(), // 🔥 MUST
+    provideAnimations(),
     provideHttpClient(
       withInterceptors([authInterceptor])
     ),
     provideRouter(routes),
-
-    // ✅ ngx-spinner provider
     importProvidersFrom(
       NgxSpinnerModule.forRoot({ type: 'ball-spin-clockwise' })
     )

@@ -1,14 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-
+import {environment} from '../../../environments/environment';
 @Injectable({
   providedIn: 'root',
 })
 export class Stock {
 
-   private apiUrl = 'http://127.0.0.1:8000/api/admin';
-
+  //  private apiUrl = 'http://127.0.0.1:8000/api/admin';
+private apiUrl = environment.apiBaseUrl+ '/admin';
   constructor(private http: HttpClient) {}
 
   // GET STOCK LIST (with warehouse & product)

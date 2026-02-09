@@ -1,8 +1,9 @@
 import { HttpInterceptorFn } from '@angular/common/http';
-
+import {environment} from '../../core/environments/environment'
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const token = localStorage.getItem('token');
-  if (token && req.url.startsWith('http://127.0.0.1:8000/api')) {
+  const apiUrl = environment.apiBaseUrl;
+  if (token && req.url.startsWith(apiUrl)) {
     req = req.clone({
       setHeaders: {
         Authorization: `Bearer ${token}`,
