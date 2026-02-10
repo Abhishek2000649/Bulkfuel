@@ -3,10 +3,10 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Stock } from '../../../../core/services/admin/stock/stock';
 import { Router } from '@angular/router';
-
+import { Spinner } from '../../../../shared/spinner/spinner';
 @Component({
   selector: 'app-add-stock',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, Spinner],
   templateUrl: './add-stock.html',
   styleUrl: './add-stock.css',
 })
@@ -16,7 +16,7 @@ export class AddStock {
   warehouses: any[] = [];
   products: any[] = [];
   errors: string[] = [];
-
+  isLoading:boolean= false;
   constructor(
     private fb: FormBuilder,
     private adminService: Stock,
@@ -36,35 +36,54 @@ export class AddStock {
   }
 
   loadWarehouses() {
+    this.isLoading=true;
     this.adminService.getWarehouses().subscribe({
       next: (res) => {this.warehouses = res;
+        this.isLoading=false;
         this.cdr.detectChanges();
       },
-      error: (err) => console.error(err),
+      error: (err) =>
+        {
+          this.isLoading=false;
+           console.error(err);
+        }
       
     });
   }
 
   loadProducts() {
+    this.isLoading=true;
     this.adminService.getProducts().subscribe({
       next: (res) => {this.products = res;
+        this.isLoading=false;
         this.cdr.detectChanges();
       },
-      error: (err) => console.error(err),
+      error: (err) => 
+        {
+          this.isLoading=false;
+          console.error(err);
+        }
     });
   }
 
   onSubmit() {
-    if (this.stockForm.invalid) return;
+    this.isLoading=true;
+    if (this.stockForm.invalid) 
+      {
+        this.isLoading=false;
+        return;
+      }
 
     this.errors = [];
 
     this.adminService.addStock(this.stockForm.value).subscribe({
       next: () => {
+        this.isLoading=false;
         alert('Stock added successfully');
         this.router.navigate(['/admin/stock']);
       },
       error: (err) => {
+        this.isLoading=false;
         console.log(err);
          if (err.status === 422) {
       this.errors = [err.error.message];

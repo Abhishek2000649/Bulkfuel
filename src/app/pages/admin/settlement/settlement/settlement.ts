@@ -2,11 +2,12 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SettlementService } from '../../../../core/services/admin/settlement/settlement-service';
+import { Spinner } from '../../../../shared/spinner/spinner';
 
 @Component({
   selector: 'app-settlement',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, Spinner],
   templateUrl: './settlement.html',
   styleUrl: './settlement.css',
 })
@@ -15,7 +16,7 @@ export class Settlement implements OnInit {
   // ================= DATA =================
   agents: any[] = [];
   settlement: any = null;
-
+  isLoading:boolean= false;
   // ================= FORM STATE =================
   selectedAgentId: number | null = null;
   settlementMode: string = '';
@@ -43,12 +44,15 @@ export class Settlement implements OnInit {
 
   // 1️⃣ Load delivery agents
   loadAgents(): void {
+    this.isLoading=true;
     this.settlementService.getDeliveryAgents().subscribe({
       next: (res: any[]) => {
         this.agents = res || [];
+        this.isLoading=false;
         this.cdr.detectChanges();
       },
       error: () => {
+        this.isLoading=false;
         alert('Failed to load agents');
       },
     });
@@ -56,8 +60,10 @@ export class Settlement implements OnInit {
 
   // 2️⃣ On agent select → fetch pending settlement
   onAgentChange(): void {
+    this.isLoading=true;
     if (!this.selectedAgentId) {
       this.resetForm();
+      this.isLoading=false;
       return;
     }
 
@@ -71,10 +77,12 @@ export class Settlement implements OnInit {
         next: (res: any) => {
           this.settlement = res?.settlement || null;
           this.loading = false;
+          this.isLoading=false;
           this.cdr.detectChanges();
         },
         error: () => {
           this.loading = false;
+          this.isLoading=false;
           alert('No pending settlement found');
           this.settlement = null;
         },
@@ -89,12 +97,15 @@ export class Settlement implements OnInit {
 
   // 4️⃣ Complete settlement
   submitSettlement(): void {
+    this.isLoading=true;
     if (!this.settlement) {
+      this.isLoading=false;
       alert('No settlement available');
       return;
     }
 
     if (!this.settlementMode) {
+      this.isLoading=false;
       alert('Please select settlement mode');
       return;
     }
@@ -108,11 +119,13 @@ export class Settlement implements OnInit {
 
     this.settlementService.completeSettlement(payload).subscribe({
       next: () => {
+        this.isLoading=false;
         alert('Settlement completed successfully');
         this.resetForm();
         this.cdr.detectChanges();
       },
       error: () => {
+        this.isLoading=false;
         alert('Failed to complete settlement');
         this.submitting = false;
       },

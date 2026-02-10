@@ -3,10 +3,11 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { UserManagement } from '../../../../core/services/admin/userManagement/user-management';
 import { CommonModule } from '@angular/common';
+import { Spinner } from '../../../../shared/spinner/spinner';
 
 @Component({
   selector: 'app-edit-user-management',
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, Spinner],
   templateUrl: './edit-user-management.html',
   styleUrl: './edit-user-management.css',
 })
@@ -15,7 +16,7 @@ export class EditUserManagement {
     userForm!: FormGroup;
   userId!: number;
   errors: string[] = [];
-
+  isLoading:boolean=false;
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
@@ -36,6 +37,7 @@ export class EditUserManagement {
   }
 
   loadUser() {
+    this.isLoading=true;
     this.adminService.getUserById(this.userId).subscribe({
       next: (res) => {
         this.userForm.patchValue({
@@ -43,15 +45,19 @@ export class EditUserManagement {
           email: res.email,
           role: res.role,
         });
+        this.isLoading=false;
       },
       error: (err) => {
+        this.isLoading=false;
         console.error(err);
       },
     });
   }
 
   onSubmit() {
+    this.isLoading=true;
     if (this.userForm.invalid) {
+      this.isLoading=false;
       return;
     }
 
@@ -60,10 +66,12 @@ export class EditUserManagement {
     this.adminService.updateUser(this.userId, this.userForm.value)
       .subscribe({
         next: () => {
+          this.isLoading=false;
           alert('User updated successfully');
           this.router.navigate(['/admin/userManagement']);
         },
         error: (err) => {
+          this.isLoading=false;
           console.log(err);
           
         },

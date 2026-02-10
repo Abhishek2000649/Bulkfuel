@@ -3,11 +3,12 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Product } from '../../../../core/services/admin/product/product';
+import { Spinner } from '../../../../shared/spinner/spinner';
 
 @Component({
   selector: 'app-home-product',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, Spinner],
   templateUrl: './home-product.html',
   styleUrl: './home-product.css',
 })
@@ -19,7 +20,7 @@ export class HomeProduct {
 
   selectedCategory: string = 'ALL';
   searchText: string = '';
-
+  isLoading:boolean=false;
   defaultImage =
     'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9';
 
@@ -33,6 +34,7 @@ export class HomeProduct {
   }
 
   loadProducts() {
+    this.isLoading=true;
     this.adminService.getProducts().subscribe({
       next: (res: any[]) => {
         this.products = res;
@@ -44,9 +46,11 @@ export class HomeProduct {
           if (p.category) {
             map.set(p.category.id, p.category);
           }
+          
         });
 
         this.categories = Array.from(map.values());
+        this.isLoading=false;
         this.cdr.detectChanges();
       },
       error: (err) => console.error(err),
@@ -73,10 +77,18 @@ export class HomeProduct {
 
   deleteProduct(id: number) {
     if (!confirm('Are you sure you want to delete this product?')) return;
-
+    this.isLoading=true;
     this.adminService.deleteProduct(id).subscribe({
-      next: () => this.loadProducts(),
-      error: (err) => console.error(err),
+      next: () => 
+        {
+          this.isLoading=false;
+          this.loadProducts()
+        },
+      error: (err) => 
+        {
+          this.isLoading=false;
+          console.error(err)
+        }
     });
   }
 

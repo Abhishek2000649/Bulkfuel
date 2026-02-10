@@ -1,11 +1,12 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AdminOrder } from '../../../../core/services/admin/AdminOrder/admin-order';
+import { Spinner } from '../../../../shared/spinner/spinner';
 
 @Component({
   selector: 'app-order-history',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, Spinner],
   templateUrl: './order-history.html',
   styleUrl: './order-history.css',
 })
@@ -13,7 +14,7 @@ export class OrderHistory implements OnInit {
 
   orders: any[] = [];
   filteredOrders: any[] = [];
-
+  isLoading:boolean= false;
   // ✅ FIXED STATUS LIST
   statuses: string[] = [
     'ALL',
@@ -39,13 +40,16 @@ export class OrderHistory implements OnInit {
 
   // ================= FETCH ORDERS =================
   getOrders(): void {
+    this.isLoading=true;
     this.orderService.getOrderHistory().subscribe({
       next: (res: any) => {
         this.orders = res.orders || [];
         this.filteredOrders = [...this.orders];
+        this.isLoading=false;
         this.cdr.detectChanges();
       },
       error: (err) => {
+        this.isLoading=false;
         console.error('Error fetching orders', err);
       },
     });

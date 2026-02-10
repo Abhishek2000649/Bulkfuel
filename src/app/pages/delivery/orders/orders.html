@@ -50,6 +50,7 @@
 
 <div class="bg-gray-50 font-sans">
   <div class="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-2 ">
+    <app-spinner [isLoading]="isLoading" [loaderSize]="100"></app-spinner>
   <div *ngFor="let delivery of deliveries" class=" mx-auto px-4 py-4">
     <!-- Card -->
     <div class="bg-white rounded-xl border shadow-sm">

@@ -1,26 +1,29 @@
 
 <div class="min-h-screen w-full flex flex-col lg:flex-row font-['Inter']">
-
+  <app-spinner [isLoading]="isLoading" [loaderSize]="100"></app-spinner>
   <!-- ================= LEFT BRAND SECTION ================= -->
   <div
     class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-[#450a0a] to-[#1a0303]
            relative items-center justify-center p-20 overflow-hidden">
-
+    
     <div class="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-red-600/10 blur-[120px] rounded-full"></div>
     <div class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-amber-500/5 blur-[100px] rounded-full"></div>
 
     <div class="relative z-10 max-w-lg text-center lg:text-left">
 
       <div class="mb-12 inline-flex items-center space-x-4">
-        <div class="bg-white/10 p-4 rounded-3xl backdrop-blur-xl border border-white/20">
-          <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="bg-white/10 p-3 rounded-3xl backdrop-blur-xl border border-white/20">
+          <!-- <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-          </svg>
+          </svg> -->
+          <div class="w-12 h-12 flex justify-center flex-srink-0 overflow-hidden rounded-lg">
+              <img src="assets/images/logo-dark.png" alt="" class="w-full h-full object-contain">
+          </div>
         </div>
 
         <div class="flex flex-col leading-none">
-          <span class="text-3xl font-black text-white tracking-tighter">MY SHOP.</span>
+          <span class="text-3xl font-black text-white tracking-tighter">AZIZI NEXUS</span>
           <span class="text-[10px] uppercase tracking-[0.4em] text-amber-400 font-black mt-1">
             Premium Edition
           </span>
@@ -144,12 +147,11 @@
             Remember me for 30 days
           </label>
         </div>
-
         <!-- Submit -->
         <button type="submit" [disabled]="loginForm.invalid"
           class="w-full py-4 bg-[#8B0000] text-white font-black uppercase
                  tracking-[0.2em] text-xs rounded-2xl hover:bg-[#600000] transition-all">
-          Sign In to My Shop
+          Sign In to AZIZI NEXUS
         </button>
 
         <p class="text-center text-sm font-medium text-gray-500 pt-6">

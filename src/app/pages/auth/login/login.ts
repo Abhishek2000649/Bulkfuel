@@ -3,17 +3,19 @@ import { Router, RouterModule } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Auth } from '../../../core/services/Auth/authservice/auth';
 import { switchMap } from 'rxjs';
+import { Spinner } from '../../../shared/spinner/spinner';
+
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterModule], // 👈 IMPORTANT
+  imports: [ReactiveFormsModule, RouterModule, Spinner ], 
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
 export class Login {
   loginForm!: FormGroup;
-
+  isLoading:boolean = false;
   constructor(private fb: FormBuilder, private auth: Auth, private router: Router) {
     // 🔹 Form initialization
     this.loginForm = this.fb.group({
@@ -23,7 +25,9 @@ export class Login {
   }
 
   login() {
+    this.isLoading= true;
     if (this.loginForm.invalid) {
+      this.isLoading = false;
       return;
     }
 
@@ -33,13 +37,13 @@ export class Login {
         
         switchMap((res) => {
           localStorage.setItem('token', res.token);
-          return this.auth.me(); // returns full response
+          return this.auth.me(); 
         })
       )
       .subscribe({
         next: (res) => {
-          const user = res.user; // 🔥 IMPORTANT
-
+          const user = res.user; 
+          this.isLoading = false;
           switch (user.role) {
             case 'ADMIN':
               this.router.navigate(['/admin']);
@@ -60,6 +64,7 @@ export class Login {
 
         error: (err) => {
           console.error(err);
+          this.isLoading = false;
         },
       });
   }

@@ -2,17 +2,18 @@ import { CommonModule } from '@angular/common';
 import { Component, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AdminOrder } from '../../../../core/services/admin/AdminOrder/admin-order';
+import { Spinner } from '../../../../shared/spinner/spinner';
 
 @Component({
   selector: 'app-home-order',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, Spinner],
   templateUrl: './home-order.html',
   styleUrl: './home-order.css',
 })
 export class HomeOrder {
   orders: any[] = [];
-
+  isLoading:boolean=false;
   // TEMP status (important)
   tempStatus: { [key: number]: string } = {};
 
@@ -47,6 +48,7 @@ export class HomeOrder {
   }
 
   loadOrders() {
+    this.isLoading=true;
     this.adminService.getOrders().subscribe({
       next: (res) => {
         this.orders = res;
@@ -55,10 +57,14 @@ export class HomeOrder {
         this.orders.forEach(order => {
           this.tempStatus[order.id] = order.status;
         });
-
+        this.isLoading=false;
         this.cdr.detectChanges();
       },
-      error: (err) => console.error(err),
+      error: (err) => 
+        {
+          this.isLoading=false;
+          console.error(err);
+        }
     });
   }
 
@@ -76,16 +82,22 @@ export class HomeOrder {
   }
 
   updateStatus(orderId: number) {
+    this.isLoading=true;
     const newStatus = this.tempStatus[orderId];
 
     if (!confirm('Are you sure to update order status?')) return;
 
     this.adminService.updateOrderStatus(orderId, newStatus).subscribe({
       next: () => {
+        this.isLoading=false;
         alert('Order status updated');
         this.loadOrders(); // reload → order removed if SHIPPED+
       },
-      error: (err) => console.error(err),
+      error: (err) => 
+        {
+          this.isLoading=false;
+          console.error(err);
+        }
     });
   }
 

@@ -3,10 +3,11 @@ import { UserManagement } from '../../../../core/services/admin/userManagement/u
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { Spinner } from '../../../../shared/spinner/spinner';
 
 @Component({
   selector: 'app-add-user-management',
-  imports: [RouterModule, ReactiveFormsModule, CommonModule],
+  imports: [RouterModule, ReactiveFormsModule, CommonModule, Spinner],
   templateUrl: './add-user-management.html',
   styleUrl: './add-user-management.css',
 })
@@ -14,7 +15,7 @@ export class AddUserManagement {
 
     userForm: FormGroup;
   errors: string[] = [];
-
+  isLoading:boolean= false;
   constructor(
     private fb: FormBuilder,
     private adminService: UserManagement,
@@ -28,7 +29,9 @@ export class AddUserManagement {
   }
 
   onSubmit() {
+    this.isLoading=true;
     if (this.userForm.invalid) {
+      this.isLoading=false;
       return;
     }
 
@@ -37,12 +40,13 @@ export class AddUserManagement {
     this.adminService.addUser(this.userForm.value).subscribe({
       next: () => {
         
-
+        this.isLoading=false;
         alert('User added successfully');
         this.router.navigate(['/admin/userManagement']);
         
       },
       error: (err) => {
+        this.isLoading=false;
         // Laravel validation errors
        console.log(err);
        

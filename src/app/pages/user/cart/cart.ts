@@ -1,54 +1,72 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { finalize } from 'rxjs/operators';
+
 import { CartService } from '../../../core/services/user/cart/cart-service';
 import { CheckoutService } from '../../../core/services/user/checkoutService/checkout-service';
+import { Spinner } from '../../../shared/spinner/spinner';
 
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, Spinner],
   templateUrl: './cart.html',
 })
-export class Cart {
+export class Cart implements OnInit {
 
   cartItems: any[] = [];
   selectedTotal = 0;
   selectAll = false;
   checkoutError = '';
-
+  isLoading = false;
   stockWarnings: Record<number, string> = {};
 
   constructor(
     private cartService: CartService,
     private checkoutService: CheckoutService,
     private router: Router,
-    private cdr:ChangeDetectorRef,
+    private cdr: ChangeDetectorRef
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.loadCart();
   }
 
+  // ================= LOAD CART =================
   loadCart() {
-    this.cartService.getCart().subscribe(res => {
-      this.cartItems = res.cartItems.map((item: any) => ({
-        ...item,
-        selected: false
-      }));
+    this.isLoading = true;
 
-      this.updateStockWarnings();
-      this.calculateTotal();
-      this.cdr.detectChanges();
-    });
+    this.cartService.getCart()
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+          this.cdr.detectChanges();
+        })
+      )
+      .subscribe({
+        next: (res: any) => {
+          this.cartItems = res.cartItems.map((item: any) => ({
+            ...item,
+            selected: false
+          }));
+          this.updateStockWarnings();
+          this.calculateTotal();
+        },
+        error: (err) => {
+          console.error('Failed to load cart', err);
+        }
+      });
   }
 
+  // ================= SELECT ALL =================
   toggleSelectAll() {
     this.cartItems.forEach(item => item.selected = this.selectAll);
     this.calculateTotal();
   }
 
+  // ================= TOTAL =================
   calculateTotal() {
     this.selectedTotal = this.cartItems
       .filter(item => item.selected)
@@ -58,6 +76,7 @@ export class Cart {
       );
   }
 
+  // ================= STOCK WARNINGS =================
   updateStockWarnings() {
     this.stockWarnings = {};
 
@@ -69,10 +88,14 @@ export class Cart {
     });
   }
 
+  // ================= INCREASE =================
   increase(item: any) {
     if (item.quantity >= item.product.totalStock) return;
 
+    this.isLoading = true;
+
     this.cartService.updateCart(item.product_id, 'increase')
+      .pipe(finalize(() => this.isLoading = false))
       .subscribe(() => {
         item.quantity++;
         this.updateStockWarnings();
@@ -80,27 +103,36 @@ export class Cart {
       });
   }
 
+  // ================= DECREASE =================
   decrease(item: any) {
+    this.isLoading = true;
+
     this.cartService.updateCart(item.product_id, 'decrease')
+      .pipe(finalize(() => this.isLoading = false))
       .subscribe(() => {
         if (item.quantity > 1) {
           item.quantity--;
         } else {
           this.cartItems = this.cartItems.filter(i => i !== item);
         }
-
         this.updateStockWarnings();
         this.calculateTotal();
       });
   }
 
+  // ================= REMOVE =================
   remove(item: any) {
-    this.cartService.removeItem(item.id).subscribe(() => {
-      this.cartItems = this.cartItems.filter(i => i !== item);
-      this.calculateTotal();
-    });
+    this.isLoading = true;
+
+    this.cartService.removeItem(item.id)
+      .pipe(finalize(() => this.isLoading = false))
+      .subscribe(() => {
+        this.cartItems = this.cartItems.filter(i => i !== item);
+        this.calculateTotal();
+      });
   }
 
+  // ================= CHECKOUT =================
   checkout() {
     this.checkoutError = '';
 

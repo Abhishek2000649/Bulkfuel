@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CartService } from '../../../core/services/user/cart/cart-service';
 import { CheckoutService } from '../../../core/services/user/checkoutService/checkout-service';
+import { Spinner } from '../../../shared/spinner/spinner';
 
 @Component({
   selector: 'app-checkout',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, Spinner],
   templateUrl: './checkout.html',
   styleUrl: './checkout.css',
 })
@@ -18,7 +19,7 @@ export class Checkout implements OnInit {
   cartIds: number[] = [];
   totalAmount = 0;
   user: any = null;
-
+  isLoading:boolean=false;
   form = {
     address: '',
     city: '',
@@ -35,9 +36,11 @@ export class Checkout implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.isLoading=true;
     this.cartIds = this.checkoutService.getCartIds();
 
     if (this.cartIds.length === 0) {
+      this.isLoading=false;
       this.router.navigate(['/user/cart']);
       return;
     }
@@ -53,17 +56,20 @@ export class Checkout implements OnInit {
           this.form.city = this.user.address.city;
           this.form.state = this.user.address.state;
           this.form.pincode = this.user.address.pincode;
+          this.isLoading=false;
         }
-
+        this.isLoading=false;
         this.cdr.detectChanges();
       },
       error: () => {
+        this.isLoading=false;
         this.router.navigate(['/user/cart']);
       },
     });
   }
 
   placeOrder(): void {
+    this.isLoading=true;
     const payload = {
       ...this.form,
       cart_ids: this.cartIds,
@@ -71,8 +77,10 @@ export class Checkout implements OnInit {
 
     this.checkoutService.placeOrder(payload).subscribe({
       next: () => {
-        alert('Order placed successfully');
         this.checkoutService.clear();
+        this.isLoading=false;
+        alert('Order placed successfully');
+        
         this.router.navigate(['/user/orders']);
       },
     });

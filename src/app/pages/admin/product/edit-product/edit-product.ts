@@ -3,10 +3,11 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Product } from '../../../../core/services/admin/product/product';
+import { Spinner } from '../../../../shared/spinner/spinner';
 
 @Component({
   selector: 'app-edit-product',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, Spinner],
   templateUrl: './edit-product.html',
   styleUrl: './edit-product.css',
 })
@@ -16,7 +17,7 @@ export class EditProduct {
   productId!: number;
   categories: any[] = [];
   errors: string[] = [];
-
+  isLoading:boolean=false;
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
@@ -40,13 +41,22 @@ export class EditProduct {
   }
 
   loadCategories() {
+    this.isLoading=true;
     this.adminService.getCategories().subscribe({
-      next: (res) => (this.categories = res),
-      error: (err) => console.error(err),
+      next: (res) => {this.categories = res
+        this.isLoading=false;
+
+      },
+      error: (err) => 
+        {
+          this.isLoading=false;
+          console.error(err);
+        }
     });
   }
 
   loadProduct() {
+    this.isLoading=true;
     this.adminService.getProductById(this.productId).subscribe({
       next: (res) => {
         this.productForm.patchValue({
@@ -56,23 +66,35 @@ export class EditProduct {
           category_id: res.category_id,
           description: res.description,
         });
+        this.isLoading=false;
       },
-      error: (err) => console.error(err),
+      error: (err) => 
+        {
+          this.isLoading=false;
+          console.error(err);
+        }
     });
   }
 
   onSubmit() {
-    if (this.productForm.invalid) return;
+    this.isLoading=true;
+    if (this.productForm.invalid) 
+      {
+        this.isLoading=false;
+        return;
+      }
 
     this.errors = [];
 
     this.adminService.updateProduct(this.productId, this.productForm.value)
       .subscribe({
         next: () => {
+          this.isLoading=false;
           alert('Product updated successfully');
           this.router.navigate(['/admin/product']);
         },
         error: (err) => {
+          this.isLoading=false;
          console.log(err);
          
         },

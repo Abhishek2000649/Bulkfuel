@@ -2,11 +2,12 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ProfileService } from '../../core/services/Auth/profile/profile-service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Spinner } from '../spinner/spinner';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, Spinner],
   templateUrl: './profile.html',
   styleUrl: './profile.css',
 })
@@ -14,7 +15,7 @@ export class Profile implements OnInit {
 
   user: any = {};
   address: any = {};
-
+  isLoading:boolean=false;
   // visibility
   showBasic = true;     // ✅ default open
   showAddress = false;
@@ -43,13 +44,16 @@ export class Profile implements OnInit {
      LOAD PROFILE
   ========================= */
   loadProfile() {
+    this.isLoading =true;
     this.profileService.getProfile().subscribe({
       next: (res) => {
         this.user = res.user;
         this.address = res.user.address ?? {};
+        this.isLoading = false;
         this.cdr.detectChanges();
       },
       error: () => {
+        this.isLoading = false;
         this.error = 'Failed to load profile';
       }
     });
@@ -85,6 +89,7 @@ export class Profile implements OnInit {
      UPDATE BASIC
   ========================= */
   updateBasic() {
+    this.isLoading= true;
     this.profileService.updateBasic({
       name: this.user.name,
       email: this.user.email,
@@ -92,9 +97,11 @@ export class Profile implements OnInit {
       next: (res) => {
         this.message = res.message;
         this.openBasic();
+        this.isLoading = false;
         this.cdr.detectChanges();
       },
       error: (err) => {
+        this.isLoading= false;
         this.error = err.error?.message || 'Update failed';
         this.cdr.detectChanges();
       }
@@ -105,13 +112,16 @@ export class Profile implements OnInit {
      UPDATE ADDRESS
   ========================= */
   updateAddress() {
+    this.isLoading= true;
     this.profileService.updateAddress(this.address).subscribe({
       next: (res) => {
         this.message = res.message;
         this.openAddress();
+        this.isLoading=false;
         this.cdr.detectChanges();
       },
       error: () => {
+        this.isLoading= false;
         this.error = 'Address update failed';
         this.cdr.detectChanges();
       }
@@ -122,6 +132,7 @@ export class Profile implements OnInit {
      UPDATE PASSWORD
   ========================= */
   updatePassword() {
+    this.isLoading= true;
     this.profileService.updatePassword(this.passwordData).subscribe({
       next: (res) => {
         this.message = res.message;
@@ -131,9 +142,11 @@ export class Profile implements OnInit {
           password_confirmation: ''
         };
         this.openPassword();
+        this.isLoading=false;
         this.cdr.detectChanges();
       },
       error: (err) => {
+        this.isLoading=false;
         this.error =
           err.error?.errors?.current_password?.[0] ||
           'Password update failed';

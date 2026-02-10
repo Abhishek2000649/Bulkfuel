@@ -21,6 +21,7 @@
   class="min-h-screen bg-[#f9fafb]  font-['Inter'] flex justify-center items-center"
 >
   <div class="max-w-[1200px]">
+    <app-spinner [isLoading]="isLoading" [loaderSize]="100"></app-spinner>
     <!-- Back -->
     <a
       routerLink="/admin/category"

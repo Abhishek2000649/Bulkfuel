@@ -3,12 +3,12 @@ import { Component, ChangeDetectorRef } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Stock } from '../../../../core/services/admin/stock/stock';
-import { NgxSpinnerService } from 'ngx-spinner';
+import { Spinner } from '../../../../shared/spinner/spinner';
 
 @Component({
   selector: 'app-home-stock',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, ],
+  imports: [CommonModule, RouterModule, FormsModule, Spinner ],
   templateUrl: './home-stock.html',
   styleUrl: './home-stock.css',
 })
@@ -17,11 +17,10 @@ export class HomeStock {
   stocks: any[] = [];
   searchTerm = '';
   errorMessage = '';
-
+  isLoading:boolean= false;
   constructor(
     private stockService: Stock,
     private cdr: ChangeDetectorRef,
-    private spinner: NgxSpinnerService
   ) {}
 
   ngOnInit(): void {
@@ -30,27 +29,38 @@ export class HomeStock {
   }
 
   loadStocks() {
-     this.spinner.show();
+     this.isLoading = true;
     this.stockService.getStocks().subscribe({
       next: (res) => {
 
         this.stocks = res;
+        this.isLoading = false;
         this.cdr.detectChanges();
-         this.spinner.hide();
+         
       },
       error: (err) => {
         this.errorMessage = err.error?.message || 'Failed to load stock';
-        this.spinner.hide();
+        this.isLoading = false;
       },
     });
   }
 
   deleteStock(id: number) {
-    if (!confirm('Delete this stock?')) return;
+    this.isLoading=true;
+    if (!confirm('Delete this stock?')) 
+      {
+        this.isLoading=false;
+        return;
+      }
 
     this.stockService.deleteStock(id).subscribe({
-      next: () => this.loadStocks(),
+      next: () =>
+        {
+          this.isLoading=false;
+        this.loadStocks()
+        },
       error: (err) => {
+        this.isLoading=false;
         this.errorMessage = err.error?.message || 'Delete failed';
       },
     });

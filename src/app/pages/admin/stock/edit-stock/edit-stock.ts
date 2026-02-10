@@ -3,10 +3,11 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Stock } from '../../../../core/services/admin/stock/stock';
+import { Spinner } from '../../../../shared/spinner/spinner';
 
 @Component({
   selector: 'app-edit-stock',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, Spinner],
   templateUrl: './edit-stock.html',
   styleUrl: './edit-stock.css',
 })
@@ -18,7 +19,7 @@ export class EditStock {
   warehouses: any[] = [];
   products: any[] = [];
   errors: string[] = [];
-
+  isLoading:boolean=false;
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
@@ -41,20 +42,38 @@ export class EditStock {
   }
 
   loadWarehouses() {
+    this.isLoading=true;
     this.stockService.getWarehouses().subscribe({
-      next: (res) => (this.warehouses = res),
-      error: (err) => console.error(err),
+      next: (res) => 
+        {
+          this.isLoading=false;
+          this.warehouses = res
+        },
+      error: (err) =>
+        {
+          this.isLoading=false;
+           console.error(err)
+          }
     });
   }
 
   loadProducts() {
+    this.isLoading=true;
     this.stockService.getProducts().subscribe({
-      next: (res) => (this.products = res),
-      error: (err) => console.error(err),
+      next: (res) =>
+        { 
+          this.isLoading=false;
+          this.products = res},
+      error: (err) => 
+        {
+          this.isLoading=false;
+          console.error(err);
+        },
     });
   }
 
   loadStock() {
+    this.isLoading=true;
     this.stockService.getStockById(this.stockId).subscribe({
       next: (res) => {
         this.stockForm.patchValue({
@@ -62,23 +81,35 @@ export class EditStock {
           product_id: res.product_id,
           stock_quantity: res.stock_quantity,
         });
+        this.isLoading=false;
       },
-      error: (err) => console.error(err),
+      error: (err) => 
+        {
+          this.isLoading=false;
+          console.error(err);
+        }
     });
   }
 
   onSubmit() {
-    if (this.stockForm.invalid) return;
+    this.isLoading=true;
+    if (this.stockForm.invalid) 
+      {
+        this.isLoading=false;
+        return;
+      }
 
     this.errors = [];
 
     this.stockService.updateStock(this.stockId, this.stockForm.value)
       .subscribe({
         next: () => {
+          this.isLoading=false;
           alert('Stock updated successfully');
           this.router.navigate(['/admin/stock']);
         },
         error: (err) => {
+          this.isLoading=false;
           if (err.status === 422) {
             this.errors = [err.error.message];
           }

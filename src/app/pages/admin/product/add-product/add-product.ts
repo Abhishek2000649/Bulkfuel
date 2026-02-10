@@ -3,11 +3,12 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Product } from '../../../../core/services/admin/product/product';
 import { Router, RouterLink, RouterModule } from '@angular/router';
+import { Spinner } from '../../../../shared/spinner/spinner';
 
 @Component({
   selector: 'app-add-product',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule,RouterLink, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule,RouterLink, RouterModule, Spinner],
   templateUrl: './add-product.html',
   styleUrl: './add-product.css',
 })
@@ -16,7 +17,7 @@ export class AddProduct implements OnInit {
   productForm!: FormGroup;
   categories: any[] = [];
   errors: string[] = [];
-
+  isLoading:boolean=false;
   constructor(
     private fb: FormBuilder,
     private adminService: Product,
@@ -42,12 +43,15 @@ export class AddProduct implements OnInit {
 
   // 🔹 Load Categories from API
   loadCategories() {
+    this.isLoading=true;
     this.adminService.getCategories().subscribe({
       next: (res: any) => {
         this.categories = res;
+        this.isLoading=false;
         this.cdr.detectChanges();
       },
       error: (err: any) => {
+        this.isLoading=false;
         console.error('Category Load Error:', err);
       },
     });
@@ -60,8 +64,10 @@ export class AddProduct implements OnInit {
 
   // 🔹 Submit Product
   onSubmit() {
+    this.isLoading=true;
     if (this.productForm.invalid) {
       this.productForm.markAllAsTouched();
+      this.isLoading=false;
       return;
     }
 
@@ -71,10 +77,12 @@ export class AddProduct implements OnInit {
 
     this.adminService.addProduct(payload).subscribe({
       next: () => {
+        this.isLoading=false;
         alert('✅ Product added successfully');
         this.router.navigate(['/admin/product']);
       },
       error: (err: any) => {
+        this.isLoading=false;
         console.error(err);
 
         // Optional: backend validation errors
