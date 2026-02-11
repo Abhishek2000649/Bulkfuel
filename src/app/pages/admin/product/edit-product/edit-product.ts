@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Product } from '../../../../core/services/admin/product/product';
 import { Spinner } from '../../../../shared/spinner/spinner';
-
+import { finalize } from 'rxjs';
+type ProductFormFields = 'name' | 'price' | 'stock' | 'category_id' | 'description';
 @Component({
   selector: 'app-edit-product',
   imports: [CommonModule, ReactiveFormsModule, Spinner],
@@ -18,26 +19,99 @@ export class EditProduct {
   categories: any[] = [];
   errors: string[] = [];
   isLoading:boolean=false;
+
+  formErrors: Record<ProductFormFields, string> = {
+    name: '',
+    price: '',
+    stock: '',
+    category_id: '',
+    description: '',
+  };
+  validationMessages: Record<ProductFormFields, any> = {
+    name: {
+      required: 'Enter name',
+    },
+    price: {
+      required: 'Enter price',
+      pattern: 'Enter valid Price',
+    },
+    stock: {
+      required: 'Enter stock',
+      pattern: 'Enter valid quantity',
+    },
+    category_id: {
+      required: 'Select any category',
+    },
+    description: {
+      required: ' Enter Description',
+    }
+  };
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private adminService: Product
-  ) {}
+    private adminService: Product,
+    private cdr:ChangeDetectorRef,
+  ) {
+    this.createForm();
+    this.productForm.valueChanges.subscribe(() => {
+      this.updateFormErrors();
+    });
+  }
 
   ngOnInit(): void {
     this.productId = Number(this.route.snapshot.paramMap.get('id'));
 
-    this.productForm = this.fb.group({
-      name: ['', Validators.required],
-      price: ['', Validators.required],
-      stock: ['', Validators.required],
-      category_id: ['', Validators.required],
-      description: [''],
-    });
+   
 
     this.loadCategories();
     this.loadProduct();
+  }
+  createForm() {
+  this.productForm = this.fb.group({
+    name: ['', [Validators.required]],
+
+    price: [
+      '',
+      [
+        Validators.required,
+        Validators.min(0),
+        Validators.pattern(/^[0-9]+$/)
+      ]
+    ],
+
+    stock: [
+      '',
+      [
+        Validators.required,
+        Validators.min(0),
+        Validators.pattern(/^[0-9]+$/)
+      ]
+    ],
+
+    category_id: ['', [Validators.required]],
+
+    description: ['', [Validators.required]],
+  });
+}
+
+
+  updateFormErrors(): void {
+    (Object.keys(this.formErrors) as ProductFormFields[]).forEach((field) => {
+      const control = this.productForm.get(field);
+      this.formErrors[field] = '';
+
+      if (control && control.invalid && (control.dirty || control.touched)) {
+        const messages = this.validationMessages[field];
+
+        if (control.errors) {
+          for (const errorKey of Object.keys(control.errors)) {
+            this.formErrors[field] = messages[errorKey];
+            break; 
+          }
+        }
+      }
+    });
   }
 
   loadCategories() {
@@ -45,7 +119,7 @@ export class EditProduct {
     this.adminService.getCategories().subscribe({
       next: (res) => {this.categories = res
         this.isLoading=false;
-
+        this.cdr.detectChanges();
       },
       error: (err) => 
         {
@@ -81,12 +155,19 @@ export class EditProduct {
     if (this.productForm.invalid) 
       {
         this.isLoading=false;
+         this.productForm.markAllAsTouched();
+      this.updateFormErrors();
         return;
       }
 
     this.errors = [];
 
-    this.adminService.updateProduct(this.productId, this.productForm.value)
+    this.adminService.updateProduct(this.productId, this.productForm.value).pipe(
+      finalize(()=>{
+        this.isLoading=false;
+        this.cdr.detectChanges();
+      })
+    )
       .subscribe({
         next: () => {
           this.isLoading=false;

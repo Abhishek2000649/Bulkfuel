@@ -125,6 +125,9 @@
             placeholder="New Warehouse Name"
             class="w-full border-b border-gray-200 focus:border-red-900 outline-none py-4 text-3xl font-extrabold bg-transparent"
           />
+          <p *ngIf="formErrors.name" class="mt-1 text-xs text-red-600 font-semibold ml-1">
+            {{ formErrors.name }}
+          </p>
         </div>
 
         <!-- Address -->
@@ -132,12 +135,14 @@
           <label class="block text-[11px] font-black uppercase tracking-[0.2em] text-gray-400 mb-2">
             Deployment Location
           </label>
-          <input
-            type="text"
+          <textarea
             formControlName="address"
             placeholder="Street address or zone"
             class="w-full border-b border-gray-200 focus:border-red-900 outline-none py-4 bg-transparent"
-          />
+          ></textarea>
+          <p *ngIf="formErrors.address" class="mt-1 text-xs text-red-600 font-semibold ml-1">
+            {{ formErrors.address}}
+          </p>
         </div>
 
         <!-- City / State -->
@@ -151,6 +156,9 @@
               formControlName="city"
               class="w-full border-b border-gray-200 focus:border-red-900 outline-none py-4 bg-transparent"
             />
+            <p *ngIf="formErrors.city" class="mt-1 text-xs text-red-600 font-semibold ml-1">
+            {{ formErrors.city }}
+          </p>
           </div>
 
           <div>
@@ -162,6 +170,9 @@
               formControlName="state"
               class="w-full border-b border-gray-200 focus:border-red-900 outline-none py-4 bg-transparent"
             />
+            <p *ngIf="formErrors.state" class="mt-1 text-xs text-red-600 font-semibold ml-1">
+            {{ formErrors.state }}
+          </p>
           </div>
         </div>
 
@@ -175,6 +186,9 @@
             formControlName="pincode"
             class="w-full border-b border-gray-200 focus:border-red-900 outline-none py-4 bg-transparent"
           />
+          <p *ngIf="formErrors.pincode" class="mt-1 text-xs text-red-600 font-semibold ml-1">
+            {{ formErrors.pincode }}
+          </p>
         </div>
 
         <!-- Submit -->

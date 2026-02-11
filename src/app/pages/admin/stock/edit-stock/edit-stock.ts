@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Stock } from '../../../../core/services/admin/stock/stock';
 import { Spinner } from '../../../../shared/spinner/spinner';
-
+import { finalize } from 'rxjs';
+type StockFormFields = 'warehouse_id' | 'product_id' | 'stock_quantity';
 @Component({
   selector: 'app-edit-stock',
   imports: [CommonModule, ReactiveFormsModule, Spinner],
@@ -20,21 +21,61 @@ export class EditStock {
   products: any[] = [];
   errors: string[] = [];
   isLoading:boolean=false;
+  formErrors: Record<StockFormFields, string> = {
+    warehouse_id: '',
+    product_id: '',
+    stock_quantity: '',
+  };
+     validationMessages: Record<StockFormFields, any> = {
+      warehouse_id: {
+        required: 'Select warehouse',
+      },
+      product_id: {
+        required: 'Select product',
+      },
+      stock_quantity: {
+        required: 'Enter Quantity',
+        pattern: 'Enter valid Quantity',
+      }
+    };
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private stockService: Stock
-  ) {}
+    private stockService: Stock,
+    private cdr: ChangeDetectorRef,
+  ) {
+    this.stockForm = this.fb.group({
+      warehouse_id: ['', Validators.required],
+      product_id: ['', Validators.required],
+      stock_quantity: ['', [Validators.required,  Validators.pattern(/^[0-9]+$/)]],
+    });
+    this.stockForm.valueChanges.subscribe(() => {
+      this.updateFormErrors();
+    });
+  }
+  updateFormErrors(): void {
+    (Object.keys(this.formErrors) as StockFormFields[]).forEach((field) => {
+      const control = this.stockForm.get(field);
+      this.formErrors[field] = '';
+
+      if (control && control.invalid && (control.dirty || control.touched)) {
+        const messages = this.validationMessages[field];
+
+        if (control.errors) {
+          for (const errorKey of Object.keys(control.errors)) {
+            this.formErrors[field] = messages[errorKey];
+            break; 
+          }
+        }
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.stockId = Number(this.route.snapshot.paramMap.get('id'));
 
-    this.stockForm = this.fb.group({
-      warehouse_id: ['', Validators.required],
-      product_id: ['', Validators.required],
-      stock_quantity: ['', [Validators.required, Validators.min(1)]],
-    });
+    
 
     this.loadWarehouses();
     this.loadProducts();
@@ -95,21 +136,28 @@ export class EditStock {
     this.isLoading=true;
     if (this.stockForm.invalid) 
       {
+         this.stockForm.markAllAsTouched();
+      this.updateFormErrors();
         this.isLoading=false;
         return;
       }
 
     this.errors = [];
 
-    this.stockService.updateStock(this.stockId, this.stockForm.value)
+    this.stockService.updateStock(this.stockId, this.stockForm.value).pipe(
+          finalize(()=>{
+            this.isLoading=false;
+            this.cdr.detectChanges();
+          })
+        )
       .subscribe({
         next: () => {
-          this.isLoading=false;
+          
           alert('Stock updated successfully');
           this.router.navigate(['/admin/stock']);
         },
         error: (err) => {
-          this.isLoading=false;
+    
           if (err.status === 422) {
             this.errors = [err.error.message];
           }

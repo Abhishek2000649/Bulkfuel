@@ -76,6 +76,9 @@
             placeholder="e.g. Premium Wireless Headphones"
             class="w-full bg-transparent text-4xl font-bold placeholder:text-slate-300 py-3 input-underline"
           />
+          <p *ngIf="formErrors.name" class="mt-1 text-xs text-red-600 font-semibold ml-1">
+            {{ formErrors.name }}
+          </p>
         </div>
 
         <!-- Image Upload (Static) -->
@@ -110,6 +113,9 @@
               placeholder="0.00"
               class="w-full bg-transparent text-xl font-semibold py-3 input-underline"
             />
+            <p *ngIf="formErrors.price" class="mt-1 text-xs text-red-600 font-semibold ml-1">
+            {{ formErrors.price }}
+          </p>
           </div>
 
           <div class="space-y-2">
@@ -122,6 +128,9 @@
               placeholder="100"
               class="w-full bg-transparent text-xl font-semibold py-3 input-underline"
             />
+             <p *ngIf="formErrors.stock" class="mt-1 text-xs text-red-600 font-semibold ml-1">
+            {{ formErrors.stock }}
+          </p>
           </div>
         </div>
 
@@ -137,6 +146,9 @@
       {{ c.name }}
     </option>
           </select>
+          <p *ngIf="formErrors.category_id" class="mt-1 text-xs text-red-600 font-semibold ml-1">
+            {{ formErrors.category_id }}
+          </p>
         </div>
 
         <!-- Description -->
@@ -156,6 +168,9 @@
             placeholder="Describe your product's unique value..."
             class="w-full bg-transparent text-lg leading-relaxed py-3 input-underline resize-none min-h-[160px]">
           </textarea>
+          <p *ngIf="formErrors.description" class="mt-1 text-xs text-red-600 font-semibold ml-1">
+            {{ formErrors.description }}
+          </p>
         </div>
 
         <!-- Submit -->

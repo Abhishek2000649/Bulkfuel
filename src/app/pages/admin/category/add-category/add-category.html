@@ -71,10 +71,10 @@
 
             <!-- ERROR -->
             <p
-              class="mt-2 text-sm text-red-600"
-              *ngIf="categoryForm.get('name')?.touched && categoryForm.get('name')?.invalid"
+              class="mt-1 text-xs text-red-600 font-semibold ml-1"
+              *ngIf="formErrors.name"
             >
-              Category name is required
+              {{formErrors.name}}
             </p>
           </div>
 
@@ -93,7 +93,6 @@
           <div class="flex items-center gap-8">
             <button
               type="submit"
-              [disabled]="categoryForm.invalid"
               class="px-20 py-4 rounded-full font-semibold shadow-xl transition bg-[#7f1d1d] text-white hover:bg-[#991b1b] hover:-translate-y-1 disabled:opacity-40 disabled:cursor-not-allowed"
             >
               Add Category

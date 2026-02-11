@@ -93,6 +93,9 @@
                   {{ w.name }}
                 </option>
               </select>
+              <p *ngIf="formErrors.warehouse_id" class="mt-1 text-xs text-red-600 font-semibold ml-1">
+            {{ formErrors.warehouse_id }}
+          </p>
             </div>
 
             <!-- Product -->
@@ -110,6 +113,9 @@
                   {{ p.name }}
                 </option>
               </select>
+              <p *ngIf="formErrors.product_id" class="mt-1 text-xs text-red-600 font-semibold ml-1">
+            {{ formErrors.product_id }}
+          </p>
             </div>
 
             <!-- Quantity -->
@@ -124,6 +130,9 @@
                        text-3xl font-black outline-none text-red-900
                        focus:bg-white focus:border-red-800
                        border-2 border-transparent transition"/>
+                       <p *ngIf="formErrors.stock_quantity" class="mt-1 text-xs text-red-600 font-semibold ml-1">
+            {{ formErrors.stock_quantity }}
+          </p>
             </div>
 
             <!-- Button -->

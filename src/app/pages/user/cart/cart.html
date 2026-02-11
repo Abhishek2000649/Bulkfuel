@@ -81,7 +81,7 @@
         My Cart <span class="text-red-800">({{ cartItems.length }})</span>
       </h2>
 
-      <label class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg border shadow-sm">
+      <label *ngIf="cartItems.length > 0" class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg border shadow-sm">
         <span class="text-xs font-bold text-gray-600 uppercase">
           Select All
         </span>
@@ -101,6 +101,12 @@
     >
       Your cart is empty
     </p>
+    <p
+    
+    class="text-center text-red-500 font-semibold py-2">
+      {{checkoutError}}
+    </p>
+    
 
     <!-- ================= CART ITEMS ================= -->
     <div

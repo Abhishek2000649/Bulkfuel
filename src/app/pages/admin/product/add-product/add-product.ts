@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Product } from '../../../../core/services/admin/product/product';
 import { Router, RouterLink, RouterModule } from '@angular/router';
 import { Spinner } from '../../../../shared/spinner/spinner';
-
+type ProductFormFields = 'name' | 'price' | 'stock' | 'category_id' | 'description';
 @Component({
   selector: 'app-add-product',
   standalone: true,
@@ -18,15 +18,46 @@ export class AddProduct implements OnInit {
   categories: any[] = [];
   errors: string[] = [];
   isLoading:boolean=false;
+  formErrors: Record<ProductFormFields, string> = {
+    name: '',
+    price: '',
+    stock: '',
+    category_id: '',
+    description: '',
+  };
+  validationMessages: Record<ProductFormFields, any> = {
+    name: {
+      required: 'Enter name',
+    },
+    price: {
+      required: 'Enter price',
+      pattern: 'Enter valid Price',
+    },
+    stock: {
+      required: 'Enter stock',
+      pattern: 'Enter valid quantity',
+    },
+    category_id: {
+      required: 'Select any category',
+    },
+    description: {
+      required: ' Enter Description',
+    }
+  };
   constructor(
     private fb: FormBuilder,
     private adminService: Product,
     private router: Router,
     private cdr: ChangeDetectorRef,
-  ) {}
+  ) {
+    this.createForm();
+    this.productForm.valueChanges.subscribe(() => {
+      this.updateFormErrors();
+    });
+  }
 
   ngOnInit(): void {
-    this.createForm();
+    
     this.loadCategories();
   }
 
@@ -34,10 +65,28 @@ export class AddProduct implements OnInit {
   createForm() {
     this.productForm = this.fb.group({
       name: ['', Validators.required],
-      price: [0, [Validators.required, Validators.min(0)]],
-      stock: [0, [Validators.required, Validators.min(0)]],
+      price: ['', [Validators.required, Validators.min(0), Validators.pattern(/^[0-9]+$/),]],
+      stock: ['', [Validators.required, Validators.min(0), Validators.pattern(/^[0-9]+$/)]],
       category_id: ['', Validators.required],
-      description: [''],
+      description: ['', Validators.required],
+    });
+  }
+
+  updateFormErrors(): void {
+    (Object.keys(this.formErrors) as ProductFormFields[]).forEach((field) => {
+      const control = this.productForm.get(field);
+      this.formErrors[field] = '';
+
+      if (control && control.invalid && (control.dirty || control.touched)) {
+        const messages = this.validationMessages[field];
+
+        if (control.errors) {
+          for (const errorKey of Object.keys(control.errors)) {
+            this.formErrors[field] = messages[errorKey];
+            break; 
+          }
+        }
+      }
     });
   }
 
@@ -67,6 +116,7 @@ export class AddProduct implements OnInit {
     this.isLoading=true;
     if (this.productForm.invalid) {
       this.productForm.markAllAsTouched();
+      this.updateFormErrors();
       this.isLoading=false;
       return;
     }

@@ -112,12 +112,8 @@
       <!-- ================= LEFT COLUMN ================= -->
       <div class="lg:col-span-7 flex flex-col">
 
-        <form
-          #checkoutForm="ngForm"
-          (ngSubmit)="placeOrder()"
-          novalidate
-          class="space-y-4 flex flex-col"
-        >
+        <form [formGroup]="checkoutForm" (ngSubmit)="placeOrder()">
+
 
           <!-- DELIVERY DETAILS -->
           <section class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
@@ -136,36 +132,48 @@
                   Street Address
                 </label>
                 <textarea
-                  name="address"
-                  [(ngModel)]="form.address"
-                  required
+                   formControlName="address"
+                  
                   class="w-full mt-1 bg-slate-50 border border-gray-100 rounded-xl p-2.5 outline-none min-h-[65px]"
                   placeholder="H.No, Street, Landmark..."
                 ></textarea>
+                <p *ngIf="formErrors.address" class="mt-1 text-xs text-red-600 font-semibold ml-1">
+            {{ formErrors.address}}
+          </p>
               </div>
 
               <div class="grid md:grid-cols-3 gap-3">
+                <div>
                 <input
-                  name="city"
-                  [(ngModel)]="form.city"
-                  required
+                 formControlName="city"
+                  
                   class="bg-slate-50 border border-gray-100 rounded-xl p-2.5 outline-none"
                   placeholder="City"
                 />
+                <p *ngIf="formErrors.city" class="mt-1 text-xs text-red-600 font-semibold ml-1">
+            {{ formErrors.city}}
+          </p>
+          </div>
+          <div>
                 <input
-                  name="state"
-                  [(ngModel)]="form.state"
-                  required
+                  formControlName="state"
                   class="bg-slate-50 border border-gray-100 rounded-xl p-2.5 outline-none"
                   placeholder="State"
                 />
+                <p *ngIf="formErrors.state" class="mt-1 text-xs text-red-600 font-semibold ml-1">
+            {{ formErrors.state}}
+          </p>
+          </div>
+          <div>
                 <input
-                  name="pincode"
-                  [(ngModel)]="form.pincode"
-                  required
+                  formControlName="pincode"
                   class="bg-slate-50 border border-gray-100 rounded-xl p-2.5 outline-none"
                   placeholder="Pincode"
                 />
+                <p *ngIf="formErrors.pincode" class="mt-1 text-xs text-red-600 font-semibold ml-1">
+            {{ formErrors.pincode}}
+          </p>
+          </div>
               </div>
             </div>
           </section>
@@ -186,19 +194,19 @@
               <!-- ONLINE -->
               <label
                 class="flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer"
-                [class.border-red-800]="form.payment_method === 'ONLINE'"
-                [class.bg-red-50/30]="form.payment_method === 'ONLINE'"
+                [class.border-red-800]="checkoutForm.get('payment_method')?.value === 'ONLINE'"
+                [class.bg-red-50/30]="checkoutForm.get('payment_method')?.value === 'ONLINE'"
               >
                 <input
                   type="radio"
                   name="payment_method"
                   value="ONLINE"
-                  [(ngModel)]="form.payment_method"
+                  formControlName="payment_method"
                   class="hidden"
                 />
                 <div class="w-4 h-4 rounded-full border-2 border-red-800 flex items-center justify-center">
                   <div
-                    *ngIf="form.payment_method === 'ONLINE'"
+                     *ngIf="checkoutForm.get('payment_method')?.value === 'ONLINE'"
                     class="w-2 h-2 bg-red-800 rounded-full"
                   ></div>
                 </div>
@@ -212,19 +220,19 @@
               <!-- COD -->
               <label
                 class="flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer"
-                [class.border-red-800]="form.payment_method === 'COD'"
-                [class.bg-red-50/30]="form.payment_method === 'COD'"
+                [class.border-red-800]="checkoutForm.get('payment_method')?.value === 'COD'"
+                [class.bg-red-50/30]="checkoutForm.get('payment_method')?.value === 'COD'"
               >
                 <input
                   type="radio"
                   name="payment_method"
                   value="COD"
-                  [(ngModel)]="form.payment_method"
+                  formControlName="payment_method"
                   class="hidden"
                 />
                 <div class="w-4 h-4 rounded-full border-2 border-gray-300 flex items-center justify-center">
                   <div
-                    *ngIf="form.payment_method === 'COD'"
+                     *ngIf="checkoutForm.get('payment_method')?.value === 'COD'"
                     class="w-2 h-2 bg-red-800 rounded-full"
                   ></div>
                 </div>

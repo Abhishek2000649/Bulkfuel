@@ -3,9 +3,7 @@ import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-spinner',
-  host: {
-    'data-component': 'global-loader'
-  },
+  
   standalone: true,
   imports: [CommonModule],
   templateUrl: './spinner.html',

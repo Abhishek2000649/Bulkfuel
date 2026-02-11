@@ -1,15 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CartService } from '../../../core/services/user/cart/cart-service';
 import { CheckoutService } from '../../../core/services/user/checkoutService/checkout-service';
 import { Spinner } from '../../../shared/spinner/spinner';
-
+type checkoutFormFields =  'address' | 'city' | 'state' | 'pincode';
 @Component({
   selector: 'app-checkout',
   standalone: true,
-  imports: [CommonModule, FormsModule, Spinner],
+  imports: [CommonModule, ReactiveFormsModule, Spinner],
   templateUrl: './checkout.html',
   styleUrl: './checkout.css',
 })
@@ -20,20 +20,68 @@ export class Checkout implements OnInit {
   totalAmount = 0;
   user: any = null;
   isLoading:boolean=false;
-  form = {
+  checkoutForm!: FormGroup;
+formErrors: Record<checkoutFormFields, string> = {
+    
     address: '',
     city: '',
     state: '',
     pincode: '',
-    payment_method: 'COD',
   };
-
+  validationMessages: Record<checkoutFormFields, any> = {
+    address: {
+      required: 'Enter address', 
+    },
+    city:{
+        required: 'Enter City',
+        pattern: 'Enter valid city name'
+    },
+    state:{
+        required: 'Enter state',
+        pattern: 'Enter valid state name'
+    },
+    pincode:{
+        required: 'Enter pincode',
+        pattern: 'Enter valid pincode'
+    }
+  };
   constructor(
+     private fb: FormBuilder,
     private checkoutService: CheckoutService,
     private cartService: CartService,
     private router: Router,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) {
+    this.checkoutForm = this.fb.group({
+  address: ['', Validators.required],
+  city: ['', [Validators.required, Validators.pattern(/^[A-Za-z\s]+$/)]],
+  state: ['', [Validators.required, Validators.pattern(/^[A-Za-z\s]+$/)]],
+  pincode: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]],
+  payment_method: ['COD', Validators.required],
+});
+ this.checkoutForm.valueChanges.subscribe(() => {
+      this.updateFormErrors();
+    });
+
+  }
+
+    updateFormErrors(): void {
+    (Object.keys(this.formErrors) as checkoutFormFields[]).forEach((field) => {
+      const control = this.checkoutForm.get(field);
+      this.formErrors[field] = '';
+
+      if (control && control.invalid && (control.dirty || control.touched)) {
+        const messages = this.validationMessages[field];
+
+        if (control.errors) {
+          for (const errorKey of Object.keys(control.errors)) {
+            this.formErrors[field] = messages[errorKey];
+            break; 
+          }
+        }
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.isLoading=true;
@@ -52,10 +100,13 @@ export class Checkout implements OnInit {
         this.user = res.user;
 
         if (this.user?.address) {
-          this.form.address = this.user.address.address;
-          this.form.city = this.user.address.city;
-          this.form.state = this.user.address.state;
-          this.form.pincode = this.user.address.pincode;
+          this.checkoutForm.patchValue({
+  address: this.user.address.address,
+  city: this.user.address.city,
+  state: this.user.address.state,
+  pincode: this.user.address.pincode,
+});
+
           this.isLoading=false;
         }
         this.isLoading=false;
@@ -70,8 +121,14 @@ export class Checkout implements OnInit {
 
   placeOrder(): void {
     this.isLoading=true;
+    if (this.checkoutForm.invalid) {
+  this.checkoutForm.markAllAsTouched();
+  this.updateFormErrors();
+  this.isLoading = false;
+  return;
+}
     const payload = {
-      ...this.form,
+      ...this.checkoutForm.value,
       cart_ids: this.cartIds,
     };
 
@@ -80,7 +137,6 @@ export class Checkout implements OnInit {
         this.checkoutService.clear();
         this.isLoading=false;
         alert('Order placed successfully');
-        
         this.router.navigate(['/user/orders']);
       },
     });

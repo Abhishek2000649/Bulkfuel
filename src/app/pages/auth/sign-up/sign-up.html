@@ -56,6 +56,9 @@
               class="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl
                      focus:bg-white focus:ring-2 focus:ring-amber-400/40
                      outline-none font-medium text-sm text-gray-900 shadow-sm"/>
+            <p *ngIf="formErrors.name" class="mt-1 text-xs text-red-600 font-semibold ml-1">
+              {{formErrors.name}}
+            </p>
           </div>
 
           <!-- Email -->
@@ -71,6 +74,9 @@
               class="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl
                      focus:bg-white focus:ring-2 focus:ring-amber-400/40
                      outline-none font-medium text-sm text-gray-900 shadow-sm"/>
+                     <p *ngIf="formErrors.email" class="mt-1 text-xs text-red-600 font-semibold ml-1">
+              {{formErrors.email}}
+            </p>
           </div>
 
           <!-- Password -->
@@ -85,6 +91,9 @@
               class="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl
                      focus:bg-white focus:ring-2 focus:ring-amber-400/40
                      outline-none font-medium text-sm text-gray-900 shadow-sm"/>
+                     <p *ngIf="formErrors.password" class="mt-1 text-xs text-red-600 font-semibold ml-1">
+              {{formErrors.password}}
+            </p>
           </div>
 
         </div>
@@ -109,7 +118,6 @@
         <!-- Submit -->
         <button
           type="submit"
-          [disabled]="registerForm.invalid"
           class="w-full py-4 bg-[#8B0000] text-white font-black uppercase
                  tracking-[0.2em] text-xs rounded-2xl
                  hover:bg-[#600000] hover:scale-[1.01]

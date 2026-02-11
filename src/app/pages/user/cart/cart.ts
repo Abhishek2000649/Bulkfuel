@@ -37,7 +37,6 @@ export class Cart implements OnInit {
   // ================= LOAD CART =================
   loadCart() {
     this.isLoading = true;
-
     this.cartService.getCart()
       .pipe(
         finalize(() => {
@@ -62,12 +61,14 @@ export class Cart implements OnInit {
 
   // ================= SELECT ALL =================
   toggleSelectAll() {
+    this.checkoutError='';
     this.cartItems.forEach(item => item.selected = this.selectAll);
     this.calculateTotal();
   }
 
   // ================= TOTAL =================
   calculateTotal() {
+    this.checkoutError='';
     this.selectedTotal = this.cartItems
       .filter(item => item.selected)
       .reduce(
@@ -78,6 +79,7 @@ export class Cart implements OnInit {
 
   // ================= STOCK WARNINGS =================
   updateStockWarnings() {
+    this.checkoutError='';
     this.stockWarnings = {};
 
     this.cartItems.forEach(item => {
@@ -90,12 +92,17 @@ export class Cart implements OnInit {
 
   // ================= INCREASE =================
   increase(item: any) {
+    this.checkoutError='';
     if (item.quantity >= item.product.totalStock) return;
 
     this.isLoading = true;
 
     this.cartService.updateCart(item.product_id, 'increase')
-      .pipe(finalize(() => this.isLoading = false))
+      .pipe(finalize(() => 
+        {
+          this.isLoading = false;
+          this.cdr.detectChanges();
+  }))
       .subscribe(() => {
         item.quantity++;
         this.updateStockWarnings();
@@ -106,9 +113,13 @@ export class Cart implements OnInit {
   // ================= DECREASE =================
   decrease(item: any) {
     this.isLoading = true;
-
+    this.checkoutError='';
     this.cartService.updateCart(item.product_id, 'decrease')
-      .pipe(finalize(() => this.isLoading = false))
+      .pipe(finalize(() => 
+        {
+          this.isLoading = false;
+          this.cdr.detectChanges();
+  }))
       .subscribe(() => {
         if (item.quantity > 1) {
           item.quantity--;
@@ -123,9 +134,12 @@ export class Cart implements OnInit {
   // ================= REMOVE =================
   remove(item: any) {
     this.isLoading = true;
-
+    this.checkoutError='';
     this.cartService.removeItem(item.id)
-      .pipe(finalize(() => this.isLoading = false))
+      .pipe(finalize(() => {
+        this.isLoading = false;
+        this.cdr.detectChanges();
+  }))
       .subscribe(() => {
         this.cartItems = this.cartItems.filter(i => i !== item);
         this.calculateTotal();
