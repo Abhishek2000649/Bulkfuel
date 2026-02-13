@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { Spinner } from '../../../../shared/spinner/spinner';
 import { pattern, required } from '@angular/forms/signals';
 import { finalize } from 'rxjs';
+import Swal from 'sweetalert2';
 type UserManagementFormFields = 'name' | 'email' | 'role' | 'password';
 @Component({
   selector: 'app-add-user-management',
@@ -76,32 +77,63 @@ export class AddUserManagement {
     });
   }
   onSubmit() {
-    this.isLoading=true;
-    if (this.userForm.invalid) {
-       this.userForm.markAllAsTouched();
-      this.updateFormErrors();
-      this.isLoading=false;
-      return;
-    }
 
-    this.errors = [];
+  this.isLoading = true;
 
-    this.adminService.addUser(this.userForm.value).pipe(
-      finalize(()=>{
-        this.isLoading= false;
+  if (this.userForm.invalid) {
+    this.userForm.markAllAsTouched();
+    this.updateFormErrors();
+    this.isLoading = false;
+    return;
+  }
+
+  this.errors = [];
+
+  this.adminService.addUser(this.userForm.value)
+    .pipe(
+      finalize(() => {
+        this.isLoading = false;
         this.cdr.detectChanges();
       })
     )
     .subscribe({
-      next: () => {
-        alert('User added successfully');
-        this.router.navigate(['/admin/userManagement']);
+
+      // ✅ SUCCESS
+      next: (res: any) => {
+
+        Swal.fire({
+          title: res?.message || 'User added successfully',
+          icon: 'success',
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#d4af37',
+          background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+          color: '#ffffff',
+          iconColor: '#22c55e'
+        }).then(() => {
+          this.router.navigate(['/admin/userManagement']);
+        });
+
       },
-      error: (err) => {
-       console.log(err);
-       
-      },
+
+      // ❌ ERROR
+      error: (err: any) => {
+
+        Swal.fire({
+          title: err.error?.message || 'Failed to add user',
+          icon: 'error',
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#d4af37',
+          background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+          color: '#ffffff',
+          iconColor: '#ef4444'
+        });
+
+        console.log(err);
+      }
+
     });
-  }
+
+}
+
 
 }

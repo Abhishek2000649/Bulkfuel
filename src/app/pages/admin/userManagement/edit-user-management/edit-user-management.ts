@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { Spinner } from '../../../../shared/spinner/spinner';
 import { finalize } from 'rxjs';
 import { required } from '@angular/forms/signals';
+import Swal from 'sweetalert2';
 type UserManagementFormFields = 'name' | 'email' | 'role' | 'password';
 @Component({
   selector: 'app-edit-user-management',
@@ -83,52 +84,97 @@ export class EditUserManagement {
     });
   }
   loadUser() {
-    this.isLoading=true;
-    this.adminService.getUserById(this.userId).subscribe({
-      next: (res) => {
-        this.userForm.patchValue({
-          name: res.name,
-          email: res.email,
-          role: res.role,
-        });
-        this.isLoading=false;
-      },
-      error: (err) => {
-        this.isLoading=false;
-        console.error(err);
-      },
-    });
-  }
+  this.isLoading = true;
 
-  onSubmit() {
-    this.isLoading=true;
-    if (this.userForm.invalid) {
-        this.userForm.markAllAsTouched();
-      this.updateFormErrors();
-      this.isLoading=false;
-      return;
+  this.adminService.getUserById(this.userId).subscribe({
+
+    next: (res: any) => {
+      this.userForm.patchValue({
+        name: res?.data?.name || res.name,
+        email: res?.data?.email || res.email,
+        role: res?.data?.role || res.role,
+      });
+
+      this.isLoading = false;
+    },
+
+    error: (err: any) => {
+
+      this.isLoading = false;
+
+      Swal.fire({
+        title: err.error?.message || 'Failed to load user',
+        icon: 'error',
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true
+      });
+
     }
 
-    this.errors = [];
+  });
+}
 
-    this.adminService.updateUser(this.userId, this.userForm.value).pipe(
-          finalize(()=>{
-            this.isLoading= false;
-            this.cdr.detectChanges();
-          })
-        )
-      .subscribe({
-        next: () => {
-          this.isLoading=false;
-          alert('User updated successfully');
-          this.router.navigate(['/admin/userManagement']);
-        },
-        error: (err) => {
-          this.isLoading=false;
-          console.log(err);
-          
-        },
-      });
+
+ onSubmit() {
+
+  this.isLoading = true;
+
+  // 🔹 Form validation check
+  if (this.userForm.invalid) {
+    this.userForm.markAllAsTouched();
+    this.updateFormErrors();
+    this.isLoading = false;
+    return;
   }
+
+  this.errors = [];
+
+  this.adminService.updateUser(this.userId, this.userForm.value)
+    .pipe(
+      finalize(() => {
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      })
+    )
+    .subscribe({
+
+      // ✅ SUCCESS
+      next: (res: any) => {
+
+        Swal.fire({
+          title: res?.message || 'User updated successfully',
+          icon: 'success',
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#d4af37',
+          background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+          color: '#ffffff',
+          iconColor: '#22c55e'
+        }).then(() => {
+          this.router.navigate(['/admin/userManagement']);
+        });
+
+      },
+
+      // ❌ ERROR
+      error: (err: any) => {
+
+        Swal.fire({
+          title: err.error?.message || 'Something went wrong',
+          icon: 'error',
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#d4af37',
+          background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+          color: '#ffffff',
+          iconColor: '#ef4444'
+        });
+
+        console.error(err);
+      }
+
+    });
+
+}
+
 
 }

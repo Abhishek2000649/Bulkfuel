@@ -6,6 +6,7 @@ import { Router, RouterLink } from '@angular/router';
 import { Spinner } from '../../../../shared/spinner/spinner';
 import { pattern } from '@angular/forms/signals';
 import { finalize } from 'rxjs';
+import Swal from 'sweetalert2';
 type CategoryFormFields = 'name';
 @Component({
   selector: 'app-add-category',
@@ -69,32 +70,63 @@ export class AddCategory {
   }
 
 
-  onSubmit() {
-    this.isLoading=true;
-    if (this.categoryForm.invalid) {
-      this.categoryForm.markAllAsTouched();
-      this.updateFormErrors();
-      this.isLoading=false;
-      return;
-    }
+ onSubmit() {
 
-    this.adminService.addCategory(this.categoryForm.value).pipe(
-      finalize(()=>{
-        this.isLoading=false;
+  this.isLoading = true;
+
+  if (this.categoryForm.invalid) {
+    this.categoryForm.markAllAsTouched();
+    this.updateFormErrors();
+    this.isLoading = false;
+    return;
+  }
+
+  this.adminService.addCategory(this.categoryForm.value)
+    .pipe(
+      finalize(() => {
+        this.isLoading = false;
         this.cdr.detectChanges();
       })
-    ).subscribe({
-      next: (res) => {
-        this.isLoading=false;
-        alert('Category added successfully');
-        this.categoryForm.reset();
-        this.router.navigate(['/admin/category/'])
+    )
+    .subscribe({
+
+      // ✅ SUCCESS
+      next: (res: any) => {
+
+        Swal.fire({
+          title: res?.message || 'Category added successfully',
+          icon: 'success',
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#d4af37',
+          background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+          color: '#ffffff',
+          iconColor: '#22c55e'
+        }).then(() => {
+          this.categoryForm.reset();
+          this.router.navigate(['/admin/category/']);
+        });
+
       },
-      error: (err) => {
-        this.isLoading=false;
+
+      // ❌ ERROR
+      error: (err: any) => {
+
+        Swal.fire({
+          title: err.error?.message || 'Failed to add category',
+          icon: 'error',
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#d4af37',
+          background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+          color: '#ffffff',
+          iconColor: '#ef4444'
+        });
+
         console.error(err);
-      },
+      }
+
     });
-  }
+
+}
+
 
 }

@@ -14,16 +14,29 @@ import { CommonModule } from '@angular/common';
 export class App {
   constructor(private auth: Auth, private router: Router) {}
   ngOnInit() {
-    if (localStorage.getItem('token')) {
-      this.auth.me().subscribe({
-        next: () => {},
-        error: (err) => {
-          console.log(err);
+
+  const token = localStorage.getItem('token');
+
+  if (token) {
+
+    this.auth.me().subscribe({
+
+      next: () => {
+      },
+
+      error: (err) => {
+        if (err.status === 401 || err.status === 0) {
           localStorage.clear();
           this.router.navigate(['/login']);
-        },
-      });
-    }
+        }
+
+      }
+
+    });
+
   }
+
+}
+
   protected readonly title = signal('Bulk-fuel-web');
 }
