@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Auth } from '../../core/services/Auth/authservice/auth';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-header',
@@ -55,19 +56,80 @@ export class Header {
   }
 
   // ================= LOGOUT =================
-  logout(): void {
-    this.closeAll();
+ logout(): void {
 
-    this.auth.logout().subscribe({
-      next: (res: any) => {
-        if (res?.status) {
-          localStorage.removeItem('token');
+  this.closeAll();
+
+  this.auth.logout().subscribe({
+
+    next: (res: any) => {
+
+      if (res?.success || res?.status) {
+
+        Swal.fire({
+          title: res?.message || "Logout successful",
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 1500,
+          timerProgressBar: true,
+          background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+          color: '#ffffff',
+          iconColor: '#22c55e'
+        });
+
+        localStorage.removeItem('token');
+
+        setTimeout(() => {
           this.router.navigate(['/']);
-        }
-      },
-      error: (err: any) => {
-        console.error('Logout failed', err);
+        }, 1500);
+
+      } else {
+
+        // अगर backend success false दे दे
+        Swal.fire({
+          title: res?.message || 'Logout failed',
+          icon: 'error'
+        });
+
       }
-    });
-  }
+
+    },
+
+    error: (err: any) => {
+
+      let title = 'Error';
+      
+      // 🔴 Backend not running
+      if (err.status === 0) {
+        title = 'Server not running';
+      }
+
+      // 🔴 Unauthorized (Token expired)
+      else if (err.status === 401) {
+        title = err.error?.message || 'Session expired. Please login again.';
+        localStorage.removeItem('token');
+        this.router.navigate(['/']);
+      }
+
+      // 🔴 Other backend errors
+      else {
+        title = err.error?.message || 'Something went wrong';
+      }
+
+      Swal.fire({
+        title: title,
+        icon: 'error',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#d4af37',
+        background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+        color: '#ffffff',
+        iconColor: '#ef4444'
+      });
+
+      console.error('Logout failed', err);
+    }
+
+  });
+}
+
 }

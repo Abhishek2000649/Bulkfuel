@@ -8,8 +8,10 @@ header {
   align-items: center;
   justify-content: space-between;
 
-  position: relative;
+  position: fixed;
   z-index: 1000;
+  top: 0;
+  left: 0;
 }
 
 /* Logo / Title */

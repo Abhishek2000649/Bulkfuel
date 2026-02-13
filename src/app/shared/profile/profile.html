@@ -120,30 +120,30 @@
             </button>
           </div>
             <form [formGroup]="basicForm" (ngSubmit)="updateBasic()" class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div class="sm:col-span-2">
-              <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">Full Name</label>
-              <input formControlName="name" name="name" class="w-full px-4 py-3 rounded-xl border border-gray-300" >
+            <div class="sm:col-span-2 group">
+              <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1 group-focus-within:text-red-800">Full Name</label>
+              <input formControlName="name" name="name" class="w-full px-4 py-3 rounded-xl border border-gray-300  focus:border-red-800 focus:border-2  focus:outline-none focus:ring-0" >
               <p *ngIf="formBasicErrors.name" class="mt-1 text-xs text-red-600 font-semibold ml-1">
             {{ formBasicErrors.name }}
           </p>
             </div>
 
-            <div>
-              <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">Email</label>
-              <input formControlName="email" name="email"  class="w-full px-4 py-3 rounded-xl border border-gray-300" >
+            <div class="group">
+              <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1 group-focus-within:text-red-800">Email</label>
+              <input formControlName="email" name="email"  class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-red-800 focus:border-2  focus:outline-none focus:ring-0" >
               <p *ngIf="formBasicErrors.email" class="mt-1 text-xs text-red-600 font-semibold ml-1">
             {{ formBasicErrors.email }}
           </p>
             </div>
 
-            <div>
-              <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">Phone</label>
-              <input class="w-full px-4 py-3 rounded-xl border border-gray-300" >
+            <div class="group">
+              <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1 group-focus-within:text-red-800">Phone</label>
+              <input class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-red-800 focus:border-2  focus:outline-none focus:ring-0" >
             </div>
 
-            <div class="sm:col-span-2">
-              <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">Bio</label>
-              <textarea rows="4" class="w-full px-4 py-3 rounded-xl border border-gray-300 resize-none">
+            <div class="sm:col-span-2 group">
+              <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1 group-focus-within:text-red-800">Bio</label>
+              <textarea rows="4" class="w-full px-4 py-3 rounded-xl border border-gray-300 resize-none focus:border-red-800 focus:border-2  focus:outline-none focus:ring-0">
                   
               </textarea>
             </div>
@@ -168,9 +168,9 @@
 
         <div class="p-10">
           <form [formGroup]="addressForm" (ngSubmit)="updateAddress()" class="grid grid-cols-1 sm:grid-cols-6 gap-6">
-            <div class="sm:col-span-6">
-              <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">Street</label>
-              <textarea formControlName="address" name="address" class="w-full px-4 py-3 rounded-xl border border-gray-300"
+            <div class="sm:col-span-6 group">
+              <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1 group-focus-within:text-red-800">Street</label>
+              <textarea formControlName="address" name="address" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-red-800 focus:border-2  focus:outline-none focus:ring-0"
                      value="123 Innovation Drive, Suite 400"></textarea>
                      <p *ngIf="formAddressErrors.address" class="mt-1 text-xs text-red-600 font-semibold ml-1">
             {{ formAddressErrors.address }}
@@ -178,25 +178,25 @@
 
             </div>
 
-            <div class="sm:col-span-2">
-              <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">City</label>
-              <input formControlName="city" name="city"  class="w-full px-4 py-3 rounded-xl border border-gray-300" >
+            <div class="sm:col-span-2 group">
+              <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1 group-focus-within:text-red-800">City</label>
+              <input formControlName="city" name="city"  class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-red-800 focus:border-2  focus:outline-none focus:ring-0" >
               <p *ngIf="formAddressErrors.city" class="mt-1 text-xs text-red-600 font-semibold ml-1">
             {{ formAddressErrors.city }}
           </p>
             </div>
 
-            <div class="sm:col-span-2">
-              <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">State</label>
-              <input formControlName="state" name="state" class="w-full px-4 py-3 rounded-xl border border-gray-300" >
+            <div class="sm:col-span-2 group">
+              <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1 group-focus-within:text-red-800">State</label>
+              <input formControlName="state" name="state" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-red-800 focus:border-2  focus:outline-none focus:ring-0" >
               <p *ngIf="formAddressErrors.state" class="mt-1 text-xs text-red-600 font-semibold ml-1">
             {{ formAddressErrors.state }}
           </p>
             </div>
 
-            <div class="sm:col-span-2">
-              <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">ZIP</label>
-              <input formControlName="pincode" name="pincode" class="w-full px-4 py-3 rounded-xl border border-gray-300" >
+            <div class="sm:col-span-2 group">
+              <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1 group-focus-within:text-red-800">ZIP</label>
+              <input formControlName="pincode" name="pincode" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-red-800 focus:border-2  focus:outline-none focus:ring-0" >
               <p *ngIf="formAddressErrors.pincode" class="mt-1 text-xs text-red-600 font-semibold ml-1">
             {{ formAddressErrors.pincode }}
           </p>
@@ -222,28 +222,28 @@
 
         <div class="p-10 max-w-xl">
           <form [formGroup]="passwordForm" (ngSubmit)="updatePassword()" class="space-y-6">
-            <div>
-              <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">Current Password</label>
+            <div class="group">
+              <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1 group-focus-within:text-red-800">Current Password</label>
               <input formControlName="current_password"
-           name="current_password"  type="password" class="w-full px-4 py-3 rounded-xl border border-gray-300">
+           name="current_password"  type="password" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-red-800 focus:border-2  focus:outline-none focus:ring-0">
            <p *ngIf="formPasswordErrors.current_password" class="mt-1 text-xs text-red-600 font-semibold ml-1">
             {{ formPasswordErrors.current_password }}
           </p>
             </div>
 
-            <div>
-              <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">New Password</label>
+            <div class="group">
+              <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1 group-focus-within:text-red-800">New Password</label>
               <input formControlName="password"
-           name="password" type="password" class="w-full px-4 py-3 rounded-xl border border-gray-300">
+           name="password" type="password" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-red-800 focus:border-2  focus:outline-none focus:ring-0">
            <p *ngIf="formPasswordErrors.password" class="mt-1 text-xs text-red-600 font-semibold ml-1">
             {{ formPasswordErrors.password }}
           </p>
             </div>
 
-            <div>
-              <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1">Confirm Password</label>
+            <div class="group">
+              <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1 group-focus-within:text-red-800">Confirm Password</label>
               <input formControlName="password_confirmation"
-           name="password_confirmation" type="password" class="w-full px-4 py-3 rounded-xl border border-gray-300">
+           name="password_confirmation" type="password" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-red-800 focus:border-2  focus:outline-none focus:ring-0">
            <p *ngIf="formPasswordErrors.password_confirmation" class="mt-1 text-xs text-red-600 font-semibold ml-1">
             {{ formPasswordErrors.password_confirmation }}
           </p>

@@ -19,13 +19,11 @@ export class App {
         next: () => {},
         error: (err) => {
           console.log(err);
-
           localStorage.clear();
           this.router.navigate(['/login']);
         },
       });
     }
   }
-
   protected readonly title = signal('Bulk-fuel-web');
 }

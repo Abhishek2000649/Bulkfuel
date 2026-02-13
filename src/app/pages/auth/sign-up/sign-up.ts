@@ -6,6 +6,7 @@ import { Spinner } from '../../../shared/spinner/spinner';
 import { CommonModule } from '@angular/common';
 import { required } from '@angular/forms/signals';
 import { finalize } from 'rxjs';
+import Swal from 'sweetalert2';
 type SignUpFormFields = 'name' | 'email' | 'password';
 @Component({
   selector: 'app-sign-up',
@@ -88,11 +89,27 @@ export class SignUp {
     ).subscribe({
       next: (res: any) => {
         if (res.status) {
+            Swal.fire({
+                      title: res.message || "Register successfully",
+                      icon: 'success',
+                      confirmButtonText: 'OK',
+                      confirmButtonColor: '#d4af37',   
+                      background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+                      color: '#ffffff',
+                      iconColor: '#22c55e', });
           
           this.router.navigate(['/login']);
         }
       },
       error: (err) => {
+        Swal.fire({
+                  title: err.error.message || "Something went wrong",
+                  icon: 'error',
+                  confirmButtonText: 'OK',
+                  confirmButtonColor: '#d4af37',   
+                  background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+                  color: '#ffffff',
+                  iconColor: '#ef4444', });
         
         console.error(err);
       },

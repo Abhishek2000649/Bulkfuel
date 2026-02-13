@@ -11,6 +11,7 @@ import { finalize, switchMap } from 'rxjs';
 
 import { Auth } from '../../../core/services/Auth/authservice/auth';
 import { Spinner } from '../../../shared/spinner/spinner';
+import Swal from 'sweetalert2';
 
 type LoginFormFields = 'email' | 'password';
 
@@ -87,48 +88,58 @@ export class Login {
     }
 
     this.auth
-      .login(this.loginForm.value)
-      .pipe(
-        switchMap((res) => {
-          localStorage.setItem('token', res.token);
-          return this.auth.me();
-        }),
-         finalize(() => {
-        this.isLoading = false;
-        console.log("finalize"+ this.isLoading);
-        this.cdr.detectChanges();
-      }),
-      )
-      .subscribe({
-        next: (res) => {
-          console.log("200"+ this.isLoading);
-          const user = res?.user;
+  .login(this.loginForm.value)
+  .pipe(
+    switchMap((res: any) => {
+      localStorage.setItem('token', res.data.token);
+      localStorage.setItem('user', JSON.stringify(res.data.user));
+      return this.auth.me();
+    }),
+    finalize(() => {
+      this.isLoading = false;
+      this.cdr.detectChanges();
+    })
+  )
+  .subscribe({
+    next: (res) => {
+      const user = res?.user;
+        Swal.fire({
+          title: res.message || "Login successfull",
+          icon: 'success',
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#d4af37',   
+          background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+          color: '#ffffff',
+          iconColor: '#22c55e', });
 
-          switch (user.role) {
-            case 'ADMIN':
-              this.router.navigate(['/admin']);
-              break;
+      switch (user.role) {
+        case 'ADMIN':
+          this.router.navigate(['/admin']);
+          break;
+        case 'delivery_agent':
+          this.router.navigate(['/delivery/available']);
+          break;
+        case 'USER':
+          this.router.navigate(['/user']);
+          break;
+        default:
+          this.router.navigate(['/login']);
+      }
+    },
+    error: (err) => {
+      Swal.fire({
+      title: err.error?.message || 'Something went wrong',
+      icon: 'error',
+      confirmButtonText: 'OK',
+      confirmButtonColor: '#d4af37',
+      background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+      color: '#ffffff',
+      iconColor: '#ef4444'
+    });
+      this.loginForm.reset();
+      console.log(err);
+    },
+  });
 
-            case 'delivery_agent':
-              this.router.navigate(['/delivery/available']);
-              break;
-
-            case 'USER':
-              this.router.navigate(['/user']);
-              break;
-
-            default:
-              this.router.navigate(['/login']);
-          }
-        },
-        error: (err) => {
-           this.loginForm.reset();
-          console.log("401"+ this.isLoading);
-          console.log('Status code:', err.status);
-          console.log('Message:', err.error?.message);
-          console.log(err);
-          
-        },
-      });
   }
 }
