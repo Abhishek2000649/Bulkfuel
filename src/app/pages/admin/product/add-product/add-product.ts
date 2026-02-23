@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Product } from '../../../../core/services/admin/product/product';
 import { Router, RouterLink, RouterModule } from '@angular/router';
 import { Spinner } from '../../../../shared/spinner/spinner';
+import Swal from 'sweetalert2';
 type ProductFormFields = 'name' | 'price' | 'stock' | 'category_id' | 'description';
 @Component({
   selector: 'app-add-product',
@@ -92,19 +93,30 @@ export class AddProduct implements OnInit {
 
   // 🔹 Load Categories from API
   loadCategories() {
-    this.isLoading=true;
-    this.adminService.getCategories().subscribe({
-      next: (res: any) => {
-        this.categories = res;
-        this.isLoading=false;
-        this.cdr.detectChanges();
-      },
-      error: (err: any) => {
-        this.isLoading=false;
-        console.error('Category Load Error:', err);
-      },
-    });
-  }
+  this.isLoading = true;
+
+  this.adminService.getCategories().subscribe({
+    next: (res: any) => {
+      this.categories = res.data|| 0;
+      this.isLoading = false;
+      this.cdr.detectChanges();
+    },
+    error: (err: any) => {
+      this.isLoading = false;
+      console.error('Category Load Error:', err);
+
+      Swal.fire({
+        title: err?.error?.message || 'Failed to load categories',
+        icon: 'error',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#d4af37',
+        background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+        color: '#ffffff',
+        iconColor: '#ef4444'
+      });
+    },
+  });
+}
 
   // 🔹 Used in HTML Preview
   getCategoryName(id: any): string {
@@ -112,34 +124,55 @@ export class AddProduct implements OnInit {
   }
 
   // 🔹 Submit Product
-  onSubmit() {
-    this.isLoading=true;
-    if (this.productForm.invalid) {
-      this.productForm.markAllAsTouched();
-      this.updateFormErrors();
-      this.isLoading=false;
-      return;
-    }
+ onSubmit() {
+  this.isLoading = true;
 
-    this.errors = [];
-
-    const payload = this.productForm.value;
-
-    this.adminService.addProduct(payload).subscribe({
-      next: () => {
-        this.isLoading=false;
-        alert('✅ Product added successfully');
-        this.router.navigate(['/admin/product']);
-      },
-      error: (err: any) => {
-        this.isLoading=false;
-        console.error(err);
-
-        // Optional: backend validation errors
-        if (err?.error?.errors) {
-          this.errors = Object.values(err.error.errors).flat() as string[];
-        }
-      },
-    });
+  if (this.productForm.invalid) {
+    this.productForm.markAllAsTouched();
+    this.updateFormErrors();
+    this.isLoading = false;
+    return;
   }
+
+  this.errors = [];
+  const payload = this.productForm.value;
+
+  this.adminService.addProduct(payload).subscribe({
+    next: (res: any) => {
+      this.isLoading = false;
+
+      Swal.fire({
+        title: res?.message || 'Product added successfully',
+        icon: 'success',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#d4af37',
+        background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+        color: '#ffffff',
+        iconColor: '#22c55e'
+      }).then(() => {
+        this.router.navigate(['/admin/product']);
+      });
+    },
+
+    error: (err: any) => {
+      this.isLoading = false;
+      console.error(err);
+
+      // Backend validation errors
+      if (err?.error?.errors) {
+        this.errors = Object.values(err.error.errors).flat() as string[];
+      }
+
+      Swal.fire({
+        title: err?.error?.message || 'Failed to add product',
+        icon: 'error',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#d4af37',
+        background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+        color: '#ffffff',
+        iconColor: '#ef4444'
+      });
+    },
+  });
+}
 }

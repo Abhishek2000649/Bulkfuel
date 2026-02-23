@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Product } from '../../../../core/services/admin/product/product';
 import { Spinner } from '../../../../shared/spinner/spinner';
 import { finalize } from 'rxjs';
+import Swal from 'sweetalert2';
 type ProductFormFields = 'name' | 'price' | 'stock' | 'category_id' | 'description';
 @Component({
   selector: 'app-edit-product',
@@ -114,72 +115,112 @@ export class EditProduct {
     });
   }
 
-  loadCategories() {
-    this.isLoading=true;
-    this.adminService.getCategories().subscribe({
-      next: (res) => {this.categories = res
-        this.isLoading=false;
-        this.cdr.detectChanges();
-      },
-      error: (err) => 
-        {
-          this.isLoading=false;
-          console.error(err);
-        }
-    });
-  }
+loadCategories() {
+  this.isLoading = true;
+
+  this.adminService.getCategories().subscribe({
+    next: (res: any) => {
+      this.categories = res.data || 0;
+      this.isLoading = false;
+      this.cdr.detectChanges();
+    },
+    error: (err) => {
+      this.isLoading = false;
+      console.error(err);
+
+      Swal.fire({
+        title: err.error?.message || 'Failed to load categories',
+        icon: 'error',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#d4af37',
+        background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+        color: '#ffffff',
+        iconColor: '#ef4444'
+      });
+    }
+  });
+}
 
   loadProduct() {
-    this.isLoading=true;
-    this.adminService.getProductById(this.productId).subscribe({
-      next: (res) => {
-        this.productForm.patchValue({
-          name: res.name,
-          price: res.price,
-          stock: res.stock,
-          category_id: res.category_id,
-          description: res.description,
-        });
-        this.isLoading=false;
-      },
-      error: (err) => 
-        {
-          this.isLoading=false;
-          console.error(err);
-        }
-    });
+  this.isLoading = true;
+
+  this.adminService.getProductById(this.productId).subscribe({
+    next: (res: any) => {
+      this.productForm.patchValue({
+        name: res.data.product.name,
+        price: res.data.product.price,
+        stock: res.data.product.stock,
+        category_id: res.data.product.category_id,
+        description: res.data.product.description,
+      });
+      this.isLoading = false;
+    },
+    error: (err) => {
+      this.isLoading = false;
+      console.error(err);
+
+      Swal.fire({
+        title: err.error?.message || 'Failed to load product',
+        icon: 'error',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#d4af37',
+        background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+        color: '#ffffff',
+        iconColor: '#ef4444'
+      });
+    }
+  });
+}
+
+onSubmit() {
+  this.isLoading = true;
+
+  if (this.productForm.invalid) {
+    this.isLoading = false;
+    this.productForm.markAllAsTouched();
+    this.updateFormErrors();
+
+    return;
   }
 
-  onSubmit() {
-    this.isLoading=true;
-    if (this.productForm.invalid) 
-      {
-        this.isLoading=false;
-         this.productForm.markAllAsTouched();
-      this.updateFormErrors();
-        return;
-      }
+  this.errors = [];
 
-    this.errors = [];
-
-    this.adminService.updateProduct(this.productId, this.productForm.value).pipe(
-      finalize(()=>{
-        this.isLoading=false;
+  this.adminService.updateProduct(this.productId, this.productForm.value)
+    .pipe(
+      finalize(() => {
+        this.isLoading = false;
         this.cdr.detectChanges();
       })
     )
-      .subscribe({
-        next: () => {
-          this.isLoading=false;
-          alert('Product updated successfully');
+    .subscribe({
+      next: (res: any) => {   // ✅ response receive here
+
+        Swal.fire({
+          title: res?.message || 'Product updated successfully.',
+          icon: 'success',
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#d4af37',
+          background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+          color: '#ffffff',
+          iconColor: '#22c55e'
+        }).then(() => {
           this.router.navigate(['/admin/product']);
-        },
-        error: (err) => {
-          this.isLoading=false;
-         console.log(err);
-         
-        },
-      });
-  }
+        });
+
+      },
+      error: (err) => {
+
+        Swal.fire({
+          title: err.error?.message || 'Failed to update product',
+          icon: 'error',
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#d4af37',
+          background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+          color: '#ffffff',
+          iconColor: '#ef4444'
+        });
+      },
+    });
+}
 
 }
