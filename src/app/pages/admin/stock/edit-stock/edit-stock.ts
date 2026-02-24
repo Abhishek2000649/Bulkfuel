@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Stock } from '../../../../core/services/admin/stock/stock';
 import { Spinner } from '../../../../shared/spinner/spinner';
 import { finalize } from 'rxjs';
+import Swal from 'sweetalert2';
 type StockFormFields = 'warehouse_id' | 'product_id' | 'stock_quantity';
 @Component({
   selector: 'app-edit-stock',
@@ -82,87 +83,170 @@ export class EditStock {
     this.loadStock();
   }
 
-  loadWarehouses() {
-    this.isLoading=true;
-    this.stockService.getWarehouses().subscribe({
-      next: (res) => 
-        {
-          this.isLoading=false;
-          this.warehouses = res
-        },
-      error: (err) =>
-        {
-          this.isLoading=false;
-           console.error(err)
-          }
-    });
-  }
+ loadWarehouses() {
+  this.isLoading = true;
 
-  loadProducts() {
-    this.isLoading=true;
-    this.stockService.getProducts().subscribe({
-      next: (res) =>
-        { 
-          this.isLoading=false;
-          this.products = res},
-      error: (err) => 
-        {
-          this.isLoading=false;
-          console.error(err);
-        },
-    });
-  }
+  this.stockService.getWarehouses().subscribe({
+    next: (res: any) => {
+      this.warehouses = res?.data || [];
+      this.isLoading = false;
+      this.cdr.detectChanges();
+    },
+    error: (err) => {
+      this.isLoading = false;
 
-  loadStock() {
-    this.isLoading=true;
-    this.stockService.getStockById(this.stockId).subscribe({
-      next: (res) => {
+      const errorMessage =
+        err?.error?.message ||
+        err?.message ||
+        'Failed to load warehouses';
+
+      Swal.fire({
+        title: errorMessage,
+        icon: 'error',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#d4af37',
+        background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+        color: '#ffffff',
+        iconColor: '#ef4444'
+      });
+    }
+  });
+}
+
+ loadProducts() {
+  this.isLoading = true;
+
+  this.stockService.getProducts().subscribe({
+    next: (res: any) => {
+      this.products = res?.data || [];
+      this.isLoading = false;
+      this.cdr.detectChanges();
+    },
+    error: (err) => {
+      this.isLoading = false;
+
+      const errorMessage =
+        err?.error?.message ||
+        err?.message ||
+        'Failed to load products';
+
+      Swal.fire({
+        title: errorMessage,
+        icon: 'error',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#d4af37',
+        background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+        color: '#ffffff',
+        iconColor: '#ef4444'
+      });
+    }
+  });
+}
+
+ loadStock() {
+  this.isLoading = true;
+
+  this.stockService.getStockById(this.stockId).subscribe({
+    next: (res: any) => {
+
+      const data = res?.data;
+
+      if (data) {
         this.stockForm.patchValue({
-          warehouse_id: res.warehouse_id,
-          product_id: res.product_id,
-          stock_quantity: res.stock_quantity,
+          warehouse_id: data.warehouse_id,
+          product_id: data.product_id,
+          stock_quantity: data.stock_quantity,
         });
-        this.isLoading=false;
-      },
-      error: (err) => 
-        {
-          this.isLoading=false;
-          console.error(err);
-        }
-    });
-  }
-
-  onSubmit() {
-    this.isLoading=true;
-    if (this.stockForm.invalid) 
-      {
-         this.stockForm.markAllAsTouched();
-      this.updateFormErrors();
-        this.isLoading=false;
-        return;
       }
 
-    this.errors = [];
+      this.isLoading = false;
+      this.cdr.detectChanges();
+    },
+    error: (err) => {
+      this.isLoading = false;
 
-    this.stockService.updateStock(this.stockId, this.stockForm.value).pipe(
-          finalize(()=>{
-            this.isLoading=false;
-            this.cdr.detectChanges();
-          })
-        )
-      .subscribe({
-        next: () => {
-          
-          alert('Stock updated successfully');
-          this.router.navigate(['/admin/stock']);
-        },
-        error: (err) => {
-    
-          if (err.status === 422) {
-            this.errors = [err.error.message];
-          }
-        },
+      const errorMessage =
+        err?.error?.message ||
+        err?.message ||
+        'Failed to load stock data';
+
+      Swal.fire({
+        title: errorMessage,
+        icon: 'error',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#d4af37',
+        background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+        color: '#ffffff',
+        iconColor: '#ef4444'
       });
+    }
+  });
+}
+
+ onSubmit() {
+  this.isLoading = true;
+
+  if (this.stockForm.invalid) {
+    this.stockForm.markAllAsTouched();
+    this.updateFormErrors();
+    this.isLoading = false;
+    return;
   }
+
+  this.errors = [];
+
+  this.stockService.updateStock(this.stockId, this.stockForm.value)
+    .pipe(
+      finalize(() => {
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      })
+    )
+    .subscribe({
+
+      // ✅ SUCCESS BLOCK (Logic Same)
+      next: (res: any) => {
+
+        const message =
+          res?.message || 'Stock updated successfully';
+
+        Swal.fire({
+          title: message,
+          icon: 'success',
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#d4af37',
+          background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+          color: '#ffffff',
+          iconColor: '#22c55e'
+        }).then(() => {
+          this.router.navigate(['/admin/stock']);
+        });
+      },
+
+      // ❌ ERROR BLOCK (Logic Same + Swal Added)
+      error: (err) => {
+
+        if (err.status === 422) {
+          this.errors = [err.error.message];
+        }
+
+        const errorMessage =
+          err?.error?.message ||
+          err?.message ||
+          'Something went wrong';
+
+        Swal.fire({
+          title: errorMessage,
+          icon: 'error',
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#d4af37',
+          background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+          color: '#ffffff',
+          iconColor: '#ef4444'
+        });
+      }
+
+    });
+}
 
 }

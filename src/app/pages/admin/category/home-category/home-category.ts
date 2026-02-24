@@ -37,7 +37,6 @@ export class HomeCategory implements OnInit{
     error: (err: any) => {
 
       this.isLoading = false;
-
       Swal.fire({
         title: err.error?.message || 'Failed to load categories',
         icon: 'error',
@@ -47,7 +46,6 @@ export class HomeCategory implements OnInit{
         color: '#ffffff',
         iconColor: '#ef4444'
       });
-
       console.error(err);
     }
 

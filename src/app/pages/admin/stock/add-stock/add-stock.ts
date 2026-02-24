@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { Spinner } from '../../../../shared/spinner/spinner';
 import { pattern, required } from '@angular/forms/signals';
 import { finalize } from 'rxjs';
+import Swal from 'sweetalert2';
 type StockFormFields = 'warehouse_id' | 'product_id' | 'stock_quantity';
 @Component({
   selector: 'app-add-stock',
@@ -77,70 +78,126 @@ export class AddStock {
     });
   }
 
+loadWarehouses() {
+  this.isLoading = true;
 
-  loadWarehouses() {
-    this.isLoading=true;
-    this.adminService.getWarehouses().subscribe({
-      next: (res) => {this.warehouses = res;
-        this.isLoading=false;
-        this.cdr.detectChanges();
-      },
-      error: (err) =>
-        {
-          this.isLoading=false;
-           console.error(err);
-        }
-      
-    });
-  }
+  this.adminService.getWarehouses().subscribe({
+    next: (res: any) => {
+      this.warehouses = res?.data || [];
+      this.isLoading = false;
+      this.cdr.detectChanges();
+    },
+
+    error: (err) => {
+      this.isLoading = false;
+      console.error(err);
+
+      let errorMessage = err?.error?.message || 
+                         'Failed to load warehouses. Please try again.';
+
+      // ✅ Same Styled Swal
+      Swal.fire({
+        title: errorMessage,
+        icon: 'error',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#d4af37',
+        background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+        color: '#ffffff',
+        iconColor: '#ef4444'
+      });
+    }
+  });
+}
 
   loadProducts() {
-    this.isLoading=true;
-    this.adminService.getProducts().subscribe({
-      next: (res) => {this.products = res;
-        this.isLoading=false;
-        this.cdr.detectChanges();
-      },
-      error: (err) => 
-        {
-          this.isLoading=false;
-          console.error(err);
-        }
-    });
+  this.isLoading = true;
+
+  this.adminService.getProducts().subscribe({
+    next: (res: any) => {
+      this.products = res?.data || [];
+      this.isLoading = false;
+      this.cdr.detectChanges();
+    },
+
+    error: (err) => {
+      this.isLoading = false;
+      console.error(err);
+
+   
+      const errorMessage =
+        err?.error?.message ||      
+        err?.message ||            
+        'Something went wrong';    
+
+      Swal.fire({
+        title: errorMessage,
+        icon: 'error',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#d4af37',
+        background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+        color: '#ffffff',
+        iconColor: '#ef4444'
+      });
+    }
+  });
+}
+
+onSubmit() {
+  this.isLoading = true;
+
+  if (this.stockForm.invalid) {
+    this.isLoading = false;
+    this.stockForm.markAllAsTouched();
+    this.updateFormErrors();
+    return;
   }
 
-  onSubmit() {
-    this.isLoading=true;
-    if (this.stockForm.invalid) 
-      {
-        this.isLoading=false;
-        this.stockForm.markAllAsTouched();
-      this.updateFormErrors();
-        return;
-      }
-
-    this.errors = [];
-
-    this.adminService.addStock(this.stockForm.value).pipe(
-      finalize(()=>{
-        this.isLoading=false;
+  this.adminService.addStock(this.stockForm.value)
+    .pipe(
+      finalize(() => {
+        this.isLoading = false;
         this.cdr.detectChanges();
       })
-    ).subscribe({
-      next: () => {
-        
-        alert('Stock added successfully');
-        this.router.navigate(['/admin/stock']);
-      },
-      error: (err) => {
-        
-        console.log(err);
-         if (err.status === 422) {
-      this.errors = [err.error.message];
-      this.cdr.detectChanges();
-    }
-      },
-    });
-  }
+    )
+    .subscribe({
+      next: (res: any) => {
 
+        const successMessage =
+          res?.message || 'Stock added successfully';
+
+        Swal.fire({
+          title: successMessage,
+          icon: 'success',
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#d4af37',
+          background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+          color: '#ffffff',
+          iconColor: '#22c55e'
+        }).then(() => {
+          this.router.navigate(['/admin/stock']);
+        });
+      },
+
+      
+      error: (err) => {
+        console.log(err);
+
+        const errorMessage =
+          err?.error?.message || 
+          err?.message || 
+          'Something went wrong';
+
+        Swal.fire({
+          title: errorMessage,
+          icon: 'error',
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#d4af37',
+          background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+          color: '#ffffff',
+          iconColor: '#ef4444'
+        });
+      }
+
+    });
+}
 }

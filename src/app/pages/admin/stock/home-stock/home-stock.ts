@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Stock } from '../../../../core/services/admin/stock/stock';
 import { Spinner } from '../../../../shared/spinner/spinner';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-home-stock',
@@ -29,42 +30,93 @@ export class HomeStock {
   }
 
   loadStocks() {
-     this.isLoading = true;
-    this.stockService.getStocks().subscribe({
-      next: (res) => {
+  this.isLoading = true;
 
-        this.stocks = res;
-        this.isLoading = false;
-        this.cdr.detectChanges();
-         
-      },
-      error: (err) => {
-        this.errorMessage = err.error?.message || 'Failed to load stock';
-        this.isLoading = false;
-      },
-    });
-  }
+  this.stockService.getStocks().subscribe({
+    next: (res: any) => {
+      this.stocks = res.data || 0;
+      this.isLoading = false;
+      this.cdr.detectChanges();
+    },
+    error: (err) => {
+      this.errorMessage = err.error?.message || 'Failed to load stock';
+      this.isLoading = false;
 
-  deleteStock(id: number) {
-    this.isLoading=true;
-    if (!confirm('Delete this stock?')) 
-      {
-        this.isLoading=false;
-        return;
-      }
+      // ✅ Swal added (logic unchanged)
+      Swal.fire({
+        title: this.errorMessage,
+        icon: 'error',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#d4af37',
+        background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+        color: '#ffffff',
+        iconColor: '#ef4444'
+      });
+    },
+  });
+}
+
+ deleteStock(id: number) {
+  
+
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'Delete this stock?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Delete',
+    cancelButtonText: 'Cancel',
+    confirmButtonColor: '#d4af37',
+    cancelButtonColor: '#6b7280',
+    background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+    color: '#ffffff',
+    iconColor: '#f59e0b'
+  }).then((result) => {
+
+    if (result.isConfirmed) {
+      this.isLoading = true;
+    }
+    else{
+      return;
+    }
+    
 
     this.stockService.deleteStock(id).subscribe({
-      next: () =>
-        {
-          this.isLoading=false;
-        this.loadStocks()
-        },
+      next: () => {
+        this.isLoading = false;
+
+        // ✅ Success Swal
+        Swal.fire({
+          title: 'Deleted Successfully',
+          icon: 'success',
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#d4af37',
+          background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+          color: '#ffffff',
+          iconColor: '#ef4444'
+        });
+
+        this.loadStocks();
+      },
       error: (err) => {
-        this.isLoading=false;
+        this.isLoading = false;
         this.errorMessage = err.error?.message || 'Delete failed';
+
+        // ✅ Error Swal
+        Swal.fire({
+          title: this.errorMessage,
+          icon: 'error',
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#d4af37',
+          background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+          color: '#ffffff',
+          iconColor: '#ef4444'
+        });
       },
     });
-  }
+
+  });
+}
 
   trackById(index: number, item: any) {
     return item.id;
