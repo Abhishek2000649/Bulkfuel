@@ -3,6 +3,7 @@ import { Component, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AdminOrder } from '../../../../core/services/admin/AdminOrder/admin-order';
 import { Spinner } from '../../../../shared/spinner/spinner';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-home-order',
@@ -48,25 +49,37 @@ export class HomeOrder {
   }
 
   loadOrders() {
-    this.isLoading=true;
-    this.adminService.getOrders().subscribe({
-      next: (res) => {
-        this.orders = res;
+  this.isLoading = true;
 
-        // init temp status
-        this.orders.forEach(order => {
-          this.tempStatus[order.id] = order.status;
-        });
-        this.isLoading=false;
-        this.cdr.detectChanges();
-      },
-      error: (err) => 
-        {
-          this.isLoading=false;
-          console.error(err);
-        }
-    });
-  }
+  this.adminService.getOrders().subscribe({
+    next: (res: any) => {
+      this.orders = res?.data || [];
+
+      // init temp status
+      this.orders.forEach(order => {
+        this.tempStatus[order.id] = order.status;
+      });
+
+      this.isLoading = false;
+      this.cdr.detectChanges();
+    },
+
+    error: (err) => {
+      this.isLoading = false;
+      console.error(err);
+
+      Swal.fire({
+        title: err.error?.message || 'Failed to load orders',
+        icon: 'error',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#7f1d1d', // Dark red button
+        background: 'linear-gradient(135deg, #3b0000, #1a0000)', // Dark red gradient
+        color: '#ffffff',
+        iconColor: '#dc2626' // Bright red icon
+      });
+    }
+  });
+}
 
   /** show order only if status < SHIPPED */
   shouldShowOrder(order: any): boolean {
@@ -82,24 +95,48 @@ export class HomeOrder {
   }
 
   updateStatus(orderId: number) {
-    this.isLoading=true;
-    const newStatus = this.tempStatus[orderId];
+  this.isLoading = true;
+  const newStatus = this.tempStatus[orderId];
 
-    if (!confirm('Are you sure to update order status?')) return;
+  
 
     this.adminService.updateOrderStatus(orderId, newStatus).subscribe({
-      next: () => {
-        this.isLoading=false;
-        alert('Order status updated');
-        this.loadOrders(); // reload → order removed if SHIPPED+
+
+      next: (res:any) => {
+        this.isLoading = false;
+
+        Swal.fire({
+          title: 'Updated!',
+          text: res?.message || 'Order status updated successfully.',
+          icon: 'success',
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#7f1d1d',
+          background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+          color: '#ffffff'
+        });
+
+        this.loadOrders(); 
       },
-      error: (err) => 
-        {
-          this.isLoading=false;
-          console.error(err);
-        }
+
+      error: (err) => {
+        this.isLoading = false;
+        console.error(err);
+
+        Swal.fire({
+          title: err.error?.message || 'Failed to update order status',
+          icon: 'error',
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#7f1d1d',
+          background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+          color: '#ffffff',
+          iconColor: '#dc2626'
+        });
+      }
+
     });
-  }
+
+ 
+}
 
   trackById(index: number, item: any) {
     return item.id;

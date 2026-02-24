@@ -5,6 +5,7 @@ import { Warehouse } from '../../../../core/services/admin/warehouse/warehouse';
 import { Router, RouterLink } from '@angular/router';
 import { Spinner } from '../../../../shared/spinner/spinner';
 import { finalize } from 'rxjs';
+import Swal from 'sweetalert2';
 type warehouseFormFields = 'name' | 'address' | 'city' | 'state' | 'pincode';
 @Component({
   selector: 'app-add-warehouse',
@@ -81,29 +82,56 @@ export class AddWarehouse {
     });
   }
 
-  onSubmit() {
-    this.isLoading=true;
-    if (this.warehouseForm.invalid) {
-       this.warehouseForm.markAllAsTouched();
-      this.updateFormErrors();
-      this.isLoading=false;
-      return;
-    }
+onSubmit() {
+  this.isLoading = true;
 
-    this.adminService.addWarehouse(this.warehouseForm.value).pipe(
-      finalize(()=>{
-        this.isLoading=false;
+  if (this.warehouseForm.invalid) {
+    this.warehouseForm.markAllAsTouched();
+    this.updateFormErrors();
+    this.isLoading = false;
+    return;
+  }
+
+  this.adminService.addWarehouse(this.warehouseForm.value)
+    .pipe(
+      finalize(() => {
+        this.isLoading = false;
         this.cdr.detectChanges();
       })
-    ).subscribe({
+    )
+    .subscribe({
+
       next: () => {
-        alert('Warehouse added successfully');
-        this.router.navigate(['/admin/warehouse']);
+
+        Swal.fire({
+          title: 'Warehouse Added Successfully!',
+          icon: 'success',
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#d4af37',
+          background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+          color: '#ffffff',
+          iconColor: '#22c55e'
+        }).then(() => {
+          this.router.navigate(['/admin/warehouse']);
+        });
+
       },
+
       error: (err) => {
         console.error(err);
+
+        Swal.fire({
+          title: err.error?.message || 'Failed to add warehouse',
+          icon: 'error',
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#d4af37',
+          background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+          color: '#ffffff',
+          iconColor: '#ef4444'
+        });
       },
+
     });
-  }
+}
 
 }

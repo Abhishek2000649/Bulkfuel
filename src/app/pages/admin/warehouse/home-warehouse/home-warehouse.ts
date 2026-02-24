@@ -3,6 +3,7 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Warehouse } from '../../../../core/services/admin/warehouse/warehouse';
 import { Spinner } from '../../../../shared/spinner/spinner';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-home-warehouse',
@@ -22,38 +23,92 @@ export class HomeWarehouse {
   }
 
   loadWarehouses() {
-    this.isLoading=true;
-    this.adminService.getWarehouses().subscribe({
-      next: (res) => {
-        this.warehouses = res;
-        this.isLoading=false;
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        this.isLoading=false;
-        console.error(err);
-      },
-    });
-  }
+  this.isLoading = true;
+
+  this.adminService.getWarehouses().subscribe({
+    next: (res: any) => {
+      this.warehouses = res?.data || [];
+      this.isLoading = false;
+      this.cdr.detectChanges();
+    },
+
+    error: (err) => {
+      this.isLoading = false;
+      console.error(err);
+
+      Swal.fire({
+        title: err.error?.message || 'Failed to load warehouses',
+        icon: 'error',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#d4af37',
+        background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+        color: '#ffffff',
+        iconColor: '#ef4444'
+      });
+    },
+  });
+}
 
   deleteWarehouse(id: number) {
-    this.isLoading=true;
-    if (!confirm('Are you sure you want to delete this warehouse?')) {
-      this.isLoading=false;
-      return;
+
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'You want to delete this warehouse?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Delete',
+    cancelButtonText: 'Cancel',
+    confirmButtonColor: '#d4af37',
+    cancelButtonColor: '#6b7280',
+    background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+    color: '#ffffff',
+    iconColor: '#facc15'
+  }).then((result) => {
+
+    if (result.isConfirmed) {
+
+      this.isLoading = true;
+
+      this.adminService.deleteWarehouse(id).subscribe({
+
+        next: () => {
+          this.isLoading = false;
+
+          Swal.fire({
+            title: 'Deleted Successfully!',
+            icon: 'success',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#d4af37',
+            background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+            color: '#ffffff',
+            iconColor: '#22c55e'
+          });
+
+          this.loadWarehouses();
+        },
+
+        error: (err) => {
+          this.isLoading = false;
+          console.error(err);
+
+          Swal.fire({
+            title: err.error?.message || 'Delete failed',
+            icon: 'error',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#d4af37',
+            background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+            color: '#ffffff',
+            iconColor: '#ef4444'
+          });
+        },
+
+      });
+
     }
 
-    this.adminService.deleteWarehouse(id).subscribe({
-      next: () => {
-        this.isLoading=false;
-        this.loadWarehouses();
-      },
-      error: (err) => {
-        this.isLoading=false;
-        console.error(err);
-      },
-    });
-  }
+  });
+
+}
 
   trackById(index: number, item: any) {
     return item.id;

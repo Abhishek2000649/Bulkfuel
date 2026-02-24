@@ -5,6 +5,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Warehouse } from '../../../../core/services/admin/warehouse/warehouse';
 import { Spinner } from '../../../../shared/spinner/spinner';
 import { finalize } from 'rxjs';
+import Swal from 'sweetalert2';
 type warehouseFormFields = 'name' | 'address' | 'city' | 'state' | 'pincode';
 @Component({
   selector: 'app-edit-warehouse',
@@ -89,47 +90,90 @@ export class EditWarehouse {
   }
 
   loadWarehouse() {
-    this.isLoading=true;
-    this.adminService.getWarehouseById(this.warehouseId).subscribe({
-      next: (res) => {
-        this.warehouseForm.patchValue({
-          name: res.name,
-          address: res.address,
-          city: res.city,
-          state: res.state,
-          pincode: res.pincode,
-        });
-        this.isLoading=false;
-      },
-      error: (err) => {
-        this.isLoading=false;
-        console.error(err);
-      },
-    });
-  }
+  this.isLoading = true;
+
+  this.adminService.getWarehouseById(this.warehouseId).subscribe({
+
+    next: (res: any) => {
+      this.warehouseForm.patchValue({
+        name: res?.data?.name || '',
+        address: res?.data?.address || '',
+        city: res?.data?.city || '',
+        state: res?.data?.state || '',
+        pincode: res?.data?.pincode || '',
+      });
+
+      this.isLoading = false;
+    },
+
+    error: (err) => {
+      this.isLoading = false;
+      console.error(err);
+
+      Swal.fire({
+        title: err.error?.message || 'Failed to load warehouse details',
+        icon: 'error',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#d4af37',
+        background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+        color: '#ffffff',
+        iconColor: '#ef4444'
+      });
+    },
+
+  });
+}
 
   onSubmit() {
-    this.isLoading=true;
-    if (this.warehouseForm.invalid) {
-      this.isLoading=false;
-       this.warehouseForm.markAllAsTouched();
-      this.updateFormErrors();
-      return;
-    }
+  this.isLoading = true;
 
-    this.adminService.updateWarehouse(this.warehouseId, this.warehouseForm.value).pipe(
-          finalize(()=>{
-            this.isLoading=false;
-            this.cdr.detectChanges();
-          }))
-      .subscribe({
-        next: () => {
-          alert('Warehouse updated successfully');
-          this.router.navigate(['/admin/warehouse']);
-        },
-        error: (err) => {
-          console.error(err);
-        },
-      });
+  if (this.warehouseForm.invalid) {
+    this.isLoading = false;
+    this.warehouseForm.markAllAsTouched();
+    this.updateFormErrors();
+
+    return;
   }
+
+  this.adminService.updateWarehouse(this.warehouseId, this.warehouseForm.value)
+    .pipe(
+      finalize(() => {
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      })
+    )
+    .subscribe({
+
+      next: () => {
+
+        Swal.fire({
+          title: 'Warehouse Updated Successfully!',
+          icon: 'success',
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#d4af37',
+          background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+          color: '#ffffff',
+          iconColor: '#22c55e'
+        }).then(() => {
+          this.router.navigate(['/admin/warehouse']);
+        });
+
+      },
+
+      error: (err) => {
+        console.error(err);
+
+        Swal.fire({
+          title: err.error?.message || 'Failed to update warehouse',
+          icon: 'error',
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#d4af37',
+          background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+          color: '#ffffff',
+          iconColor: '#ef4444'
+        });
+      },
+
+    });
+}
 }
