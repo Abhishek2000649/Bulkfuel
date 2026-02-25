@@ -3,6 +3,7 @@ import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HomeService } from '../../../core/services/user/home/home-service';
 import { Spinner } from '../../../shared/spinner/spinner';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-profile',
@@ -33,15 +34,39 @@ export class Profile {
   }
 
   loadHome() {
-    this.isLoading=true;
-    this.homeService.getHomeData().subscribe(res => {
+  this.isLoading = true;
+
+  this.homeService.getHomeData().subscribe({
+    next: (res) => {
       this.products = res.products || [];
       this.cart = res.cartItems || {};
       this.groupProductsByCategory();
-      this.isLoading=false;
+      this.isLoading = false;
       this.cdr.detectChanges();
-    });
-  }
+    },
+
+    error: (err) => {
+      this.isLoading = false;
+
+      const message =
+        err?.error?.message ||
+        err?.message ||
+        'Failed to load products';
+
+      Swal.fire({
+        title: message,
+        icon: 'error',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#d4af37',
+        background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+        color: '#ffffff',
+        iconColor: '#ef4444'
+      });
+
+      console.error(err);
+    }
+  });
+}
 
   groupProductsByCategory() {
     const map = new Map<number, any>();
@@ -64,45 +89,69 @@ export class Profile {
     this.groupedProducts = Array.from(map.values());
   }
 
-  increase(p: any) {
-    this.isLoading=true;
-    if (!localStorage.getItem('token')) {
-      this.isLoading=false;
-      this.router.navigate(['/login']);
-      return;
-    }
+ increase(p: any) {
+  this.isLoading = true;
 
-    if ((this.cart[p.id] || 0) >= p.totalStock)
-      {
-        this.isLoading = false;
-        return;
-      } 
+  if (!localStorage.getItem('token')) {
+    this.isLoading = false;
+    this.router.navigate(['/login']);
+    return;
+  }
 
-    this.homeService.updateCart(p.id, 'increase').subscribe(() => {
+  if ((this.cart[p.id] || 0) >= p.totalStock) {
+    this.isLoading = false;
+    return;
+  }
+
+  this.homeService.updateCart(p.id, 'increase').subscribe({
+    next: () => {
       this.cart = {
         ...this.cart,
         [p.id]: (this.cart[p.id] || 0) + 1
       };
-      this.isLoading=false;
+      this.isLoading = false;
       this.cdr.detectChanges();
-    });
+    },
+
+    error: (err) => {
+      this.isLoading = false;
+
+      const message =
+        err?.error?.message ||
+        err?.message ||
+        'Failed to update cart';
+
+      Swal.fire({
+        title: message,
+        icon: 'error',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#d4af37',
+        background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+        color: '#ffffff',
+        iconColor: '#ef4444'
+      });
+
+      console.error(err);
+    }
+  });
+}
+
+ decrease(p: any) {
+  this.isLoading = true;
+
+  if (!localStorage.getItem('token')) {
+    this.isLoading = false;
+    this.router.navigate(['/login']);
+    return;
   }
 
-  decrease(p: any) {
-    this.isLoading=true;
-    if (!localStorage.getItem('token')) {
-      this.isLoading=false;
-      this.router.navigate(['/login']);
-      return;
-    }
+  if (!this.cart[p.id]) {
+    this.isLoading = false;
+    return;
+  }
 
-    if (!this.cart[p.id]) 
-      {
-        this.isLoading=false;
-        return;
-      }
-
-    this.homeService.updateCart(p.id, 'decrease').subscribe(() => {
+  this.homeService.updateCart(p.id, 'decrease').subscribe({
+    next: () => {
       const qty = this.cart[p.id] - 1;
 
       if (qty <= 0) {
@@ -111,29 +160,70 @@ export class Profile {
       } else {
         this.cart = { ...this.cart, [p.id]: qty };
       }
-      this.isLoading= false;
+
+      this.isLoading = false;
       this.cdr.detectChanges();
-    });
+    },
+
+    error: (err) => {
+      this.isLoading = false;
+
+      const message =
+        err?.error?.message ||
+        err?.message ||
+        'Failed to update cart';
+
+      Swal.fire({
+        title: message,
+        icon: 'error',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#d4af37',
+        background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+        color: '#ffffff',
+        iconColor: '#ef4444'
+      });
+
+      console.error(err);
+    }
+  });
+}
+
+ goToCart() {
+  this.isLoading = true;
+
+  // 1️⃣ Not Logged In
+  if (!localStorage.getItem('token')) {
+    this.isLoading = false;
+
+    
+      this.router.navigate(['/login']);
   }
 
-  goToCart() {
-    this.isLoading=true;
-    if (!localStorage.getItem('token')) {
-      this.isLoading=false;
-      this.router.navigate(['/login']);
+  // 2️⃣ Stock Validation
+  for (let p of this.products) {
+    if ((this.cart[p.id] || 0) > p.totalStock) {
+      this.isLoading = false;
+
+      Swal.fire({
+        title: `Please reduce quantity of ${p.name}. Only ${p.totalStock} available.`,
+        icon: 'error',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#d4af37',
+        background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+        color: '#ffffff',
+        iconColor: '#ef4444'
+      });
+
       return;
     }
-
-    for (let p of this.products) {
-      if ((this.cart[p.id] || 0) > p.totalStock) {
-        alert(`Please reduce quantity of ${p.name}. Only ${p.totalStock} available.`);
-        this.isLoading=false;
-        return;
-      }
-    }
-    this.isLoading=false;
-    this.router.navigate(['/user/cart']);
   }
+
+  // 3️⃣ Navigate to Cart
+  this.isLoading = false;
+
+  
+    this.router.navigate(['/user/cart']);
+}
 
   trackByProductId(index: number, item: any) {
     return item.id;

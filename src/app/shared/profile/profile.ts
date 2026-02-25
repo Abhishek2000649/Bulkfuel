@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { Spinner } from '../spinner/spinner';
 import { finalize } from 'rxjs';
 import { pattern, required } from '@angular/forms/signals';
+import Swal from 'sweetalert2';
 type ProfileBasicFormFields =  'name' | 'email' ;
 type ProfileAddressFormFields =  'address' | 'city' | 'state' | 'pincode' ;
 type ProfilePasswordFormFields = 'current_password' | 'password' | 'password_confirmation';
@@ -196,32 +197,45 @@ this.passwordForm = this.fb.group({
      LOAD PROFILE
   ========================= */
   loadProfile() {
-    this.isLoading =true;
-    this.profileService.getProfile().subscribe({
-      next: (res) => {
-       this.basicForm.patchValue({
-  name: res.user.name,
-  email: res.user.email,
-});
+  this.isLoading = true;
 
-if (res.user.address) {
-  this.addressForm.patchValue({
-    address: res.user.address.address,
-    city: res.user.address.city,
-    state: res.user.address.state,
-    pincode: res.user.address.pincode,
+  this.profileService.getProfile().subscribe({
+    next: (res) => {
+      this.basicForm.patchValue({
+        name: res.user.name,
+        email: res.user.email,
+      });
+
+      if (res.user.address) {
+        this.addressForm.patchValue({
+          address: res.user.address.address,
+          city: res.user.address.city,
+          state: res.user.address.state,
+          pincode: res.user.address.pincode,
+        });
+      }
+
+      this.isLoading = false;
+      this.cdr.detectChanges();
+    },
+
+    error: (err) => {   // 👈 err receive karna important hai
+      this.isLoading = false;
+
+      Swal.fire({
+        title: err.error?.message || 'Failed to load profile',
+        icon: 'error',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#d4af37',
+        background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+        color: '#ffffff',
+        iconColor: '#ef4444'
+      });
+
+      console.error(err);
+    }
   });
 }
-
-        this.isLoading = false;
-        this.cdr.detectChanges();
-      },
-      error: () => {
-        this.isLoading = false;
-        this.error = 'Failed to load profile';
-      }
-    });
-  }
 
   /* =========================
      TAB CONTROLS
@@ -252,7 +266,7 @@ if (res.user.address) {
   /* =========================
      UPDATE BASIC
   ========================= */
-  updateBasic() {
+ updateBasic() {
   if (this.basicForm.invalid) {
     this.basicForm.markAllAsTouched();
     this.updateBasicFormErrors();
@@ -262,21 +276,42 @@ if (res.user.address) {
   this.isLoading = true;
 
   this.profileService.updateBasic(this.basicForm.value).pipe(
-    finalize(()=>{
-      this.isLoading=false;
+    finalize(() => {
+      this.isLoading = false;
       this.cdr.detectChanges();
     })
   )
-    .subscribe({
-      next: (res) => {
-        this.message = res.message;
-        
-      },
-      error: (err) => {
-        
-        this.error = err.error?.message || 'Update failed';
-      }
-    });
+  .subscribe({
+    next: (res) => {
+      this.message = res.message;
+
+      // ✅ Success Swal (Dark Red Theme)
+      Swal.fire({
+        title: res.message || 'Updated successfully',
+        icon: 'success',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#d4af37',
+        background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+        color: '#ffffff',
+        iconColor: '#22c55e'
+      });
+    },
+
+    error: (err) => {
+      this.error = err.error?.message || 'Update failed';
+
+      // ❌ Error Swal (Dark Red Theme)
+      Swal.fire({
+        title: this.error,
+        icon: 'error',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#d4af37',
+        background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+        color: '#ffffff',
+        iconColor: '#ef4444'
+      });
+    }
+  });
 }
 
 
@@ -293,28 +328,51 @@ if (res.user.address) {
   this.isLoading = true;
 
   this.profileService.updateAddress(this.addressForm.value).pipe(
-    finalize(()=>{
-      this.isLoading=false;
+    finalize(() => {
+      this.isLoading = false;
       this.cdr.detectChanges();
     })
   )
-    .subscribe({
-      next: (res) => {
-        this.message = res.message;
-        this.isLoading = false;
-      },
-      error: () => {
-        this.isLoading = false;
-        this.error = 'Address update failed';
-      }
-    });
+  .subscribe({
+    next: (res) => {
+      this.message = res.message;
+      this.isLoading = false;
+
+      // ✅ Success Swal (Dark Red Theme)
+      Swal.fire({
+        title: res.message || 'Address updated successfully',
+        icon: 'success',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#d4af37',
+        background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+        color: '#ffffff',
+        iconColor: '#22c55e'
+      });
+    },
+
+    error: (err) => {
+      this.isLoading = false;
+      this.error = err?.error?.message || 'Address update failed';
+
+      // ❌ Error Swal (Dark Red Theme)
+      Swal.fire({
+        title: this.error,
+        icon: 'error',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#d4af37',
+        background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+        color: '#ffffff',
+        iconColor: '#ef4444'
+      });
+    }
+  });
 }
 
 
   /* =========================
      UPDATE PASSWORD
   ========================= */
-  updatePassword() {
+ updatePassword() {
   if (this.passwordForm.invalid) {
     this.passwordForm.markAllAsTouched();
     this.updatePasswordFormErrors();
@@ -325,24 +383,47 @@ if (res.user.address) {
 
   this.profileService.updatePassword(this.passwordForm.value)
   .pipe(
-    finalize(()=>{
-      this.isLoading=false;
+    finalize(() => {
+      this.isLoading = false;
       this.cdr.detectChanges();
     })
   )
-    .subscribe({
-      next: (res) => {
-        this.message = res.message;
-        this.passwordForm.reset();
-        this.isLoading = false;
-      },
-      error: (err) => {
-        this.isLoading = false;
-        this.error =
-          err.error?.errors?.current_password?.[0] ||
-          'Password update failed';
-      }
-    });
+  .subscribe({
+    next: (res) => {
+      this.message = res.message;
+      this.passwordForm.reset();
+      this.isLoading = false;
+
+      // ✅ Success Swal (Dark Red Theme)
+      Swal.fire({
+        title: res.message || 'Password updated successfully',
+        icon: 'success',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#d4af37',
+        background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+        color: '#ffffff',
+        iconColor: '#22c55e'
+      });
+    },
+
+    error: (err) => {
+      this.isLoading = false;
+      this.error =
+        err.error?.errors?.current_password?.[0] ||
+        'Password update failed';
+
+      // ❌ Error Swal (Dark Red Theme)
+      Swal.fire({
+        title: this.error,
+        icon: 'error',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#d4af37',
+        background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+        color: '#ffffff',
+        iconColor: '#ef4444'
+      });
+    }
+  });
 }
 
 }

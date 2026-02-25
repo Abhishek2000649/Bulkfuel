@@ -5,6 +5,7 @@ import { DeliveryService } from '../../../core/services/delivery/delivery-servic
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Spinner } from '../../../shared/spinner/spinner';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-delivery-dashboard',
@@ -23,56 +24,115 @@ export class Dashboard {
     this.loadAssignedDeliveries();
   }
   loadAssignedDeliveries() {
-    this.isLoading=true;
-    this.deliveryService.getAssignedDeliveries().subscribe({
-      next: (res: any) => {
-        console.log(res);
-        this.deliveries = res.orders;
-        this.isLoading=false;
-        this.cdr.detectChanges();
-      },
-      error: () => {
-        this.isLoading=false;
-        this.errorMessage = 'Failed to load deliveries';
-      },
-    });
-  }
-  markDelivered(deliveryId: number) {
-    this.isLoading=true;
-    this.deliveryService.markDelivered(deliveryId).subscribe({
-      next: (res: any) => {
-        this.isLoading=false;
-        this.successMessage = res.message || 'Order delivered successfully';
-        this.loadAssignedDeliveries();
-        this.cdr.detectChanges();
-      },
-      error: () => {
-        this.isLoading=false;
-        this.errorMessage = 'Failed to mark delivered';
-      },
-    });
-  }
-  cancelDelivery(deliveryId: number, reason: string) {
-    this.isLoading=true;
-    if (!reason) {
-      this.errorMessage = 'Cancel reason is required';
-      return;
-    }
+  this.isLoading = true;
 
-    this.deliveryService.cancelDelivery(deliveryId, reason).subscribe({
-      next: (res: any) => {
-        this.successMessage = res.message || 'Delivery cancelled';
-        this.isLoading=false;
-        this.loadAssignedDeliveries();
-        
+  this.deliveryService.getAssignedDeliveries().subscribe({
+    next: (res: any) => {
+      console.log(res);
+      this.deliveries = res.orders;
+      this.isLoading = false;
+      this.cdr.detectChanges();
+    },
+
+    error: (err) => {
+      this.isLoading = false;
+
+      Swal.fire({
+        title: err?.error?.message || 'Failed to load deliveries',
+        icon: 'error',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#d4af37',
+        background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+        color: '#ffffff',
+        iconColor: '#ef4444'
+      });
+    },
+  });
+}
+  markDelivered(deliveryId: number) {
+  this.isLoading = true;
+
+  this.deliveryService.markDelivered(deliveryId).subscribe({
+    next: (res: any) => {
+      this.isLoading = false;
+
+      Swal.fire({
+        title: res?.message || 'Order delivered successfully',
+        icon: 'success',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#d4af37',
+        background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+        color: '#ffffff',
+        iconColor: '#22c55e'
+      }).then(() => {
+        this.loadAssignedDeliveries(); // refresh after alert close
         this.cdr.detectChanges();
-      },
-      error: () => {
-        this.isLoading=false;
-        this.errorMessage = 'Failed to cancel delivery';
-      },
-    });
+      });
+    },
+
+    error: (err) => {
+      this.isLoading = false;
+
+      Swal.fire({
+        title: err?.error?.message || 'Failed to mark delivered',
+        icon: 'error',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#d4af37',
+        background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+        color: '#ffffff',
+        iconColor: '#ef4444'
+      });
+    },
+  });
+}
+ cancelDelivery(deliveryId: number, reason: string) {
+  this.isLoading = true;
+
+ 
+  if (!reason) {
+    this.isLoading = false;
+
+   this.errorMessage = 'Cancellation reason is required';
+
+    return;
   }
+
+  this.deliveryService.cancelDelivery(deliveryId, reason).subscribe({
+
+    
+    next: (res: any) => {
+      this.isLoading = false;
+
+      Swal.fire({
+        title: res?.message || 'Delivery cancelled successfully',
+        icon: 'success',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#d4af37',
+        background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+        color: '#ffffff',
+        iconColor: '#22c55e'
+      }).then(() => {
+        this.loadAssignedDeliveries();
+        this.cdr.detectChanges();
+      });
+    },
+
+    
+    error: (err) => {
+      this.isLoading = false;
+
+      Swal.fire({
+        title: err?.error?.message || 'Failed to cancel delivery',
+        icon: 'error',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#d4af37',
+        background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+        color: '#ffffff',
+        iconColor: '#ef4444'
+      });
+    },
+  });
+}
 
   getProductsByWarehouse(items: any[], warehouseId: number) {
     return items.filter((item) =>

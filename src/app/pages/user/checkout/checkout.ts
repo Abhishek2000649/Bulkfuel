@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { CartService } from '../../../core/services/user/cart/cart-service';
 import { CheckoutService } from '../../../core/services/user/checkoutService/checkout-service';
 import { Spinner } from '../../../shared/spinner/spinner';
+import Swal from 'sweetalert2';
 type checkoutFormFields =  'address' | 'city' | 'state' | 'pincode';
 @Component({
   selector: 'app-checkout',
@@ -83,64 +84,120 @@ formErrors: Record<checkoutFormFields, string> = {
     });
   }
 
-  ngOnInit(): void {
-    this.isLoading=true;
-    this.cartIds = this.checkoutService.getCartIds();
+ ngOnInit(): void {
+  this.isLoading = true;
+  this.cartIds = this.checkoutService.getCartIds();
 
-    if (this.cartIds.length === 0) {
-      this.isLoading=false;
-      this.router.navigate(['/user/cart']);
-      return;
-    }
+  if (this.cartIds.length === 0) {
+    this.isLoading = false;
+    this.router.navigate(['/user/cart']);
+    return;
+  }
 
-    this.cartService.checkout(this.cartIds).subscribe({
-      next: (res: any) => {
-        this.cartItems = res.cartItems;
-        this.totalAmount = res.totalAmount;
-        this.user = res.user;
+  this.cartService.checkout(this.cartIds).subscribe({
+    next: (res: any) => {
+      this.cartItems = res.cartItems;
+      this.totalAmount = res.totalAmount;
+      this.user = res.user;
 
-        if (this.user?.address) {
-          this.checkoutForm.patchValue({
-  address: this.user.address.address,
-  city: this.user.address.city,
-  state: this.user.address.state,
-  pincode: this.user.address.pincode,
-});
+      if (this.user?.address) {
+        this.checkoutForm.patchValue({
+          address: this.user.address.address,
+          city: this.user.address.city,
+          state: this.user.address.state,
+          pincode: this.user.address.pincode,
+        });
+      }
 
-          this.isLoading=false;
-        }
-        this.isLoading=false;
-        this.cdr.detectChanges();
-      },
-      error: () => {
-        this.isLoading=false;
+      this.isLoading = false;
+      this.cdr.detectChanges();
+    },
+
+    error: (err) => {
+      this.isLoading = false;
+
+      const message =
+        err?.error?.message ||
+        err?.message ||
+        'Failed to load checkout data';
+
+      Swal.fire({
+        title: message,
+        icon: 'error',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#d4af37',
+        background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+        color: '#ffffff',
+        iconColor: '#ef4444'
+      }).then(() => {
         this.router.navigate(['/user/cart']);
-      },
-    });
-  }
+      });
 
-  placeOrder(): void {
-    this.isLoading=true;
-    if (this.checkoutForm.invalid) {
-  this.checkoutForm.markAllAsTouched();
-  this.updateFormErrors();
-  this.isLoading = false;
-  return;
+      console.error(err);
+    },
+  });
 }
-    const payload = {
-      ...this.checkoutForm.value,
-      cart_ids: this.cartIds,
-    };
 
-    this.checkoutService.placeOrder(payload).subscribe({
-      next: () => {
-        this.checkoutService.clear();
-        this.isLoading=false;
-        alert('Order placed successfully');
-        this.router.navigate(['/user/orders']);
-      },
-    });
+ placeOrder(): void {
+  this.isLoading = true;
+
+  // 1️⃣ Form Invalid
+  if (this.checkoutForm.invalid) {
+    this.checkoutForm.markAllAsTouched();
+    this.updateFormErrors();
+    this.isLoading = false;
+
+    return;
   }
+
+  const payload = {
+    ...this.checkoutForm.value,
+    cart_ids: this.cartIds,
+  };
+
+  this.checkoutService.placeOrder(payload).subscribe({
+    next: () => {
+      this.isLoading = false;
+      this.checkoutService.clear();
+      
+
+      Swal.fire({
+        title: 'Order placed successfully',
+        icon: 'success',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#d4af37',
+        background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+        color: '#ffffff',
+        iconColor: '#22c55e'
+      }).then(() => {
+        this.router.navigate(['/user/orders']);
+      });
+    },
+
+    
+    error: (err) => {
+      this.isLoading = false;
+
+      const message =
+        err?.error?.message ||
+        err?.error?.errors?.cart_ids?.[0] ||
+        err?.message ||
+        'Failed to place order';
+
+      Swal.fire({
+        title: message,
+        icon: 'error',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#d4af37',
+        background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+        color: '#ffffff',
+        iconColor: '#ef4444'
+      });
+
+      console.error(err);
+    }
+  });
+}
 
   goBackToCart(): void {
     this.router.navigate(['/user/cart']);

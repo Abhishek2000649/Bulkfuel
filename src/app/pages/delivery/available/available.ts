@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { DeliveryService } from '../../../core/services/delivery/delivery-service';
 import { Spinner } from '../../../shared/spinner/spinner';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-available',
@@ -21,36 +22,68 @@ export class Available {
     this.loadAvailableOrders();
   }
 
-  loadAvailableOrders() {
-    this.isLoading=true;
-    this.deliveryService.getAvailableOrders().subscribe({
-      next: (res: any) => {
-        console.log(res);
-        
-        this.orders = res.orders;
-        this.isLoading=false;
-        this.cdr.detectChanges();
-      },
-      error: () => {
-        this.isLoading=false;
-        this.errorMessage = 'Failed to load orders';
-      }
-    });
-  }
+ loadAvailableOrders() {
+  this.isLoading = true;
 
-  acceptOrder(deliveryId: number) {
-    this.isLoading=true;
-    this.deliveryService.acceptOrder(deliveryId).subscribe({
-      next: (res: any) => {
-        this.successMessage = res.message || 'Order accepted successfully';
-        this.isLoading=false;
-        this.loadAvailableOrders(); // refresh list
-      },
-      error: (err) => {
-        this.isLoading=false;
-        this.errorMessage = err.error?.message || 'Failed to accept order';
-      }
-    });
-  }
+  this.deliveryService.getAvailableOrders().subscribe({
+    next: (res: any) => {
+      console.log(res);
+
+      this.orders = res.orders;
+      this.isLoading = false;
+      this.cdr.detectChanges();
+    },
+
+    error: (err) => {
+      this.isLoading = false;
+
+      Swal.fire({
+        title: err?.error?.message || 'Failed to load orders',
+        icon: 'error',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#d4af37',
+        background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+        color: '#ffffff',
+        iconColor: '#ef4444'
+      });
+    }
+  });
+}
+
+ acceptOrder(deliveryId: number) {
+  this.isLoading = true;
+
+  this.deliveryService.acceptOrder(deliveryId).subscribe({
+    next: (res: any) => {
+      this.isLoading = false;
+
+      Swal.fire({
+        title: res?.message || 'Order accepted successfully',
+        icon: 'success',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#d4af37',
+        background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+        color: '#ffffff',
+        iconColor: '#22c55e'
+      }).then(() => {
+        this.loadAvailableOrders(); // refresh list after alert close
+      });
+    },
+
+    error: (err) => {
+      this.isLoading = false;
+
+      Swal.fire({
+        title: err?.error?.message || 'Failed to accept order',
+        icon: 'error',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#d4af37',
+        background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+        color: '#ffffff',
+        iconColor: '#ef4444'
+      });
+    }
+  });
+}
 
 }
