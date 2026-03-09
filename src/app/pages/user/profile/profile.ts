@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HomeService } from '../../../core/services/user/home/home-service';
@@ -32,6 +32,20 @@ export class Profile {
   ngOnInit(): void {
     this.loadHome();
   }
+  @ViewChild('heroVideo') heroVideo!: ElementRef<HTMLVideoElement>;
+
+ngAfterViewInit() {
+  setTimeout(() => {
+    const video = this.heroVideo?.nativeElement;
+
+    if (video) {
+      video.muted = true;
+      video.play().catch(err => {
+        console.log('Autoplay prevented:', err);
+      });
+    }
+  }, 500); // small delay for DOM stability
+}
 
   loadHome() {
   this.isLoading = true;

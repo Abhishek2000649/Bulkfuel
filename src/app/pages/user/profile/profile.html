@@ -1,53 +1,427 @@
-<!-- <h2>Products</h2>
 
-<div *ngFor="let group of groupedProducts" class="category-section">
 
-  <h2 class="category-title">
-    {{ group.category_name }}
-  </h2>
+<div class="bg-slate-50 overflow-hidden">
+  <app-spinner [isLoading]="isLoading" [loaderSize]="60"></app-spinner>
+  <div class="snap-y snap-mandatory">
+   <section class="mt-6 relative h-[720px] overflow-hidden font-sans text-white">
+<video
+  #heroVideo
+  muted
+  loop
+  playsinline
+  preload="metadata"
+  poster="assets/images/hero-fallback.jpg"
+  class="absolute inset-0 w-full h-full object-cover">
+  <source src="assets/videos/HeroPageVideo.mp4" type="video/mp4" />
+</video>
 
-  <div
-    class="product-card"
-    *ngFor="let p of group.items"
-  >
-    <h3>{{ p.name }}</h3>
-    <p>{{ p.description }}</p>
-    <p><b>Price:</b> ₹{{ p.price }}</p>
+  <!-- Overlay -->
+  <div class="absolute w-full h-full bg-black/65"></div>
 
-    <p *ngIf="p.totalStock === 0" class="out-stock">
-      Out of Stock
+  <!-- Center Content -->
+  <div class="absolute top-[32%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-center w-full">
+    <h1 class="text-[60px] font-semibold mb-5">
+      Build Serious Muscle Mass Faster
+    </h1>
+    <p class="text-[20px] text-gray-300 mb-8">
+     High-calorie mass gainer packed with protein and essential nutrients to help you gain weight, build muscle, and recover faster.
     </p>
-    <div *ngIf="p.totalStock > 0" class="qty-box">
-      <button (click)="decrease(p)" [disabled]="!cart[p.id]">−</button>
 
-      <input type="text" [value]="cart[p.id] || 0" readonly />
+    <div>
+      <a href="#"
+         class="px-10 py-3 rounded-lg text-base mx-3 bg-[#d3122f] hover:bg-[#a90f25] transition duration-300">
+Shop Gainers Now
+      </a>
 
-      <button
-        (click)="increase(p)"
-        [disabled]="(cart[p.id] || 0) >= p.totalStock"
-      >
-        +
-      </button>
-
-      <p
-        *ngIf="(cart[p.id] || 0) >= p.totalStock"
-        style="color:red;font-size:12px;margin:4px 0 0;"
-      >
-        Max stock reached
-      </p>
+      <a href="#"
+         class="px-10 py-3 rounded-lg text-base mx-3 border-2 border-white hover:bg-white hover:text-black transition duration-300">
+View Nutrition Facts
+      </a>
     </div>
   </div>
 
-</div>
+  <!-- Features -->
+  <div class="absolute top-[55%] left-[46%] -translate-x-1/2 text-left text-[20px] leading-[2.2]">
+    <div>✔ 30g Protein Per Serving</div>
+    <div>✔ 1200 Clean Calories</div>
+    <div>✔ No Added Sugar</div>
+    <div>✔ Fast Muscle Recovery</div>
+    <div>✔ Suitable for Beginners</div>
+  </div>
 
-<br><br>
+  <!-- Left Card -->
+  <div class="absolute bottom-[60px] left-[100px] w-[380px] p-7 rounded-[20px] 
+              bg-white/5 backdrop-blur-xl border border-white/20 
+              shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.4)]">
 
-<button class="cart-btn" (click)="goToCart()">Go to Cart</button> -->
+    <span class="text-xs px-3 py-1 rounded font-semibold bg-[#d3122f]">
+      LIMITED TIME OFFER
+    </span>
 
-<div class="mt-6 bg-slate-50 overflow-hidden">
-  <app-spinner [isLoading]="isLoading" [loaderSize]="100"></app-spinner>
-  <div class="snap-y snap-mandatory">
-    <section class="bg-[#fcfcfd]">
+    <h3 class="text-[26px] my-4">
+      Get 20% OFF<br>Your First Order
+    </h3>
+
+    <p class="text-[14px] text-gray-300 mb-6">
+     Use Code: GAIN15
+    </p>
+
+    <a href="#"
+       class="px-5 py-2 rounded text-sm bg-[#d3122f] text-white">
+       Claim Discount
+    </a>
+  </div>
+
+  <!-- Right Card -->
+  <div class="absolute bottom-[60px] right-[100px] w-[380px] p-7 rounded-[20px] 
+              bg-white/5 backdrop-blur-xl border border-white/20 
+              shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.4)]">
+
+    <span class="text-xs px-3 py-1 rounded font-semibold bg-[#b88900]">
+      NEW ARRIVAL
+    </span>
+
+    <h3 class="text-[26px] my-4">
+      Advanced Mass Gainer 2.0
+    </h3>
+
+    <p class="text-[14px] text-gray-300 mb-6">
+     • Improved Formula <br>• Better Taste <br>• Faster Results
+    </p>
+
+    <a href="#"
+       class="px-5 py-2 rounded text-sm border border-white text-white">
+       Explore Now
+    </a>
+  </div>
+
+</section>
+<!-- <section class="py-20 bg-gray-50">
+  <div class="text-center mb-8">
+    <h2 class="text-5xl font-semibold text-gray-900 mb-4">
+      Shop By Category
+    </h2>
+
+   
+    <div class="flex justify-center gap-6 text-sm text-gray-600">
+      <span class="flex items-center gap-2">
+        <span class="w-2 h-2 bg-red-600 rounded-full"></span> High Protein
+      </span>
+      <span class="flex items-center gap-2">
+        <span class="w-2 h-2 bg-red-600 rounded-full"></span> Fast Weight Gain
+      </span>
+      <span class="flex items-center gap-2">
+        <span class="w-2 h-2 bg-red-600 rounded-full"></span> Premium Quality
+      </span>
+      <span class="flex items-center gap-2">
+        <span class="w-2 h-2 bg-red-600 rounded-full"></span> Lab Tested
+      </span>
+    </div>
+  </div>
+
+  
+  <div class="max-w-6xl mx-auto bg-white rounded-3xl shadow-2xl p-6">
+
+    <div class="grid grid-cols-4 gap-4">
+
+      
+      <div class="col-span-2 bg-gradient-to-r from-[#7e1f25] to-[#a32b33] rounded-2xl p-6 text-white flex justify-between items-center">
+        <div>
+          <p class="text-sm opacity-80">Muscle Growth</p>
+          <h3 class="text-3xl font-bold mb-4">MASS GAINER</h3>
+          <button class="bg-white text-black text-xs px-4 py-2 rounded-full">
+            SHOP NOW
+          </button>
+        </div>
+        <img src="https://images.unsplash.com/photo-1605296867304-46d5465a13f1"
+             class="w-32 h-32 object-contain">
+      </div>
+
+      
+      <div class="bg-[#c14953] rounded-2xl p-4 text-white flex flex-col justify-between">
+        <div>
+          <p class="text-xs opacity-80">Lean Muscle</p>
+          <h3 class="text-xl font-bold">WHEY PROTEIN</h3>
+        </div>
+        <img src="https://images.unsplash.com/photo-1599058917212-d750089bc07e"
+             class="h-24 object-contain mx-auto">
+        <button class="bg-white text-black text-xs px-3 py-1 rounded-full mt-2">
+          SHOP NOW
+        </button>
+      </div>
+
+     
+      <div class="bg-[#f3f0c9] rounded-2xl p-4 text-gray-800 flex flex-col justify-between">
+        <div>
+          <p class="text-xs opacity-70">Energy Booster</p>
+          <h3 class="text-xl font-bold">PRE WORKOUT</h3>
+        </div>
+        <img src="https://images.unsplash.com/photo-1571019613914-85f342c55f4b"
+             class="h-24 object-contain mx-auto">
+      </div>
+
+     
+      <div class="bg-gray-200 rounded-2xl p-4 text-gray-700 flex flex-col justify-between">
+        <div>
+          <p class="text-xs opacity-70">Recovery</p>
+          <h3 class="text-lg font-bold">BCAA</h3>
+        </div>
+        <img src="https://images.unsplash.com/photo-1600185365483-26d7a4cc7519"
+             class="h-20 object-contain mx-auto">
+      </div>
+
+      
+      <div class="bg-[#e67d85] rounded-2xl p-4 flex items-center justify-center">
+        <img src="https://images.unsplash.com/photo-1583454110551-21f2fa2afe61"
+             class="h-28 object-contain">
+      </div>
+
+     
+      <div class="col-span-2 bg-gradient-to-r from-[#9e2b33] to-[#c74b55] rounded-2xl p-6 text-white flex justify-between items-center">
+        <div>
+          <p class="text-sm opacity-80">Top Rated</p>
+          <h3 class="text-2xl font-bold mb-3">BESTSELLERS</h3>
+          <button class="bg-white text-black text-xs px-4 py-2 rounded-full">
+            SHOP NOW
+          </button>
+        </div>
+        <img src="https://images.unsplash.com/photo-1594737625785-caf31f1d1f98"
+             class="h-24 object-contain">
+      </div>
+
+      
+      <div class="col-span-2 bg-gray-100 rounded-2xl p-4 text-gray-700 flex justify-between items-center">
+        <div>
+          <p class="text-xs opacity-70">Strength Training</p>
+          <h3 class="text-xl font-bold">GYM EQUIPMENT</h3>
+        </div>
+        <img src="https://images.unsplash.com/photo-1517963879433-6ad2b056d712"
+             class="h-24 object-contain">
+      </div>
+
+     
+      <div class="bg-[#c14c57] rounded-2xl p-4 text-white">
+        <p class="text-xs opacity-80">Health Support</p>
+        <h3 class="text-lg font-bold">MULTI VITAMINS</h3>
+      </div>
+
+      
+      <div class="bg-[#a2343f] rounded-2xl p-4 text-white">
+        <p class="text-xs opacity-80">Workout Gear</p>
+        <h3 class="text-lg font-bold">ACCESSORIES</h3>
+      </div>
+
+    </div>
+  </div>
+
+</section> -->
+
+<section 
+  class="py-20 bg-cover bg-center bg-no-repeat"
+  style="background-image: url('https://images.unsplash.com/photo-1604079628040-94301bb21b91');"
+>
+
+  <div class="max-w-6xl mx-auto px-6 text-center">
+
+    <!-- Heading -->
+    <h1 class="text-4xl md:text-5xl font-bold text-white leading-tight">
+      A Simple & Powerful Way to Gain Serious Muscle Mass
+    </h1>
+
+    <!-- Subtext -->
+    <p class="text-red-100 mt-4 max-w-2xl mx-auto text-sm md:text-base">
+     Trusted by 10,000+ fitness enthusiasts across India.
+Premium mass gainers designed to help you build muscle faster and more effectively.
+    </p>
+
+    <!-- Cards Container -->
+    <div class="mt-12 bg-[#5a0f0f]/80 backdrop-blur-sm p-6 md:p-8 rounded-2xl shadow-2xl">
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <!-- Large Left Card -->
+        <div class="relative rounded-xl overflow-hidden md:row-span-2">
+          <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee"
+               class="w-full h-full object-cover">
+          <span class="absolute top-3 left-3 bg-red-500 text-xs px-3 py-1 rounded-full font-semibold text-white">
+            Transformation Results
+          </span>
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="bg-red-500 w-14 h-14 rounded-full flex items-center justify-center shadow-lg text-white text-xl">
+              ▶
+            </div>
+          </div>
+        </div>
+
+        <!-- Top Middle -->
+        <div class="relative rounded-xl overflow-hidden">
+          <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9"
+               class="w-full h-64 object-cover">
+          <span class="absolute top-3 left-3 bg-red-500 text-xs px-3 py-1 rounded-full font-semibold text-white">
+            Customer Reviews
+          </span>
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="bg-red-500 w-12 h-12 rounded-full flex items-center justify-center shadow-md text-white">
+              ▶
+            </div>
+          </div>
+        </div>
+
+        <!-- Top Right -->
+        <div class="relative rounded-xl overflow-hidden">
+          <img src="https://images.unsplash.com/photo-1519183071298-a2962be96a9f"
+               class="w-full h-64 object-cover">
+          <span class="absolute top-3 left-3 bg-red-600 text-xs px-3 py-1 rounded-full font-semibold text-white">
+Product Demo
+          </span>
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="bg-red-500 w-12 h-12 rounded-full flex items-center justify-center shadow-md text-white">
+              ▶
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Middle -->
+        <div class="relative rounded-xl overflow-hidden">
+          <img src="https://images.unsplash.com/photo-1581291518857-4e27b48ff24e"
+               class="w-full h-64 object-cover">
+          <span class="absolute top-3 left-3 bg-red-500 text-xs px-3 py-1 rounded-full font-semibold text-white">
+            How it works
+          </span>
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="bg-red-500 w-12 h-12 rounded-full flex items-center justify-center shadow-md text-white">
+              ▶
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Right -->
+        <div class="relative rounded-xl overflow-hidden">
+          <img src="https://images.unsplash.com/photo-1606813907291-d86efa9b94db"
+               class="w-full h-64 object-cover">
+          <span class="absolute top-3 left-3 bg-red-500 text-xs px-3 py-1 rounded-full font-semibold text-white">
+Unboxing & Taste Test          </span>
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="bg-red-500 w-12 h-12 rounded-full flex items-center justify-center shadow-md text-white">
+              ▶
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+  <section class="relative overflow-hidden py-20">
+    
+    <!-- Pink Background Shape -->
+    <div class="absolute right-0 top-0 w-1/2 h-full">
+      <div class="absolute right-0 top-10 w-[600px] h-[400px] bg-pink-200 opacity-60 rounded-[100px] rotate-[-25deg]"></div>
+    </div>
+
+    <div class="container mx-auto px-10 flex items-center justify-between relative z-10">
+
+      <!-- Left Content -->
+      <div class="max-w-xl">
+
+        <!-- Logo + Tag -->
+        <div class="flex items-center gap-4 mb-10">
+          <div class="w-14 h-14 bg-white rounded-xl shadow flex items-center justify-center">
+            <div class="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
+              <div class="w-0 h-0 border-l-[10px] border-l-white border-y-[6px] border-y-transparent ml-1"></div>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="font-semibold text-lg">Muscle Growth Formula</h3>
+            <span class="text-xs bg-red-100 text-red-600 px-2 py-1 rounded-full">
+              Trusted by 10,000+ Gym Athletes
+            </span>
+          </div>
+        </div>
+
+        <!-- Heading -->
+        <h1 class="text-5xl font-bold text-gray-900 leading-tight mb-8">
+          Build Muscle Faster.
+ <br> Gain Weight Smarter.
+        </h1>
+
+        <!-- Bullet Points -->
+        <div class="space-y-4 text-gray-700 text-lg">
+          <div class="flex items-start gap-3">
+            <span class="text-pink-500 text-xl">✔</span>
+            <p>High-Calorie Formula for Serious Mass Gain</p>
+          </div>
+          <div class="flex items-start gap-3">
+            <span class="text-pink-500 text-xl">✔</span>
+            <p>30g+ Protein Per Serving for Lean Muscle</p>
+          </div>
+        </div>
+
+        <!-- Footer Brand -->
+        <div class="mt-16 text-red-600 font-semibold text-lg">
+          AZIZI <span class="text-black"> TALBINA</span>
+        </div>
+
+      </div>
+
+      <!-- Right Images -->
+      <div class="relative w-[500px]">
+
+        <!-- Main Card -->
+        <div class="bg-white rounded-2xl shadow-xl p-6">
+          <div class="relative mb-4">
+            <img src="https://images.unsplash.com/photo-1511379938547-c1f69419868d"
+                 class="rounded-lg w-full h-48 object-cover"/>
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="bg-red-400 text-white p-3 rounded-lg shadow-lg">
+                ▶
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-gray-100 rounded-lg p-4 flex items-center gap-4">
+            <img src="https://images.unsplash.com/photo-1492724441997-5dc865305da7"
+                 class="w-20 h-20 rounded-lg object-cover"/>
+            <div>
+              <div class="h-3 bg-gray-300 rounded w-32 mb-2"></div>
+              <div class="h-3 bg-gray-300 rounded w-20"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Floating Card -->
+        <div class="absolute right-[-40px] bottom-[-30px] bg-white rounded-2xl shadow-xl p-4 w-60">
+          <img src="https://images.unsplash.com/photo-1492724441997-5dc865305da7"
+               class="rounded-lg w-full h-32 object-cover mb-3"/>
+          <div class="h-3 bg-gray-300 rounded w-20 mb-2"></div>
+          <div class="h-3 bg-gray-300 rounded w-16 mb-4"></div>
+
+          <div class="flex items-center justify-between">
+            <span class="font-bold">$$$</span>
+            <button class="bg-red-400 text-white px-4 py-2 rounded-lg">
+              🛒
+            </button>
+          </div>
+        </div>
+
+        <!-- Blue Expand Icon -->
+        <div class="absolute right-[-70px] top-1/2 bg-red-400 w-14 h-14 rounded-full flex items-center justify-center text-white text-xl shadow-lg">
+          ↗
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+    <section class="mt-6 bg-[#fcfcfd]">
 
       <!-- ================= CATEGORY LOOP ================= -->
       <section
@@ -197,14 +571,14 @@
       </section>
 
       <!-- ================= GO TO CART ================= -->
-      <div class="my-6 flex justify-end max-w-[1440px] mx-auto px-4">
-        <button
-          (click)="goToCart()"
-          class="px-8 py-3 bg-slate-900 text-white rounded-xl font-black uppercase tracking-widest shadow-lg hover:bg-rose-900 transition"
-        >
-          Go To Cart →
-        </button>
-      </div>
+      <div class="fixed bottom-6 left-6 z-50">
+  <button
+    (click)="goToCart()"
+    class="px-8 py-3 bg-slate-900 text-white rounded-xl font-black uppercase tracking-widest shadow-lg hover:bg-rose-900 transition duration-300"
+  >
+    Go To Cart →
+  </button>
+</div>
 
     </section>
   </div>

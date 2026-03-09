@@ -14,6 +14,7 @@ import Swal from 'sweetalert2';
   standalone: true,
   imports: [CommonModule, FormsModule, Spinner],
   templateUrl: './cart.html',
+  styleUrl: './cart.css',
 })
 export class Cart implements OnInit {
 
