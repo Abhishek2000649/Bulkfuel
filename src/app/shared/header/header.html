@@ -6,34 +6,26 @@
     <div class="flex items-center justify-between md:gap-x-12 gap-x-6 h-20">
 
       <!-- ================= LOGO ================= -->
-      <div class="flex items-center cursor-pointer"
-           [routerLink]="auth.isLoggedIn() ? '/user' : '/'">
+      <div class="flex items-center cursor-pointer" [routerLink]="auth.isLoggedIn() ? '/user' : '/'">
         <div class="bg-white/10 p-2 rounded-2xl shadow-md">
           <div class="w-12 h-12 flex justify-center overflow-hidden rounded-lg">
-            <img src="assets/images/logo-dark.png"
-                 class="w-full h-full object-contain" />
+            <img src="assets/images/logo-dark.png" class="w-full h-full object-contain" />
           </div>
         </div>
       </div>
 
       <!-- ================= ADDRESS + SEARCH ================= -->
-      <div class="flex items-center gap-x-8 flex-1 max-w-2xl"
-           *ngIf="auth.user$ | async as user">
+      <div class="flex items-center gap-x-8 flex-1 max-w-2xl" *ngIf="auth.user$ | async as user">
 
         <!-- Address -->
-        <div *ngIf="user.role === 'USER'"
-             class="hidden lg:flex items-center bg-white/10 backdrop-blur-xl
+        <div *ngIf="user.role === 'USER'" class="hidden lg:flex items-center bg-white/10 backdrop-blur-xl
                     border border-white/20 px-5 py-1 rounded-2xl shadow">
 
-          <svg class="w-5 h-5 mr-3 text-amber-400"
-               fill="none" stroke="currentColor"
-               viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 11c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3z"/>
-            <path stroke-linecap="round" stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 22s8-4.5 8-11a8 8 0 10-16 0c0 6.5 8 11 8 11z"/>
+          <svg class="w-5 h-5 mr-3 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 11c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 22s8-4.5 8-11a8 8 0 10-16 0c0 6.5 8 11 8 11z" />
           </svg>
 
           <div>
@@ -42,9 +34,9 @@
             </p>
             <p class="text-sm font-semibold">
               {{
-                user.address?.city
-                ? user.address.city + ', ' + user.address.state
-                : 'No Address'
+              user.address?.city
+              ? user.address.city + ', ' + user.address.state
+              : 'No Address'
               }}
             </p>
           </div>
@@ -52,10 +44,7 @@
 
         <!-- Search -->
         <div class="relative w-full max-w-sm hidden lg:block">
-          <input type="text"
-                 [(ngModel)]="searchQuery"
-                 placeholder="Search premium products..."
-                 class="w-full pl-6 pr-5 py-3 rounded-2xl
+          <input type="text" [(ngModel)]="searchQuery" placeholder="Search premium products..." class="w-full pl-6 pr-5 py-3 rounded-2xl
                         bg-white/95 text-gray-900
                         text-sm font-medium
                         placeholder-gray-400
@@ -67,29 +56,22 @@
       </div>
 
       <!-- ================= NAV LINKS ================= -->
-      <nav class="hidden lg:flex items-center space-x-4"
-           *ngIf="auth.user$ | async as user">
+      <nav class="hidden lg:flex items-center space-x-4" *ngIf="auth.user$ | async as user">
 
         <!-- USER -->
         <ng-container *ngIf="user.role === 'USER'">
-          <a routerLink="/user"
-             routerLinkActive="border-b-2 border-amber-400 text-amber-300"
-             [routerLinkActiveOptions]="{ exact: true }"
-             class="px-5 py-2.5 text-sm font-semibold
+          <a routerLink="/user" routerLinkActive="border-b-2 border-amber-400 text-amber-300"
+            [routerLinkActiveOptions]="{ exact: true }" class="px-5 py-2.5 text-sm font-semibold
                     hover:bg-white/10 border-b-2 border-transparent transition">
             Home
           </a>
 
-          <a routerLink="/user/orders"
-             routerLinkActive="border-b-2 border-amber-400 text-amber-300"
-             class="px-5 py-2.5 text-sm font-semibold
+          <a routerLink="/user/orders" routerLinkActive="border-b-2 border-amber-400 text-amber-300" class="px-5 py-2.5 text-sm font-semibold
                     hover:bg-white/10 border-b-2 border-transparent transition">
             My Orders
           </a>
 
-          <a routerLink="/user/cart"
-             routerLinkActive="border-b-2 border-amber-400 text-amber-300"
-             class="px-5 py-2.5 text-sm font-semibold
+          <a routerLink="/user/cart" routerLinkActive="border-b-2 border-amber-400 text-amber-300" class="px-5 py-2.5 text-sm font-semibold
                     hover:bg-white/10 border-b-2 border-transparent transition">
             My Cart
           </a>
@@ -97,61 +79,52 @@
 
         <!-- ADMIN -->
         <ng-container *ngIf="user.role === 'ADMIN'">
-          <a routerLink="/admin/product"
-             routerLinkActive="border-b-2 border-amber-400 text-amber-300"
-             class="px-5 py-2.5 hover:bg-white/10 border-b-2 border-transparent transition">
+          <a routerLink="/admin/product" routerLinkActive="border-b-2 border-amber-400 text-amber-300"
+            class="px-5 py-2.5 hover:bg-white/10 border-b-2 border-transparent transition">
             Products
           </a>
 
-          <a routerLink="/admin/stock"
-             routerLinkActive="border-b-2 border-amber-400 text-amber-300"
-             class="px-5 py-2.5 hover:bg-white/10 border-b-2 border-transparent transition">
+          <a routerLink="/admin/stock" routerLinkActive="border-b-2 border-amber-400 text-amber-300"
+            class="px-5 py-2.5 hover:bg-white/10 border-b-2 border-transparent transition">
             Stock
           </a>
 
-          <a routerLink="/admin/userManagement"
-             routerLinkActive="border-b-2 border-amber-400 text-amber-300"
-             class="px-5 py-2.5 hover:bg-white/10 border-b-2 border-transparent transition">
+          <a routerLink="/admin/userManagement" routerLinkActive="border-b-2 border-amber-400 text-amber-300"
+            class="px-5 py-2.5 hover:bg-white/10 border-b-2 border-transparent transition">
             Users
           </a>
 
-          <a routerLink="/admin/order"
-             routerLinkActive="border-b-2 border-amber-400 text-amber-300"
-             class="px-5 py-2.5 hover:bg-white/10 border-b-2 border-transparent transition">
+          <a routerLink="/admin/order" routerLinkActive="border-b-2 border-amber-400 text-amber-300"
+            class="px-5 py-2.5 hover:bg-white/10 border-b-2 border-transparent transition">
             New Orders
           </a>
 
-          <a routerLink="/admin/order-history"
-             routerLinkActive="border-b-2 border-amber-400 text-amber-300"
-             class="px-5 py-2.5 hover:bg-white/10 border-b-2 border-transparent transition">
+          <a routerLink="/admin/order-history" routerLinkActive="border-b-2 border-amber-400 text-amber-300"
+            class="px-5 py-2.5 hover:bg-white/10 border-b-2 border-transparent transition">
             Order History
           </a>
 
-          <a routerLink="/admin/settlement"
-             routerLinkActive="border-b-2 border-amber-400 text-amber-300"
-             class="px-5 py-2.5 hover:bg-white/10 border-b-2 border-transparent transition">
+          <a routerLink="/admin/settlement" routerLinkActive="border-b-2 border-amber-400 text-amber-300"
+            class="px-5 py-2.5 hover:bg-white/10 border-b-2 border-transparent transition">
             Settlement
           </a>
         </ng-container>
 
         <!-- DELIVERY -->
         <ng-container *ngIf="user.role === 'delivery_agent'">
-          <a routerLink="/delivery"
-             routerLinkActive="border-b-2 border-amber-400 text-amber-300"
-             [routerLinkActiveOptions]="{ exact: true }"
-             class="px-5 py-2.5 hover:bg-white/10 border-b-2 border-transparent transition">
+          <a routerLink="/delivery" routerLinkActive="border-b-2 border-amber-400 text-amber-300"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="px-5 py-2.5 hover:bg-white/10 border-b-2 border-transparent transition">
             Dashboard
           </a>
 
-          <a routerLink="/delivery/available"
-             routerLinkActive="border-b-2 border-amber-400 text-amber-300"
-             class="px-5 py-2.5 hover:bg-white/10 border-b-2 border-transparent transition">
+          <a routerLink="/delivery/available" routerLinkActive="border-b-2 border-amber-400 text-amber-300"
+            class="px-5 py-2.5 hover:bg-white/10 border-b-2 border-transparent transition">
             Available
           </a>
 
-          <a routerLink="/delivery/orders"
-             routerLinkActive="border-b-2 border-amber-400 text-amber-300"
-             class="px-5 py-2.5 hover:bg-white/10 border-b-2 border-transparent transition">
+          <a routerLink="/delivery/orders" routerLinkActive="border-b-2 border-amber-400 text-amber-300"
+            class="px-5 py-2.5 hover:bg-white/10 border-b-2 border-transparent transition">
             Orders
           </a>
         </ng-container>
@@ -163,51 +136,52 @@
         <!-- GUEST -->
         <ng-container *ngIf="!auth.isLoggedIn()">
           <a routerLink="/login" class="text-sm font-bold hover:text-red-200">Login</a>
-          <a routerLink="/signUp"
-             class="px-4 py-2 bg-white text-red-900 rounded-xl text-sm font-black">
+          <a routerLink="/signUp" class="px-4 py-2 bg-white text-red-900 rounded-xl text-sm font-black">
             Signup
           </a>
         </ng-container>
 
         <!-- PROFILE -->
         <ng-container *ngIf="auth.user$ | async as user">
-          <div class="hidden lg:flex relative cursor-pointer"
-               (click)="toggleProfile($event)">
-            <img src="https://i.pravatar.cc/100"
-                 class="w-10 h-10 rounded-xl border-2 border-white/30" />
+          <div class="hidden lg:flex relative cursor-pointer" (click)="toggleProfile($event)">
+            <img src="https://i.pravatar.cc/100" class="w-10 h-10 rounded-xl border-2 border-white/30" />
 
             <!-- Dropdown -->
-            <div *ngIf="isProfileOpen"
-                 class="absolute right-0 mt-8 w-56 bg-white text-gray-800
+            <div *ngIf="isProfileOpen" class="absolute right-0 mt-8 w-56 bg-white text-gray-800
                         rounded-2xl shadow-2xl border border-gray-100 overflow-hidden">
 
               <p class="px-4 py-3 font-semibold border-b">
                 {{user.name}}
               </p>
 
-              <a routerLink="/profile-update"
-                 class="block px-4 py-3 hover:bg-red-50">
+              <a routerLink="/profile-update" class="block px-4 py-3 hover:bg-red-50">
                 👤 My Profile
               </a>
 
-              <button *ngIf="isSettingsOpen && user.role === 'ADMIN'" (click)="toggleSettings($event)"
+              <!-- <button *ngIf="isSettingsOpen && user.role === 'ADMIN'" (click)="toggleSettings($event)"
                       class="w-full flex justify-between px-4 py-3 hover:bg-red-50">
+                ⚙️ Settings
+                <span [class.rotate-90]="isSettingsOpen">▶</span>
+              </button> -->
+              <button *ngIf="user.role === 'ADMIN'" (click)="toggleSettings($event)"
+                class="w-full flex justify-between px-4 py-3 hover:bg-red-50">
                 ⚙️ Settings
                 <span [class.rotate-90]="isSettingsOpen">▶</span>
               </button>
 
-              <div *ngIf="isSettingsOpen && user.role === 'ADMIN'"
-                   class="pl-6 border-l border-gray-200">
-                <a routerLink="/admin/category"
-                   class="block px-4 py-2 hover:bg-red-50">Category</a>
-                <a routerLink="/admin/warehouse"
-                   class="block px-4 py-2 hover:bg-red-50">Warehouse</a>
+              <!-- <div *ngIf="isSettingsOpen && user.role === 'ADMIN'" class="pl-6 border-l border-gray-200">
+                <a routerLink="/admin/category" class="block px-4 py-2 hover:bg-red-50">Category</a>
+                <a routerLink="/admin/warehouse" class="block px-4 py-2 hover:bg-red-50">Warehouse</a>
+              </div> -->
+
+              <div *ngIf="isSettingsOpen && user.role === 'ADMIN'" class="pl-6 border-l border-gray-200">
+                <a routerLink="/admin/category" class="block px-4 py-2 hover:bg-red-50">Category</a>
+                <a routerLink="/admin/warehouse" class="block px-4 py-2 hover:bg-red-50">Warehouse</a>
               </div>
 
               <div class="border-t"></div>
 
-              <button (click)="logout()"
-                      class="w-full text-left px-4 py-3 text-red-600 hover:bg-red-50">
+              <button (click)="logout()" class="w-full text-left px-4 py-3 text-red-600 hover:bg-red-50">
                 Logout
               </button>
             </div>
@@ -215,8 +189,7 @@
         </ng-container>
 
         <!-- MOBILE BUTTON -->
-        <button class="lg:hidden p-2 rounded-xl bg-white/10"
-                (click)="toggleMobileMenu($event)">
+        <button class="lg:hidden p-2 rounded-xl bg-white/10" (click)="toggleMobileMenu($event)">
           ☰
         </button>
 
@@ -224,148 +197,124 @@
     </div>
   </div>
   <!-- ================= MOBILE MENU ================= -->
-<div *ngIf="isMobileMenuOpen"
-     class="lg:hidden absolute top-full left-0 w-full
+  <div *ngIf="isMobileMenuOpen" class="lg:hidden absolute top-full left-0 w-full
             bg-gradient-to-b from-[#750000] to-[#5a0000]
             text-white shadow-2xl">
 
-  <div class="px-6 py-6 space-y-6">
+    <div class="px-6 py-6 space-y-6">
 
-    <!-- USER INFO -->
-    <ng-container *ngIf="auth.user$ | async as user">
-      <div class="flex items-center gap-4 pb-4 border-b border-white/20">
-        <img src="https://i.pravatar.cc/100"
-             class="w-12 h-12 rounded-xl border-2 border-white/30" />
-        <div>
-          <p class="font-semibold text-lg">{{ user.name }}</p>
-          <p class="text-xs text-red-200 uppercase tracking-wider">
-            {{ user.role }}
-          </p>
+      <!-- USER INFO -->
+      <ng-container *ngIf="auth.user$ | async as user">
+        <div class="flex items-center gap-4 pb-4 border-b border-white/20">
+          <img src="https://i.pravatar.cc/100" class="w-12 h-12 rounded-xl border-2 border-white/30" />
+          <div>
+            <p class="font-semibold text-lg">{{ user.name }}</p>
+            <p class="text-xs text-red-200 uppercase tracking-wider">
+              {{ user.role }}
+            </p>
+          </div>
         </div>
-      </div>
 
-      <!-- USER -->
-      <ng-container *ngIf="user.role === 'USER'">
-        <a routerLink="/user"
-           (click)="isMobileMenuOpen=false"
-           class="block px-5 py-3 rounded-xl hover:bg-white/10">
-          Home
-        </a>
+        <!-- USER -->
+        <ng-container *ngIf="user.role === 'USER'">
+          <a routerLink="/user" (click)="isMobileMenuOpen=false" class="block px-5 py-3 rounded-xl hover:bg-white/10">
+            Home
+          </a>
 
-        <a routerLink="/user/orders"
-           (click)="isMobileMenuOpen=false"
-           class="block px-5 py-3 rounded-xl hover:bg-white/10">
-          My Orders
-        </a>
+          <a routerLink="/user/orders" (click)="isMobileMenuOpen=false"
+            class="block px-5 py-3 rounded-xl hover:bg-white/10">
+            My Orders
+          </a>
 
-        <a routerLink="/user/cart"
-           (click)="isMobileMenuOpen=false"
-           class="block px-5 py-3 rounded-xl hover:bg-white/10">
-          My Cart
-        </a>
+          <a routerLink="/user/cart" (click)="isMobileMenuOpen=false"
+            class="block px-5 py-3 rounded-xl hover:bg-white/10">
+            My Cart
+          </a>
+        </ng-container>
+
+        <!-- ADMIN -->
+        <ng-container *ngIf="user.role === 'ADMIN'">
+          <a routerLink="/admin/product" (click)="isMobileMenuOpen=false"
+            class="block px-5 py-3 rounded-xl hover:bg-white/10">
+            Products
+          </a>
+
+          <a routerLink="/admin/stock" (click)="isMobileMenuOpen=false"
+            class="block px-5 py-3 rounded-xl hover:bg-white/10">
+            Stock
+          </a>
+
+          <a routerLink="/admin/userManagement" (click)="isMobileMenuOpen=false"
+            class="block px-5 py-3 rounded-xl hover:bg-white/10">
+            Users
+          </a>
+
+          <a routerLink="/admin/order" (click)="isMobileMenuOpen=false"
+            class="block px-5 py-3 rounded-xl hover:bg-white/10">
+            New Orders
+          </a>
+
+          <a routerLink="/admin/order-history" (click)="isMobileMenuOpen=false"
+            class="block px-5 py-3 rounded-xl hover:bg-white/10">
+            Order History
+          </a>
+
+          <a routerLink="/admin/settlement" (click)="isMobileMenuOpen=false"
+            class="block px-5 py-3 rounded-xl hover:bg-white/10">
+            Settlement
+          </a>
+
+          <!-- Admin Settings Links -->
+          <a routerLink="/admin/category" (click)="isMobileMenuOpen=false"
+            class="block px-5 py-3 rounded-xl hover:bg-white/10">
+            Category
+          </a>
+
+          <a routerLink="/admin/warehouse" (click)="isMobileMenuOpen=false"
+            class="block px-5 py-3 rounded-xl hover:bg-white/10">
+            Warehouse
+          </a>
+        </ng-container>
+
+        <!-- DELIVERY -->
+        <ng-container *ngIf="user.role === 'delivery_agent'">
+          <a routerLink="/delivery" (click)="isMobileMenuOpen=false"
+            class="block px-5 py-3 rounded-xl hover:bg-white/10">
+            Dashboard
+          </a>
+
+          <a routerLink="/delivery/available" (click)="isMobileMenuOpen=false"
+            class="block px-5 py-3 rounded-xl hover:bg-white/10">
+            Available
+          </a>
+
+          <a routerLink="/delivery/orders" (click)="isMobileMenuOpen=false"
+            class="block px-5 py-3 rounded-xl hover:bg-white/10">
+            Orders
+          </a>
+        </ng-container>
       </ng-container>
 
-      <!-- ADMIN -->
-      <ng-container *ngIf="user.role === 'ADMIN'">
-        <a routerLink="/admin/product"
-           (click)="isMobileMenuOpen=false"
-           class="block px-5 py-3 rounded-xl hover:bg-white/10">
-          Products
+      <!-- GUEST -->
+      <ng-container *ngIf="!auth.isLoggedIn()">
+        <a routerLink="/login" (click)="isMobileMenuOpen=false" class="block px-5 py-3 rounded-xl hover:bg-white/10">
+          Login
         </a>
 
-        <a routerLink="/admin/stock"
-           (click)="isMobileMenuOpen=false"
-           class="block px-5 py-3 rounded-xl hover:bg-white/10">
-          Stock
-        </a>
-
-        <a routerLink="/admin/userManagement"
-           (click)="isMobileMenuOpen=false"
-           class="block px-5 py-3 rounded-xl hover:bg-white/10">
-          Users
-        </a>
-
-        <a routerLink="/admin/order"
-           (click)="isMobileMenuOpen=false"
-           class="block px-5 py-3 rounded-xl hover:bg-white/10">
-          New Orders
-        </a>
-
-        <a routerLink="/admin/order-history"
-           (click)="isMobileMenuOpen=false"
-           class="block px-5 py-3 rounded-xl hover:bg-white/10">
-          Order History
-        </a>
-
-        <a routerLink="/admin/settlement"
-           (click)="isMobileMenuOpen=false"
-           class="block px-5 py-3 rounded-xl hover:bg-white/10">
-          Settlement
-        </a>
-
-        <!-- Admin Settings Links -->
-        <a routerLink="/admin/category"
-           (click)="isMobileMenuOpen=false"
-           class="block px-5 py-3 rounded-xl hover:bg-white/10">
-          Category
-        </a>
-
-        <a routerLink="/admin/warehouse"
-           (click)="isMobileMenuOpen=false"
-           class="block px-5 py-3 rounded-xl hover:bg-white/10">
-          Warehouse
-        </a>
-      </ng-container>
-
-      <!-- DELIVERY -->
-      <ng-container *ngIf="user.role === 'delivery_agent'">
-        <a routerLink="/delivery"
-           (click)="isMobileMenuOpen=false"
-           class="block px-5 py-3 rounded-xl hover:bg-white/10">
-          Dashboard
-        </a>
-
-        <a routerLink="/delivery/available"
-           (click)="isMobileMenuOpen=false"
-           class="block px-5 py-3 rounded-xl hover:bg-white/10">
-          Available
-        </a>
-
-        <a routerLink="/delivery/orders"
-           (click)="isMobileMenuOpen=false"
-           class="block px-5 py-3 rounded-xl hover:bg-white/10">
-          Orders
-        </a>
-      </ng-container>
-    </ng-container>
-
-    <!-- GUEST -->
-    <ng-container *ngIf="!auth.isLoggedIn()">
-      <a routerLink="/login"
-         (click)="isMobileMenuOpen=false"
-         class="block px-5 py-3 rounded-xl hover:bg-white/10">
-        Login
-      </a>
-
-      <a routerLink="/signUp"
-         (click)="isMobileMenuOpen=false"
-         class="block text-center px-5 py-3 rounded-xl
+        <a routerLink="/signUp" (click)="isMobileMenuOpen=false" class="block text-center px-5 py-3 rounded-xl
                 bg-white text-red-900 font-bold">
-        Signup
-      </a>
-    </ng-container>
+          Signup
+        </a>
+      </ng-container>
 
-    <!-- LOGOUT -->
-    <ng-container *ngIf="auth.isLoggedIn()">
-      <button (click)="logout(); isMobileMenuOpen=false"
-              class="w-full text-left px-5 py-3 rounded-xl
+      <!-- LOGOUT -->
+      <ng-container *ngIf="auth.isLoggedIn()">
+        <button (click)="logout(); isMobileMenuOpen=false" class="w-full text-left px-5 py-3 rounded-xl
                      text-red-300 hover:bg-white/10">
-        Logout
-      </button>
-    </ng-container>
+          Logout
+        </button>
+      </ng-container>
 
+    </div>
   </div>
-</div>
 </header>
-
-<div class="h-20"></div>

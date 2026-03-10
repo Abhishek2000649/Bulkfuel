@@ -242,4 +242,12 @@ ngAfterViewInit() {
   trackByProductId(index: number, item: any) {
     return item.id;
   }
+
+  scrollToProducts() {
+  const element = document.getElementById('products');
+  element?.scrollIntoView({
+    behavior: 'smooth',
+    block: 'start'
+  });
+}
 }

@@ -1,102 +1,92 @@
-
-
 <div class="bg-slate-50 overflow-hidden">
   <app-spinner [isLoading]="isLoading" [loaderSize]="60"></app-spinner>
-  <div class="snap-y snap-mandatory">
-   <section class="mt-6 relative h-[720px] overflow-hidden font-sans text-white">
-<video
-  #heroVideo
-  muted
-  loop
-  playsinline
-  preload="metadata"
-  poster="assets/images/hero-fallback.jpg"
-  class="absolute inset-0 w-full h-full object-cover">
-  <source src="assets/videos/HeroPageVideo.mp4" type="video/mp4" />
-</video>
+  <div class=" ">
+    <section class=" relative lg:h-[720px] md:h-[950px] h-[1600px] overflow-hidden font-sans text-white">
+      <video #heroVideo muted loop playsinline preload="metadata" poster="assets/images/hero-fallback.jpg"
+        class="absolute inset-0 w-full h-full object-cover">
+        <source src="assets/videos/HeroPageVideo.mp4" type="video/mp4" />
+      </video>
 
-  <!-- Overlay -->
-  <div class="absolute w-full h-full bg-black/65"></div>
+      <div class="absolute w-full h-full bg-black/65"></div>
 
-  <!-- Center Content -->
-  <div class="absolute top-[32%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-center w-full">
-    <h1 class="text-[60px] font-semibold mb-5">
-      Build Serious Muscle Mass Faster
-    </h1>
-    <p class="text-[20px] text-gray-300 mb-8">
-     High-calorie mass gainer packed with protein and essential nutrients to help you gain weight, build muscle, and recover faster.
-    </p>
+      <div
+        class="absolute lg:top-[32%] md:top-[20%] top-[20%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-center w-full">
+        <h1 class="lg:text-[60px] text-[40px] font-semibold mb-5">
+          Build Serious Muscle Mass Faster
+        </h1>
+        <p class="text-[20px] text-gray-300 mb-8">
+          High-calorie mass gainer packed with protein and essential nutrients to help you gain weight, build muscle,
+          and recover faster.
+        </p>
 
-    <div>
-      <a href="#"
-         class="px-10 py-3 rounded-lg text-base mx-3 bg-[#d3122f] hover:bg-[#a90f25] transition duration-300">
-Shop Gainers Now
-      </a>
+        <div class="flex flex-col md:flex-row md:justify-center gap-4 md:gap-0 space-y-4 md:space-y-0">
+          <a (click)="scrollToProducts()"
+            class="px-10 py-3 rounded-lg text-base mx-3 bg-[#d3122f] hover:bg-[#a90f25] transition duration-300">
+            Shop Gainers Now
+          </a>
 
-      <a href="#"
-         class="px-10 py-3 rounded-lg text-base mx-3 border-2 border-white hover:bg-white hover:text-black transition duration-300">
-View Nutrition Facts
-      </a>
-    </div>
-  </div>
-
-  <!-- Features -->
-  <div class="absolute top-[55%] left-[46%] -translate-x-1/2 text-left text-[20px] leading-[2.2]">
-    <div>✔ 30g Protein Per Serving</div>
-    <div>✔ 1200 Clean Calories</div>
-    <div>✔ No Added Sugar</div>
-    <div>✔ Fast Muscle Recovery</div>
-    <div>✔ Suitable for Beginners</div>
-  </div>
-
-  <!-- Left Card -->
-  <div class="absolute bottom-[60px] left-[100px] w-[380px] p-7 rounded-[20px] 
+          <a href="#"
+            class="px-10 py-3 rounded-lg text-base mx-3 border-2 border-white hover:bg-white hover:text-black transition duration-300">
+            View Nutrition Facts
+          </a>
+        </div>
+      </div>
+      <div
+        class="absolute lg:top-[55%] md:top-[45%] top-[40%] lg:left-[100px] md:left-[45px] left-[20px] grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1  lg:gap-20 md:gap-12 gap-9">
+        <div class="  lg:w-[380px] md:[320px] p-7 rounded-[20px] 
               bg-white/5 backdrop-blur-xl border border-white/20 
               shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.4)]">
 
-    <span class="text-xs px-3 py-1 rounded font-semibold bg-[#d3122f]">
-      LIMITED TIME OFFER
-    </span>
+          <span class="text-xs px-3 py-1 rounded font-semibold bg-[#d3122f]">
+            LIMITED TIME OFFER
+          </span>
 
-    <h3 class="text-[26px] my-4">
-      Get 20% OFF<br>Your First Order
-    </h3>
+          <h3 class="text-[26px] my-4">
+            Get 20% OFF<br>Your First Order
+          </h3>
 
-    <p class="text-[14px] text-gray-300 mb-6">
-     Use Code: GAIN15
-    </p>
+          <p class="text-[14px] text-gray-300 mb-6">
+            Use Code: GAIN15
+          </p>
 
-    <a href="#"
-       class="px-5 py-2 rounded text-sm bg-[#d3122f] text-white">
-       Claim Discount
-    </a>
-  </div>
+          <a href="#" class="px-5 py-2 rounded text-sm bg-[#d3122f] text-white">
+            Claim Discount
+          </a>
+        </div>
+        <div class="md:hidden lg:flex lg:flex-col text-left text-[20px] leading-[2.2]">
+          <div>✔ 30g Protein Per Serving</div>
+          <div>✔ 1200 Clean Calories</div>
+          <div>✔ No Added Sugar</div>
+          <div>✔ Fast Muscle Recovery</div>
+          <div>✔ Suitable for Beginners</div>
+        </div>
 
-  <!-- Right Card -->
-  <div class="absolute bottom-[60px] right-[100px] w-[380px] p-7 rounded-[20px] 
+
+
+        <div class="  lg:w-[380px] md:w-[320px] p-7 rounded-[20px] 
               bg-white/5 backdrop-blur-xl border border-white/20 
               shadow-[0_8px_32px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.4)]">
 
-    <span class="text-xs px-3 py-1 rounded font-semibold bg-[#b88900]">
-      NEW ARRIVAL
-    </span>
+          <span class="text-xs px-3 py-1 rounded font-semibold bg-[#b88900]">
+            NEW ARRIVAL
+          </span>
 
-    <h3 class="text-[26px] my-4">
-      Advanced Mass Gainer 2.0
-    </h3>
+          <h3 class="text-[26px] my-4">
+            Advanced Mass Gainer 2.0
+          </h3>
 
-    <p class="text-[14px] text-gray-300 mb-6">
-     • Improved Formula <br>• Better Taste <br>• Faster Results
-    </p>
+          <p class="text-[14px] text-gray-300 mb-6">
+            • Improved Formula <br>• Better Taste <br>• Faster Results
+          </p>
 
-    <a href="#"
-       class="px-5 py-2 rounded text-sm border border-white text-white">
-       Explore Now
-    </a>
-  </div>
+          <a href="#" class="px-5 py-2 rounded text-sm border border-white text-white">
+            Explore Now
+          </a>
+        </div>
+      </div>
 
-</section>
-<!-- <section class="py-20 bg-gray-50">
+    </section>
+    <!-- <section class="py-20 bg-gray-50">
   <div class="text-center mb-8">
     <h2 class="text-5xl font-semibold text-gray-900 mb-4">
       Shop By Category
@@ -216,227 +206,219 @@ View Nutrition Facts
 
 </section> -->
 
-<section 
-  class="py-20 bg-cover bg-center bg-no-repeat"
-  style="background-image: url('https://images.unsplash.com/photo-1604079628040-94301bb21b91');"
->
+    <section class="py-20 bg-cover bg-center bg-no-repeat"
+      style="background-image: url('https://images.unsplash.com/photo-1604079628040-94301bb21b91');">
 
-  <div class="max-w-6xl mx-auto px-6 text-center">
-
-    <!-- Heading -->
-    <h1 class="text-4xl md:text-5xl font-bold text-white leading-tight">
-      A Simple & Powerful Way to Gain Serious Muscle Mass
-    </h1>
-
-    <!-- Subtext -->
-    <p class="text-red-100 mt-4 max-w-2xl mx-auto text-sm md:text-base">
-     Trusted by 10,000+ fitness enthusiasts across India.
-Premium mass gainers designed to help you build muscle faster and more effectively.
-    </p>
-
-    <!-- Cards Container -->
-    <div class="mt-12 bg-[#5a0f0f]/80 backdrop-blur-sm p-6 md:p-8 rounded-2xl shadow-2xl">
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-        <!-- Large Left Card -->
-        <div class="relative rounded-xl overflow-hidden md:row-span-2">
-          <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee"
-               class="w-full h-full object-cover">
-          <span class="absolute top-3 left-3 bg-red-500 text-xs px-3 py-1 rounded-full font-semibold text-white">
-            Transformation Results
-          </span>
-          <div class="absolute inset-0 flex items-center justify-center">
-            <div class="bg-red-500 w-14 h-14 rounded-full flex items-center justify-center shadow-lg text-white text-xl">
-              ▶
-            </div>
-          </div>
-        </div>
-
-        <!-- Top Middle -->
-        <div class="relative rounded-xl overflow-hidden">
-          <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9"
-               class="w-full h-64 object-cover">
-          <span class="absolute top-3 left-3 bg-red-500 text-xs px-3 py-1 rounded-full font-semibold text-white">
-            Customer Reviews
-          </span>
-          <div class="absolute inset-0 flex items-center justify-center">
-            <div class="bg-red-500 w-12 h-12 rounded-full flex items-center justify-center shadow-md text-white">
-              ▶
-            </div>
-          </div>
-        </div>
-
-        <!-- Top Right -->
-        <div class="relative rounded-xl overflow-hidden">
-          <img src="https://images.unsplash.com/photo-1519183071298-a2962be96a9f"
-               class="w-full h-64 object-cover">
-          <span class="absolute top-3 left-3 bg-red-600 text-xs px-3 py-1 rounded-full font-semibold text-white">
-Product Demo
-          </span>
-          <div class="absolute inset-0 flex items-center justify-center">
-            <div class="bg-red-500 w-12 h-12 rounded-full flex items-center justify-center shadow-md text-white">
-              ▶
-            </div>
-          </div>
-        </div>
-
-        <!-- Bottom Middle -->
-        <div class="relative rounded-xl overflow-hidden">
-          <img src="https://images.unsplash.com/photo-1581291518857-4e27b48ff24e"
-               class="w-full h-64 object-cover">
-          <span class="absolute top-3 left-3 bg-red-500 text-xs px-3 py-1 rounded-full font-semibold text-white">
-            How it works
-          </span>
-          <div class="absolute inset-0 flex items-center justify-center">
-            <div class="bg-red-500 w-12 h-12 rounded-full flex items-center justify-center shadow-md text-white">
-              ▶
-            </div>
-          </div>
-        </div>
-
-        <!-- Bottom Right -->
-        <div class="relative rounded-xl overflow-hidden">
-          <img src="https://images.unsplash.com/photo-1606813907291-d86efa9b94db"
-               class="w-full h-64 object-cover">
-          <span class="absolute top-3 left-3 bg-red-500 text-xs px-3 py-1 rounded-full font-semibold text-white">
-Unboxing & Taste Test          </span>
-          <div class="absolute inset-0 flex items-center justify-center">
-            <div class="bg-red-500 w-12 h-12 rounded-full flex items-center justify-center shadow-md text-white">
-              ▶
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-  <section class="relative overflow-hidden py-20">
-    
-    <!-- Pink Background Shape -->
-    <div class="absolute right-0 top-0 w-1/2 h-full">
-      <div class="absolute right-0 top-10 w-[600px] h-[400px] bg-pink-200 opacity-60 rounded-[100px] rotate-[-25deg]"></div>
-    </div>
-
-    <div class="container mx-auto px-10 flex items-center justify-between relative z-10">
-
-      <!-- Left Content -->
-      <div class="max-w-xl">
-
-        <!-- Logo + Tag -->
-        <div class="flex items-center gap-4 mb-10">
-          <div class="w-14 h-14 bg-white rounded-xl shadow flex items-center justify-center">
-            <div class="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
-              <div class="w-0 h-0 border-l-[10px] border-l-white border-y-[6px] border-y-transparent ml-1"></div>
-            </div>
-          </div>
-
-          <div>
-            <h3 class="font-semibold text-lg">Muscle Growth Formula</h3>
-            <span class="text-xs bg-red-100 text-red-600 px-2 py-1 rounded-full">
-              Trusted by 10,000+ Gym Athletes
-            </span>
-          </div>
-        </div>
+      <div class="max-w-6xl mx-auto px-6 text-center">
 
         <!-- Heading -->
-        <h1 class="text-5xl font-bold text-gray-900 leading-tight mb-8">
-          Build Muscle Faster.
- <br> Gain Weight Smarter.
+        <h1 class="text-4xl md:text-5xl font-bold text-white leading-tight">
+          A Simple & Powerful Way to Gain Serious Muscle Mass
         </h1>
 
-        <!-- Bullet Points -->
-        <div class="space-y-4 text-gray-700 text-lg">
-          <div class="flex items-start gap-3">
-            <span class="text-pink-500 text-xl">✔</span>
-            <p>High-Calorie Formula for Serious Mass Gain</p>
-          </div>
-          <div class="flex items-start gap-3">
-            <span class="text-pink-500 text-xl">✔</span>
-            <p>30g+ Protein Per Serving for Lean Muscle</p>
-          </div>
-        </div>
+        <!-- Subtext -->
+        <p class="text-red-100 mt-4 max-w-2xl mx-auto text-sm md:text-base">
+          Trusted by 10,000+ fitness enthusiasts across India.
+          Premium mass gainers designed to help you build muscle faster and more effectively.
+        </p>
 
-        <!-- Footer Brand -->
-        <div class="mt-16 text-red-600 font-semibold text-lg">
-          AZIZI <span class="text-black"> TALBINA</span>
+        <!-- Cards Container -->
+        <div class="mt-12 bg-[#5a0f0f]/80 backdrop-blur-sm p-6 md:p-8 rounded-2xl shadow-2xl">
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+            <!-- Large Left Card -->
+            <div class="relative rounded-xl overflow-hidden md:row-span-2">
+              <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee"
+                class="w-full h-full object-cover">
+              <span class="absolute top-3 left-3 bg-red-500 text-xs px-3 py-1 rounded-full font-semibold text-white">
+                Transformation Results
+              </span>
+              <div class="absolute inset-0 flex items-center justify-center">
+                <div
+                  class="bg-red-500 w-14 h-14 rounded-full flex items-center justify-center shadow-lg text-white text-xl">
+                  ▶
+                </div>
+              </div>
+            </div>
+
+            <!-- Top Middle -->
+            <div class="relative rounded-xl overflow-hidden">
+              <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9" class="w-full h-64 object-cover">
+              <span class="absolute top-3 left-3 bg-red-500 text-xs px-3 py-1 rounded-full font-semibold text-white">
+                Customer Reviews
+              </span>
+              <div class="absolute inset-0 flex items-center justify-center">
+                <div class="bg-red-500 w-12 h-12 rounded-full flex items-center justify-center shadow-md text-white">
+                  ▶
+                </div>
+              </div>
+            </div>
+
+            <!-- Top Right -->
+            <div class="relative rounded-xl overflow-hidden">
+              <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9" class="w-full h-64 object-cover">
+              <span class="absolute top-3 left-3 bg-red-600 text-xs px-3 py-1 rounded-full font-semibold text-white">
+                Product Demo
+              </span>
+              <div class="absolute inset-0 flex items-center justify-center">
+                <div class="bg-red-500 w-12 h-12 rounded-full flex items-center justify-center shadow-md text-white">
+                  ▶
+                </div>
+              </div>
+            </div>
+
+            <!-- Bottom Middle -->
+            <div class="relative rounded-xl overflow-hidden">
+              <img src="https://images.unsplash.com/photo-1581291518857-4e27b48ff24e" class="w-full h-64 object-cover">
+              <span class="absolute top-3 left-3 bg-red-500 text-xs px-3 py-1 rounded-full font-semibold text-white">
+                How it works
+              </span>
+              <div class="absolute inset-0 flex items-center justify-center">
+                <div class="bg-red-500 w-12 h-12 rounded-full flex items-center justify-center shadow-md text-white">
+                  ▶
+                </div>
+              </div>
+            </div>
+
+            <!-- Bottom Right -->
+            <div class="relative rounded-xl overflow-hidden">
+              <img src="https://images.unsplash.com/photo-1606813907291-d86efa9b94db" class="w-full h-64 object-cover">
+              <span class="absolute top-3 left-3 bg-red-500 text-xs px-3 py-1 rounded-full font-semibold text-white">
+                Unboxing & Taste Test </span>
+              <div class="absolute inset-0 flex items-center justify-center">
+                <div class="bg-red-500 w-12 h-12 rounded-full flex items-center justify-center shadow-md text-white">
+                  ▶
+                </div>
+              </div>
+            </div>
+
+          </div>
+
         </div>
 
       </div>
 
-      <!-- Right Images -->
-      <div class="relative w-[500px]">
+    </section>
 
-        <!-- Main Card -->
-        <div class="bg-white rounded-2xl shadow-xl p-6">
-          <div class="relative mb-4">
-            <img src="https://images.unsplash.com/photo-1511379938547-c1f69419868d"
-                 class="rounded-lg w-full h-48 object-cover"/>
-            <div class="absolute inset-0 flex items-center justify-center">
-              <div class="bg-red-400 text-white p-3 rounded-lg shadow-lg">
-                ▶
+    <section class="relative overflow-hidden py-20">
+
+      <!-- Pink Background Shape -->
+      <div class="absolute right-0 top-0 w-1/2 h-full">
+        <div class="absolute right-0 top-10 w-[600px] h-[400px] bg-pink-200 opacity-60 rounded-[100px] rotate-[-25deg]">
+        </div>
+      </div>
+
+      <div class="container mx-auto px-10 flex items-center md:justify-between flex-col md:flex-row relative z-10">
+
+        <!-- Left Content -->
+        <div class="max-w-xl">
+
+          <!-- Logo + Tag -->
+          <div class="flex items-center gap-4 mb-10">
+            <div class="w-14 h-14 bg-white rounded-xl shadow flex items-center justify-center">
+              <div class="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
+                <div class="w-0 h-0 border-l-[10px] border-l-white border-y-[6px] border-y-transparent ml-1"></div>
+              </div>
+            </div>
+
+            <div>
+              <h3 class="font-semibold text-lg">Muscle Growth Formula</h3>
+              <span class="text-xs bg-red-100 text-red-600 px-2 py-1 rounded-full">
+                Trusted by 10,000+ Gym Athletes
+              </span>
+            </div>
+          </div>
+
+          <!-- Heading -->
+          <h1 class="text-5xl font-bold text-gray-900 leading-tight mb-8">
+            Build Muscle Faster.
+            <br> Gain Weight Smarter.
+          </h1>
+
+          <!-- Bullet Points -->
+          <div class="space-y-4 text-gray-700 text-lg">
+            <div class="flex items-start gap-3">
+              <span class="text-pink-500 text-xl">✔</span>
+              <p>High-Calorie Formula for Serious Mass Gain</p>
+            </div>
+            <div class="flex items-start gap-3">
+              <span class="text-pink-500 text-xl">✔</span>
+              <p>30g+ Protein Per Serving for Lean Muscle</p>
+            </div>
+          </div>
+
+          <!-- Footer Brand -->
+          <div class="mt-16 text-red-600 font-semibold text-lg">
+            AZIZI <span class="text-black"> TALBINA</span>
+          </div>
+
+        </div>
+
+        <!-- Right Images -->
+        <div class="relative md:w-[500px] w-[90%] mx-auto mt-4 md:mt-0">
+
+          <!-- Main Card -->
+          <div class="bg-white rounded-2xl shadow-xl p-6">
+            <div class="relative mb-4">
+              <img src="https://images.unsplash.com/photo-1511379938547-c1f69419868d"
+                class="rounded-lg w-full h-48 object-cover" />
+              <div class="absolute inset-0 flex items-center justify-center">
+                <div class="bg-red-400 text-white p-3 rounded-lg shadow-lg">
+                  ▶
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-gray-100 rounded-lg p-4 hidden md:flex items-center gap-4">
+              <img src="https://images.unsplash.com/photo-1492724441997-5dc865305da7"
+                class="w-20 h-20 rounded-lg object-cover" />
+              <div>
+                <div class="h-3 bg-gray-300 rounded w-32 mb-2"></div>
+                <div class="h-3 bg-gray-300 rounded w-20"></div>
               </div>
             </div>
           </div>
 
-          <div class="bg-gray-100 rounded-lg p-4 flex items-center gap-4">
+          <!-- Floating Card -->
+          <div class="absolute hidden md:flex right-[-40px] bottom-[-30px] bg-white rounded-2xl shadow-xl p-4 w-60">
             <img src="https://images.unsplash.com/photo-1492724441997-5dc865305da7"
-                 class="w-20 h-20 rounded-lg object-cover"/>
-            <div>
-              <div class="h-3 bg-gray-300 rounded w-32 mb-2"></div>
-              <div class="h-3 bg-gray-300 rounded w-20"></div>
-            </div>
+              class="rounded-lg w-full h-32 object-cover mb-3" />
+            <!-- <div class="h-3 bg-gray-300 rounded w-20 mb-2"></div>
+            <div class="h-3 bg-gray-300 rounded w-16 mb-4"></div> -->
+
+            <!-- <div class="flex items-center justify-between">
+              <span class="font-bold">$$$</span>
+              <button class="bg-red-400 text-white px-4 py-2 rounded-lg">
+                🛒
+              </button>
+            </div> -->
           </div>
-        </div>
 
-        <!-- Floating Card -->
-        <div class="absolute right-[-40px] bottom-[-30px] bg-white rounded-2xl shadow-xl p-4 w-60">
-          <img src="https://images.unsplash.com/photo-1492724441997-5dc865305da7"
-               class="rounded-lg w-full h-32 object-cover mb-3"/>
-          <div class="h-3 bg-gray-300 rounded w-20 mb-2"></div>
-          <div class="h-3 bg-gray-300 rounded w-16 mb-4"></div>
-
-          <div class="flex items-center justify-between">
-            <span class="font-bold">$$$</span>
-            <button class="bg-red-400 text-white px-4 py-2 rounded-lg">
-              🛒
-            </button>
+          <!-- Blue Expand Icon -->
+          <div
+            class="absolute hidden md:flexright-[-70px] top-1/2 bg-red-400 w-14 h-14 rounded-full flex items-center justify-center text-white text-xl shadow-lg">
+            ↗
           </div>
-        </div>
 
-        <!-- Blue Expand Icon -->
-        <div class="absolute right-[-70px] top-1/2 bg-red-400 w-14 h-14 rounded-full flex items-center justify-center text-white text-xl shadow-lg">
-          ↗
         </div>
 
       </div>
 
-    </div>
-
-  </section>
+    </section>
 
 
-    <section class="mt-6 bg-[#fcfcfd]">
+    <section id="products" class="mt-6 bg-[#fcfcfd]">
 
       <!-- ================= CATEGORY LOOP ================= -->
-      <section
-        *ngFor="let group of groupedProducts"
-        class="max-w-[1440px] mx-auto px-4 mb-6"
-      >
+      <section *ngFor="let group of groupedProducts" class="max-w-[1440px] mx-auto px-4 mb-6">
 
         <!-- ================= CATEGORY HEADER ================= -->
-        <div class="flex flex-col md:flex-row gap-3 mb-6">
+        <div class="flex flex-col md:flex-row gap-3 my-9">
 
           <div class="flex-1 bg-white border-2 border-slate-900 rounded-2xl p-3 shadow-lg">
             <div class="flex items-center gap-4">
-              <div
-                class="w-10 h-10 bg-rose-900 text-white rounded-xl flex items-center justify-center text-xl shadow"
-              >
+              <div class="w-10 h-10 bg-rose-900 text-white rounded-xl flex items-center justify-center text-xl shadow">
                 🛒
               </div>
               <div>
@@ -451,8 +433,7 @@ Unboxing & Taste Test          </span>
           </div>
 
           <div
-            class="md:w-44 bg-rose-900 rounded-2xl p-3 text-white flex flex-col items-center justify-center shadow-lg"
-          >
+            class="md:w-44 bg-rose-900 rounded-2xl p-3 text-white flex flex-col items-center justify-center shadow-lg">
             <span class="text-xl font-black">
               {{ group.items.length }}
             </span>
@@ -463,23 +444,16 @@ Unboxing & Taste Test          </span>
         </div>
 
         <!-- ================= PRODUCTS ================= -->
-        <div class="flex gap-5 overflow-x-auto pb-4 snap-x snap-mandatory">
+        <!-- <div class="flex gap-5 overflow-x-auto pb-4 snap-x snap-mandatory">
 
-          <div
-            *ngFor="let p of group.items; trackBy: trackByProductId"
-            class="min-w-[250px] max-w-[250px] bg-white rounded-xl border border-slate-100 shadow-sm hover:shadow-xl transition-all snap-start"
-          >
+          <div *ngFor="let p of group.items; trackBy: trackByProductId"
+            class="min-w-[250px] max-w-[250px] bg-white rounded-xl border border-slate-100 shadow-sm hover:shadow-xl transition-all snap-start">
 
-            <!-- IMAGE -->
             <div class="h-48 bg-slate-100 overflow-hidden rounded-t-xl">
-              <img
-                [src]="'https://picsum.photos/seed/' + p.id + '/400/300'"
-                class="w-full h-full object-cover hover:scale-105 transition duration-700"
-                alt="product"
-              />
+              <img [src]="'https://picsum.photos/seed/' + p.id + '/400/300'"
+                class="w-full h-full object-cover hover:scale-105 transition duration-700" alt="product" />
             </div>
 
-            <!-- CONTENT -->
             <div class="p-4 flex flex-col">
 
               <h3 class="text-base font-extrabold text-slate-900 truncate">
@@ -490,7 +464,6 @@ Unboxing & Taste Test          </span>
                 {{ p.description }}
               </p>
 
-              <!-- PRICE + STOCK -->
               <div class="mt-3 flex justify-between items-end">
                 <div>
                   <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold">
@@ -501,52 +474,36 @@ Unboxing & Taste Test          </span>
                   </p>
                 </div>
 
-                <span
-                  *ngIf="
+                <span *ngIf="
                     p.totalStock - (cart[p.id] || 0) > 0 &&
                     p.totalStock - (cart[p.id] || 0) < 5
-                  "
-                  class="text-[9px] font-bold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700"
-                >
+                  " class="text-[9px] font-bold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700">
                   {{ p.totalStock - (cart[p.id] || 0) }} LEFT
                 </span>
 
-                <span
-                  *ngIf="p.totalStock - (cart[p.id] || 0) === 0"
-                  class="text-[9px] font-bold px-2.5 py-1 rounded-full bg-rose-50 text-rose-700"
-                >
+                <span *ngIf="p.totalStock - (cart[p.id] || 0) === 0"
+                  class="text-[9px] font-bold px-2.5 py-1 rounded-full bg-rose-50 text-rose-700">
                   OUT
                 </span>
               </div>
 
-              <!-- WARNINGS -->
               <div class="my-3 space-y-1.5">
-                <div
-                  *ngIf="(cart[p.id] || 0) > p.totalStock"
-                  class="text-[10px] font-bold text-rose-700 bg-rose-50 border border-rose-200 px-2 py-1.5 rounded-md"
-                >
+                <div *ngIf="(cart[p.id] || 0) > p.totalStock"
+                  class="text-[10px] font-bold text-rose-700 bg-rose-50 border border-rose-200 px-2 py-1.5 rounded-md">
                   ⚠ Only {{ p.totalStock }} available
                 </div>
 
-                <div
-                  *ngIf="(cart[p.id] || 0) === p.totalStock && p.totalStock > 0"
-                  class="text-[10px] font-bold text-orange-700 bg-orange-50 border border-orange-200 px-2 py-1.5 rounded-md"
-                >
+                <div *ngIf="(cart[p.id] || 0) === p.totalStock && p.totalStock > 0"
+                  class="text-[10px] font-bold text-orange-700 bg-orange-50 border border-orange-200 px-2 py-1.5 rounded-md">
                   🚫 Max stock reached
                 </div>
               </div>
 
-              <!-- QUANTITY -->
               <div class="mt-auto">
-                <div
-                  *ngIf="p.totalStock > 0"
-                  class="bg-slate-900 rounded-lg flex items-center justify-between p-1 text-white shadow"
-                >
-                  <button
-                    *ngIf="(cart[p.id] || 0) > 0"
-                    (click)="decrease(p)"
-                    class="w-8 h-8 rounded-md bg-slate-800 hover:bg-slate-700 transition"
-                  >
+                <div *ngIf="p.totalStock > 0"
+                  class="bg-slate-900 rounded-lg flex items-center justify-between p-1 text-white shadow">
+                  <button *ngIf="(cart[p.id] || 0) > 0" (click)="decrease(p)"
+                    class="w-8 h-8 rounded-md bg-slate-800 hover:bg-slate-700 transition">
                     −
                   </button>
 
@@ -554,11 +511,8 @@ Unboxing & Taste Test          </span>
                     {{ cart[p.id] || 0 }}
                   </span>
 
-                  <button
-                    *ngIf="(cart[p.id] || 0) < p.totalStock"
-                    (click)="increase(p)"
-                    class="w-8 h-8 rounded-md bg-rose-700 hover:bg-rose-600 transition"
-                  >
+                  <button *ngIf="(cart[p.id] || 0) < p.totalStock" (click)="increase(p)"
+                    class="w-8 h-8 rounded-md bg-rose-700 hover:bg-rose-600 transition">
                     +
                   </button>
                 </div>
@@ -567,20 +521,106 @@ Unboxing & Taste Test          </span>
             </div>
           </div>
 
+        </div> -->
+        <div class="flex lg:gap-9 gap-12 overflow-x-auto pb-4 snap-x snap-mandatory">
+          <div *ngFor="let p of group.items; trackBy: trackByProductId" class="w-[290px] rounded-3xl shadow-lg"
+            style="background:linear-gradient(90deg,#f3f4f6,#dbeafe,#fde68a); backdrop-filter: blur(10px);">
+
+            <div class="  flex items-center justify-center">
+              <div class="bg-white w-[290px] h-[230px] rounded-t-2xl overflow-hidden">
+                <img [src]="'https://picsum.photos/seed/' + p.id + '/400/300'"
+                  class="w-full h-full object-cover hover:scale-105 transition duration-700">
+              </div>
+            </div>
+
+            <div class="flex-1 p-4">
+
+              <h1 class="text-2xl font-bold text-gray-800"> {{ p.name }}</h1>
+
+              <p class="text-gray-500 mt-1">
+                {{ p.description }}
+              </p>
+
+              <!-- STARS -->
+              <div class="flex mt-1 text-yellow-400 text-lg">
+                ★ ★ ★ ★ ☆
+              </div>
+
+              <!-- PRICE -->
+              <div class="mt-2 ">
+                <p class="text-gray-400 tracking-widest text-sm">PRICE ₹</p>
+                <p class="text-2xl font-bold text-gray-900">₹{{ p.price }}</p>
+              </div>
+              <span class="mt-1" *ngIf="
+                    p.totalStock - (cart[p.id] || 0) > 0 &&
+                    p.totalStock - (cart[p.id] || 0) < 5
+                  " class="text-[9px] font-bold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700">
+                {{ p.totalStock - (cart[p.id] || 0) }} LEFT
+              </span>
+              <span class="mt-1" *ngIf="p.totalStock - (cart[p.id] || 0) === 0"
+                class="text-[9px] font-bold px-2.5 py-1 rounded-full bg-rose-50 text-rose-700">
+                OUT
+              </span>
+
+              <div class="my-3 space-y-1.5">
+                <div *ngIf="(cart[p.id] || 0) > p.totalStock"
+                  class="text-[10px] font-bold text-rose-700 bg-rose-50 border border-rose-200 px-2 py-1.5 rounded-md">
+                  ⚠ Only {{ p.totalStock }} available
+                </div>
+
+                <div *ngIf="(cart[p.id] || 0) === p.totalStock && p.totalStock > 0"
+                  class="text-[10px] font-bold text-orange-700 bg-orange-50 border border-orange-200 px-2 py-1.5 rounded-md">
+                  🚫 Max stock reached
+                </div>
+              </div>
+
+
+              <!-- CART CONTROLS -->
+              <div class="flex items-center mt-2 space-x-6">
+
+                <!-- QUANTITY -->
+                <div *ngIf="p.totalStock > 0"
+                  class="flex items-center rounded-full shadow-lg bg-gray-200 px-4 py-2 space-x-12">
+
+                  <button *ngIf="(cart[p.id] || 0) > 0" (click)="decrease(p)"
+                    class="w-10 h-10 rounded-full bg-red-500 text-white text-xl font-bold shadow-md">
+                    -
+                  </button>
+
+                  <span class="text-xl font-semibold text-gray-700">{{ cart[p.id] || 0 }}</span>
+
+                  <button *ngIf="(cart[p.id] || 0) < p.totalStock" (click)="increase(p)"
+                    class="w-10 h-10 rounded-full bg-green-500 text-white text-xl font-bold shadow-md">
+                    +
+                  </button>
+
+                </div>
+
+
+
+              </div>
+
+            </div>
+
+          </div>
         </div>
+
       </section>
 
       <!-- ================= GO TO CART ================= -->
-      <div class="fixed bottom-6 left-6 z-50">
-  <button
-    (click)="goToCart()"
-    class="px-8 py-3 bg-slate-900 text-white rounded-xl font-black uppercase tracking-widest shadow-lg hover:bg-rose-900 transition duration-300"
-  >
-    Go To Cart →
-  </button>
-</div>
+      <!-- <div class="fixed bottom-6 left-6 z-50">
+        <button (click)="goToCart()"
+          class="px-8 py-3 bg-slate-900 text-white rounded-xl font-black uppercase tracking-widest shadow-lg hover:bg-rose-900 transition duration-300">
+          Go To Cart →
+        </button>
+      </div> -->
+      <div class="sticky bottom-6 left-6">
+        <button (click)="goToCart()"
+          class="fixed bottom-6  border-t-4 border-yellow-600 left-6 px-8 py-2 bg-slate-900 text-white rounded-xl font-black uppercase tracking-widest shadow-lg hover:bg-rose-900 transition duration-300">
+          Go To Cart →
+        </button>
+      </div>
 
     </section>
   </div>
 </div>
-
