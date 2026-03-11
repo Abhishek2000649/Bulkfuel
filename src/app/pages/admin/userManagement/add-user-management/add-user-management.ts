@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { UserManagement } from '../../../../core/services/admin/userManagement/user-management';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
@@ -7,23 +7,27 @@ import { Spinner } from '../../../../shared/spinner/spinner';
 import { pattern, required } from '@angular/forms/signals';
 import { finalize } from 'rxjs';
 import Swal from 'sweetalert2';
-type UserManagementFormFields = 'name' | 'email' | 'role' | 'password';
+type UserManagementFormFields = 'name' | 'email' | 'role' | 'password'  | 'confirmPassword';
 @Component({
   selector: 'app-add-user-management',
   imports: [RouterModule, ReactiveFormsModule, CommonModule, Spinner],
   templateUrl: './add-user-management.html',
   styleUrl: './add-user-management.css',
 })
-export class AddUserManagement {
 
+export class AddUserManagement {
+@ViewChild('dropdownWrapper') dropdownWrapper!: ElementRef;
     userForm: FormGroup;
   errors: string[] = [];
+  showPassword = false;
+  showConfirmPassword = false;
   isLoading:boolean= false;
    formErrors: Record<UserManagementFormFields, string> = {
     name: '',
     email: '',
     role: '',
     password: '',
+    confirmPassword: '',
   };
   validationMessages: Record<UserManagementFormFields, any> = {
     name: {
@@ -41,6 +45,10 @@ export class AddUserManagement {
       required: 'Enter password',
       minlength: 'Password must be at least 6 characters',
     },
+    confirmPassword:{
+      required: 'Confirm your password',
+      passwordMismatch: 'Passwords do not match',
+    }
   };
 
   constructor(
@@ -48,17 +56,40 @@ export class AddUserManagement {
     private adminService: UserManagement,
     private router: Router,
     private cdr:ChangeDetectorRef,
+    private elementRef: ElementRef,
   ) {
     this.userForm = this.fb.group({
       name: ['', [Validators.required,      Validators.pattern(/^[A-Za-z\s]+$/)]],
       email: ['', [Validators.required, Validators.email]],
       role: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(6)]],
-    });
+       confirmPassword: ['', Validators.required]
+    },
+  {
+  validators: this.passwordMatchValidator
+});
+
+
      this.userForm.valueChanges.subscribe(() => {
       this.updateFormErrors();
     });
   }
+  passwordMatchValidator(form: FormGroup) {
+
+  const password = form.get('password')?.value;
+  const confirmPassword = form.get('confirmPassword')?.value;
+  if(confirmPassword === ''){
+    form.get('confirmPassword')?.setErrors({ required: true });
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    form.get('confirmPassword')?.setErrors({ passwordMismatch: true });
+  } else {
+    form.get('confirmPassword')?.setErrors(null);
+  }
+
+}
   updateFormErrors(): void {
     (Object.keys(this.formErrors) as UserManagementFormFields[]).forEach((field) => {
       const control = this.userForm.get(field);
@@ -134,6 +165,52 @@ export class AddUserManagement {
     });
 
 }
+isDropdownOpen = false;
 
+roles = ['ADMIN','USER','delivery_agent'];
+
+selectedRole: string | null = null;
+
+
+// Toggle dropdown
+toggleDropdown(event: Event): void {
+
+  event.stopPropagation();
+
+  this.isDropdownOpen = !this.isDropdownOpen;
+
+}
+
+
+// Select role
+selectRole(role: string, event: Event): void {
+
+  event.stopPropagation();
+
+  this.selectedRole = role;
+
+  this.isDropdownOpen = false;
+
+  // Update reactive form
+  this.userForm.patchValue({
+    role: role
+  });
+
+}
+
+
+// Close dropdown when clicking outside
+@HostListener('document:click', ['$event'])
+clickOutside(event: Event): void {
+
+  const target = event.target as HTMLElement;
+
+  if (this.dropdownWrapper && !this.dropdownWrapper.nativeElement.contains(target)) {
+
+    this.isDropdownOpen = false;
+
+  }
+
+}
 
 }

@@ -15,6 +15,7 @@ import Swal from 'sweetalert2';
 export class HomeUserManagement {
 
     users: any[] = [];
+    allUsers: any[] = [];
   successMessage = '';
   errorMessage = '';
   isLoading:boolean= false;
@@ -30,7 +31,8 @@ export class HomeUserManagement {
   this.adminService.getUsers().subscribe({
 
     next: (res: any) => {
-      this.users = res.data || res;   
+      this.users = res.data || res;  
+      this.allUsers = res.data || res; 
       this.isLoading = false;
       this.cdr.detectChanges();
     },
@@ -120,5 +122,20 @@ export class HomeUserManagement {
   trackById(index: number, item: any) {
     return item.id;
   }
+  searchUsers(event: any) {
+
+  const searchValue = event.target.value.toLowerCase();
+
+  if (!searchValue) {
+    this.users = this.allUsers;
+    return;
+  }
+
+  this.users = this.allUsers.filter((user: any) =>
+    user.name.toLowerCase().includes(searchValue) ||
+    user.email.toLowerCase().includes(searchValue) ||
+    user.role.toLowerCase().includes(searchValue)
+  );
+}
 
 }

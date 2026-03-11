@@ -1,13 +1,14 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { UserManagement } from '../../../../core/services/admin/userManagement/user-management';
+import { HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Spinner } from '../../../../shared/spinner/spinner';
 import { finalize } from 'rxjs';
 import { required } from '@angular/forms/signals';
 import Swal from 'sweetalert2';
-type UserManagementFormFields = 'name' | 'email' | 'role' | 'password';
+type UserManagementFormFields = 'name' | 'email' | 'role' | 'password'| 'confirmPassword';
 @Component({
   selector: 'app-edit-user-management',
   imports: [CommonModule, ReactiveFormsModule, RouterModule, Spinner],
@@ -15,16 +16,20 @@ type UserManagementFormFields = 'name' | 'email' | 'role' | 'password';
   styleUrl: './edit-user-management.css',
 })
 export class EditUserManagement {
+@ViewChild('dropdownWrapper') dropdownWrapper!: ElementRef;
 
     userForm!: FormGroup;
   userId!: number;
   errors: string[] = [];
+  showPassword = false;
+  showConfirmPassword = false;
   isLoading:boolean=false;
    formErrors: Record<UserManagementFormFields, string> = {
       name: '',
       email: '',
       role: '',
       password: '',
+       confirmPassword: '',
     };
     validationMessages: Record<UserManagementFormFields, any> = {
       name: {
@@ -42,6 +47,11 @@ export class EditUserManagement {
         required: 'Enter password',
         minlength: 'Password must be at least 6 characters',
       },
+       confirmPassword:{
+      required: 'Confirm your password',
+      minlength: 'Password must be at least 6 characters',
+      passwordMismatch: 'Passwords do not match',
+    }
     };
   constructor(
     private fb: FormBuilder,
@@ -55,11 +65,30 @@ export class EditUserManagement {
       email: ['', [Validators.required, Validators.email]],
         role: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(6)]],
-    });
+confirmPassword: ['', [Validators.required, Validators.minLength(6)]]    } ,{
+  validators: this.passwordMatchValidator
+});
      this.userForm.valueChanges.subscribe(() => {
       this.updateFormErrors();
     });
   }
+   passwordMatchValidator(form: FormGroup) {
+
+  const password = form.get('password');
+  const confirmPassword = form.get('confirmPassword');
+
+  if (!password || !confirmPassword) return;
+
+  if (confirmPassword.errors && !confirmPassword.errors['passwordMismatch']) {
+    return;
+  }
+
+  if (password.value !== confirmPassword.value) {
+    confirmPassword.setErrors({ passwordMismatch: true });
+  } else {
+    confirmPassword.setErrors(null);
+  }
+}
 
   ngOnInit(): void {
     this.userId = Number(this.route.snapshot.paramMap.get('id'));
@@ -89,14 +118,19 @@ export class EditUserManagement {
   this.adminService.getUserById(this.userId).subscribe({
 
     next: (res: any) => {
-      this.userForm.patchValue({
-        name: res?.data?.name || res.name,
-        email: res?.data?.email || res.email,
-        role: res?.data?.role || res.role,
-      });
 
-      this.isLoading = false;
-    },
+  const role = res?.data?.role || res.role;
+
+  this.userForm.patchValue({
+    name: res?.data?.name || res.name,
+    email: res?.data?.email || res.email,
+    role: role
+  });
+
+  this.selectedRole = role;
+
+  this.isLoading = false;
+},
 
     error: (err: any) => {
 
@@ -173,6 +207,54 @@ export class EditUserManagement {
       }
 
     });
+
+}
+
+isDropdownOpen = false;
+
+roles = ['ADMIN','USER','delivery_agent'];
+
+selectedRole: string | null = null;
+
+
+// Toggle dropdown
+toggleDropdown(event: Event): void {
+
+  event.stopPropagation();
+
+  this.isDropdownOpen = !this.isDropdownOpen;
+
+}
+
+
+// Select role
+selectRole(role: string, event: Event): void {
+
+  event.stopPropagation();
+
+  this.selectedRole = role;
+
+  this.isDropdownOpen = false;
+
+  // Update reactive form
+  this.userForm.patchValue({
+    role: role
+  });
+
+}
+
+
+// Close dropdown when clicking outside
+@HostListener('document:click', ['$event'])
+clickOutside(event: Event): void {
+
+  const target = event.target as HTMLElement;
+
+  if (this.dropdownWrapper && !this.dropdownWrapper.nativeElement.contains(target)) {
+
+    this.isDropdownOpen = false;
+
+  }
 
 }
 
