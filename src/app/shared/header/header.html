@@ -1,14 +1,14 @@
 <header class="fixed top-0 left-0 w-full z-50
-               bg-gradient-to-r from-[#8B0000] via-[#750000] to-[#600000]
+               bg-gradient-to-r from-red-700 via-red-700 to-red-600
                text-white shadow-lg">
 
   <div class="max-w-[1800px] mx-auto md:px-10 px-2 w-full">
-    <div class="flex items-center justify-between md:gap-x-12 gap-x-6 h-20">
+    <div class="flex items-center justify-between md:gap-x-12 gap-x-6 h-16">
 
       <!-- ================= LOGO ================= -->
       <div class="flex items-center cursor-pointer" [routerLink]="auth.isLoggedIn() ? '/user' : '/'">
-        <div class="bg-white/10 p-2 rounded-2xl shadow-md">
-          <div class="w-12 h-12 flex justify-center overflow-hidden rounded-lg">
+        <div class="bg-white/10 p-1 rounded-2xl shadow-md">
+          <div class="w-10 h-10 flex justify-center overflow-hidden rounded-lg">
             <img src="assets/images/logo-dark.png" class="w-full h-full object-contain" />
           </div>
         </div>
@@ -44,7 +44,7 @@
 
         <!-- Search -->
         <div class="relative w-full max-w-sm hidden lg:block">
-          <input type="text" [(ngModel)]="searchQuery" placeholder="Search premium products..." class="w-full pl-6 pr-5 py-3 rounded-2xl
+          <input type="text" [(ngModel)]="searchQuery" placeholder="Search premium products..." class="w-full pl-6 pr-5 py-2 rounded-lg
                         bg-white/95 text-gray-900
                         text-sm font-medium
                         placeholder-gray-400
@@ -60,63 +60,232 @@
 
         <!-- USER -->
         <ng-container *ngIf="user.role === 'USER'">
-          <a routerLink="/user" routerLinkActive="border-b-2 border-amber-400 text-amber-300"
-            [routerLinkActiveOptions]="{ exact: true }" class="px-5 py-2.5 text-sm font-semibold
-                    hover:bg-white/10 border-b-2 border-transparent transition">
-            Home
-          </a>
+          <div class="flex  space-x-9">
+            <div class="flex flex-col items-center  text-white cursor-pointer transition-all duration-200"
+              routerLink="/user" routerLinkActive="text-amber-300" [routerLinkActiveOptions]="{ exact: true }">
 
-          <a routerLink="/user/orders" routerLinkActive="border-b-2 border-amber-400 text-amber-300" class="px-5 py-2.5 text-sm font-semibold
-                    hover:bg-white/10 border-b-2 border-transparent transition">
-            My Orders
-          </a>
+              <!-- Icon -->
+              <span class=" rounded-lg hover:bg-white/10 transition">
+                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                  stroke-linecap="round" stroke-linejoin="round">
 
-          <a routerLink="/user/cart" routerLinkActive="border-b-2 border-amber-400 text-amber-300" class="px-5 py-2.5 text-sm font-semibold
-                    hover:bg-white/10 border-b-2 border-transparent transition">
-            My Cart
-          </a>
+                  <path d="M3 10L12 3l9 7"></path>
+                  <path d="M5 10v10h14V10"></path>
+
+                </svg>
+              </span>
+
+              <!-- Text -->
+              <span
+                class="text-sm font-semibold tracking-wide border-b-2 border-transparent hover:border-amber-400 transition">
+                Home
+              </span>
+
+            </div>
+
+            <div class="flex flex-col items-center text-white cursor-pointer transition-all duration-200"
+              routerLink="/user/orders" routerLinkActive="text-amber-300">
+
+              <!-- Icon -->
+              <span class=" rounded-lg hover:bg-white/10 transition">
+                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                  stroke-linecap="round" stroke-linejoin="round">
+
+                  <path d="M9 11l3 3L22 4"></path>
+                  <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+
+                </svg>
+              </span>
+
+              <!-- Text -->
+              <span
+                class="text-sm font-semibold tracking-wide border-b-2 border-transparent hover:border-amber-400 transition">
+                My Orders
+              </span>
+
+            </div>
+
+            <div class="flex flex-col items-center text-white cursor-pointer transition-all duration-200"
+              routerLink="/user/cart" routerLinkActive="text-amber-300">
+
+              <!-- Icon -->
+              <span class=" rounded-lg hover:bg-white/10 transition">
+                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                  stroke-linecap="round" stroke-linejoin="round">
+
+                  <circle cx="9" cy="20" r="1"></circle>
+                  <circle cx="18" cy="20" r="1"></circle>
+                  <path d="M3 3h2l3 12h10l3-9H6"></path>
+
+                </svg>
+              </span>
+
+              <!-- Text -->
+              <span
+                class="text-sm font-semibold tracking-wide border-b-2 border-transparent hover:border-amber-400 transition">
+                My Cart
+              </span>
+
+            </div>
+          </div>
         </ng-container>
 
         <!-- ADMIN -->
         <ng-container *ngIf="user.role === 'ADMIN'">
-          <a routerLink="/admin/product" routerLinkActive="border-b-2 border-amber-400 text-amber-300"
-            class="px-5 py-2.5 hover:bg-white/10 border-b-2 border-transparent transition">
-            Products
-          </a>
+          <div class="flex  space-x-9">
+            <div
+              class="flex flex-col items-center  text-white cursor-pointer router-link-active:text-amber-300 transition-all duration-200"
+              routerLink="/admin/product" routerLinkActive="text-amber-300">
 
-          <a routerLink="/admin/stock" routerLinkActive="border-b-2 border-amber-400 text-amber-300"
-            class="px-5 py-2.5 hover:bg-white/10 border-b-2 border-transparent transition">
-            Stock
-          </a>
+              <!-- Icon -->
+              <span class=" rounded-lg hover:bg-white/10 transition">
+                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M6 8h12l-1 12H7L6 8z"></path>
+                  <path d="M9 8V6a3 3 0 0 1 6 0v2"></path>
+                </svg>
+              </span>
 
-          <a routerLink="/admin/userManagement" routerLinkActive="border-b-2 border-amber-400 text-amber-300"
-            class="px-5 py-2.5 hover:bg-white/10 border-b-2 border-transparent transition">
-            Users
-          </a>
+              <!-- Text -->
+              <span class="text-sm font-semibold tracking-wide 
+               border-b-2 border-transparent 
+               hover:border-amber-400 transition">
+                Products
+              </span>
 
-          <a routerLink="/admin/order" routerLinkActive="border-b-2 border-amber-400 text-amber-300"
-            class="px-5 py-2.5 hover:bg-white/10 border-b-2 border-transparent transition">
-            New Orders
-          </a>
+            </div>
+            <div class="flex flex-col items-center  text-white cursor-pointer transition-all duration-200"
+              routerLink="/admin/stock" routerLinkActive="text-amber-300">
 
-          <a routerLink="/admin/order-history" routerLinkActive="border-b-2 border-amber-400 text-amber-300"
-            class="px-5 py-2.5 hover:bg-white/10 border-b-2 border-transparent transition">
-            Order History
-          </a>
+              <!-- Icon -->
+              <span class=" rounded-lg hover:bg-white/10 transition">
+                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M4 6h16"></path>
+                  <path d="M4 12h16"></path>
+                  <path d="M4 18h10"></path>
+                </svg>
+              </span>
 
-          <a routerLink="/admin/settlement" routerLinkActive="border-b-2 border-amber-400 text-amber-300"
-            class="px-5 py-2.5 hover:bg-white/10 border-b-2 border-transparent transition">
-            Settlement
-          </a>
+              <!-- Text -->
+              <span
+                class="text-sm font-semibold tracking-wide border-b-2 border-transparent hover:border-amber-400 transition">
+                Stock
+              </span>
+
+            </div>
+            <div class="flex flex-col items-center text-white cursor-pointer transition-all duration-200"
+              routerLink="/admin/userManagement" routerLinkActive="text-amber-300">
+
+              <!-- Icon -->
+              <span class=" rounded-lg hover:bg-white/10 transition">
+                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M16 11c1.66 0 3-1.79 3-4s-1.34-4-3-4-3 1.79-3 4 1.34 4 3 4z"></path>
+                  <path d="M8 11c1.66 0 3-1.79 3-4S9.66 3 8 3 5 4.79 5 7s1.34 4 3 4z"></path>
+                  <path d="M2 21v-2c0-2.21 3.58-4 6-4"></path>
+                  <path d="M22 21v-2c0-2.21-3.58-4-6-4"></path>
+                </svg>
+              </span>
+
+              <!-- Text -->
+              <span
+                class="text-sm font-semibold tracking-wide border-b-2 border-transparent hover:border-amber-400 transition">
+                Users
+              </span>
+
+            </div>
+            <div class="flex flex-col items-center  text-white cursor-pointer transition-all duration-200"
+              routerLink="/admin/order" routerLinkActive="text-amber-300">
+
+              <!-- Icon -->
+              <span class=" rounded-lg hover:bg-white/10 transition">
+                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                  stroke-linecap="round" stroke-linejoin="round">
+
+                  <circle cx="9" cy="21" r="1"></circle>
+                  <circle cx="20" cy="21" r="1"></circle>
+                  <path d="M1 1h4l2.6 12.4a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L23 6H6"></path>
+
+                </svg>
+              </span>
+
+              <!-- Text -->
+              <span
+                class="text-sm font-semibold tracking-wide border-b-2 border-transparent hover:border-amber-400 transition">
+                New Orders
+              </span>
+
+            </div>
+            <div class="flex flex-col items-center text-white cursor-pointer transition-all duration-200"
+              routerLink="/admin/order-history" routerLinkActive="text-amber-300">
+
+              <!-- Icon -->
+              <span class=" rounded-lg hover:bg-white/10 transition">
+                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                  stroke-linecap="round" stroke-linejoin="round">
+
+                  <path d="M3 3v5h5"></path>
+                  <path d="M3.05 13a9 9 0 1 0 2.13-5.36L3 8"></path>
+                  <path d="M12 7v5l3 3"></path>
+
+                </svg>
+              </span>
+
+              <!-- Text -->
+              <span
+                class="text-sm font-semibold tracking-wide border-b-2 border-transparent hover:border-amber-400 transition">
+                Order History
+              </span>
+
+            </div>
+            <div class="flex flex-col items-center  text-white cursor-pointer transition-all duration-200"
+              routerLink="/admin/settlement" routerLinkActive="text-amber-300">
+
+              <!-- Icon -->
+              <span class=" rounded-lg hover:bg-white/10 transition">
+                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                  stroke-linecap="round" stroke-linejoin="round">
+
+                  <rect x="2" y="6" width="20" height="12" rx="2"></rect>
+                  <path d="M2 10h20"></path>
+                  <circle cx="16" cy="14" r="2"></circle>
+
+                </svg>
+              </span>
+
+              <!-- Text -->
+              <span
+                class="text-sm font-semibold tracking-wide border-b-2 border-transparent hover:border-amber-400 transition">
+                Settlement
+              </span>
+
+            </div>
+          </div>
         </ng-container>
 
         <!-- DELIVERY -->
         <ng-container *ngIf="user.role === 'delivery_agent'">
-          <a routerLink="/delivery" routerLinkActive="border-b-2 border-amber-400 text-amber-300"
-            [routerLinkActiveOptions]="{ exact: true }"
-            class="px-5 py-2.5 hover:bg-white/10 border-b-2 border-transparent transition">
-            Dashboard
-          </a>
+          <div class="flex flex-col items-center text-white cursor-pointer transition-all duration-200"
+            routerLink="/delivery" routerLinkActive="text-amber-300" [routerLinkActiveOptions]="{ exact: true }">
+
+            <!-- Icon -->
+            <span class="p-1.5 rounded-lg hover:bg-white/10 transition">
+              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round">
+
+                <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+                <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+                <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+                <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+
+              </svg>
+            </span>
+
+            <!-- Text -->
+            <span
+              class="text-sm font-semibold tracking-wide border-b-2 border-transparent hover:border-amber-400 transition">
+              Dashboard
+            </span>
+
+          </div>
 
           <a routerLink="/delivery/available" routerLinkActive="border-b-2 border-amber-400 text-amber-300"
             class="px-5 py-2.5 hover:bg-white/10 border-b-2 border-transparent transition">
@@ -147,15 +316,30 @@
             <img src="https://i.pravatar.cc/100" class="w-10 h-10 rounded-xl border-2 border-white/30" />
 
             <!-- Dropdown -->
-            <div *ngIf="isProfileOpen" class="absolute right-0 mt-8 w-56 bg-white text-gray-800
-                        rounded-2xl shadow-2xl border border-gray-100 overflow-hidden">
+            <div *ngIf="isProfileOpen" class="absolute right-0 mt-12 w-56 bg-white text-gray-800
+                        rounded-lg shadow-2xl border border-gray-100 overflow-hidden">
 
               <p class="px-4 py-3 font-semibold border-b">
                 {{user.name}}
               </p>
 
-              <a routerLink="/profile-update" class="block px-4 py-3 hover:bg-red-50">
-                👤 My Profile
+              <a routerLink="/profile-update"
+                class="flex items-center gap-2 px-4 py-3 hover:bg-red-500 hover:text-white transition">
+
+                <!-- Icon -->
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                  stroke-linecap="round" stroke-linejoin="round">
+
+                  <circle cx="12" cy="7" r="4"></circle>
+                  <path d="M5.5 21a6.5 6.5 0 0 1 13 0"></path>
+
+                </svg>
+
+                <!-- Text -->
+                <span class="font-medium">
+                  My Profile
+                </span>
+
               </a>
 
               <!-- <button *ngIf="isSettingsOpen && user.role === 'ADMIN'" (click)="toggleSettings($event)"
@@ -164,9 +348,33 @@
                 <span [class.rotate-90]="isSettingsOpen">▶</span>
               </button> -->
               <button *ngIf="user.role === 'ADMIN'" (click)="toggleSettings($event)"
-                class="w-full flex justify-between px-4 py-3 hover:bg-red-50">
-                ⚙️ Settings
-                <span [class.rotate-90]="isSettingsOpen">▶</span>
+                class="w-full flex justify-between items-center px-4 py-3 hover:bg-red-500 hover:text-white transition">
+
+                <span class="flex items-center gap-2">
+
+                  <!-- SVG Icon -->
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                    stroke-linecap="round" stroke-linejoin="round">
+
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path
+                      d="M19.4 15a1.7 1.7 0 0 0 .34 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 .6 1.7 1.7 0 0 0-.4 1V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-.4-1 1.7 1.7 0 0 0-1-.6 1.7 1.7 0 0 0-1.82.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-.6-1 1.7 1.7 0 0 0-1-.4H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1-.4 1.7 1.7 0 0 0 .6-1 1.7 1.7 0 0 0-.34-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.6c.37-.37.6-.86.6-1.4V3a2 2 0 1 1 4 0v.1c0 .54.23 1.03.6 1.4.37.37.86.6 1.4.6.54 0 1.03-.23 1.4-.6l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06c-.37.37-.6.86-.6 1.4 0 .54.23 1.03.6 1.4.37.37.86.6 1.4.6H21a2 2 0 1 1 0 4h-.1c-.54 0-1.03.23-1.4.6-.37.37-.6.86-.6 1.4z">
+                    </path>
+
+                  </svg>
+
+                  Settings
+                </span>
+
+                <span [class.rotate-90]="isSettingsOpen" class="transition-transform">
+                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+
+                    <polyline points="9 6 15 12 9 18"></polyline>
+
+                  </svg>
+                </span>
+
               </button>
 
               <!-- <div *ngIf="isSettingsOpen && user.role === 'ADMIN'" class="pl-6 border-l border-gray-200">
@@ -175,14 +383,67 @@
               </div> -->
 
               <div *ngIf="isSettingsOpen && user.role === 'ADMIN'" class="pl-6 border-l border-gray-200">
-                <a routerLink="/admin/category" class="block px-4 py-2 hover:bg-red-50">Category</a>
-                <a routerLink="/admin/warehouse" class="block px-4 py-2 hover:bg-red-50">Warehouse</a>
+                <a routerLink="/admin/category"
+                  class="flex items-center gap-2 px-4 py-2 hover:bg-red-500 hover:text-white transition">
+
+                  <!-- SVG Icon -->
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                    stroke-linecap="round" stroke-linejoin="round">
+
+                    <path d="M20 10V6a2 2 0 0 0-2-2h-4"></path>
+                    <path d="M4 14v4a2 2 0 0 0 2 2h4"></path>
+                    <rect x="4" y="4" width="6" height="6" rx="1"></rect>
+                    <rect x="14" y="14" width="6" height="6" rx="1"></rect>
+
+                  </svg>
+
+                  <!-- Text -->
+                  <span class="font-medium">
+                    Category
+                  </span>
+
+                </a>
+                <a routerLink="/admin/warehouse"
+                  class="flex items-center gap-2 px-4 py-2 hover:bg-red-500 hover:text-white transition">
+
+                  <!-- SVG Icon -->
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                    stroke-linecap="round" stroke-linejoin="round">
+
+                    <path d="M3 10l9-6 9 6"></path>
+                    <path d="M4 10v10h16V10"></path>
+                    <path d="M9 20v-6h6v6"></path>
+
+                  </svg>
+
+                  <!-- Text -->
+                  <span class="font-medium">
+                    Warehouse
+                  </span>
+
+                </a>
               </div>
 
               <div class="border-t"></div>
 
-              <button (click)="logout()" class="w-full text-left px-4 py-3 text-red-600 hover:bg-red-50">
-                Logout
+              <button (click)="logout()"
+                class="w-full flex items-center gap-2 text-left px-4 py-3 text-red-600 hover:bg-red-500 hover:text-white transition">
+
+                <!-- SVG Icon -->
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                  stroke-linecap="round" stroke-linejoin="round">
+
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                  <polyline points="16 17 21 12 16 7"></polyline>
+                  <line x1="21" y1="12" x2="9" y2="12"></line>
+
+                </svg>
+
+                <!-- Text -->
+                <span class="font-medium">
+                  Logout
+                </span>
+
               </button>
             </div>
           </div>

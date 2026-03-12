@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Product } from '../../../../core/services/admin/product/product';
@@ -9,11 +9,23 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-home-product',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, Spinner],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './home-product.html',
   styleUrl: './home-product.css',
 })
 export class HomeProduct {
+   @ViewChild('dropdownWrapper') dropdownWrapper!: ElementRef;
+
+@HostListener('document:click', ['$event'])
+clickOutside(event: Event): void {
+
+  const target = event.target as HTMLElement;
+
+  if (this.dropdownWrapper && !this.dropdownWrapper.nativeElement.contains(target)) {
+    this.isDropdownOpen = false;
+  }
+
+}
 
   products: any[] = [];
   filteredProducts: any[] = [];
@@ -73,23 +85,25 @@ export class HomeProduct {
   });
 }
 
-  onCategoryChange(categoryId: string) {
-    this.selectedCategory = categoryId;
-    this.applyFilters();
-  }
+  
 
-  applyFilters() {
-    this.filteredProducts = this.products.filter(p => {
-      const matchCategory =
-        this.selectedCategory === 'ALL' ||
-        p.category?.id == this.selectedCategory;
+ applyFilters() {
 
-      const matchSearch =
-        p.name?.toLowerCase().includes(this.searchText.toLowerCase());
+  this.filteredProducts = this.products.filter(p => {
 
-      return matchCategory && matchSearch;
-    });
-  }
+    const matchCategory =
+      !this.selectedCategoryId ||
+      p.category?.id === this.selectedCategoryId;
+
+    const matchSearch =
+      !this.searchText ||
+      p.name?.toLowerCase().includes(this.searchText.toLowerCase());
+
+    return matchCategory && matchSearch;
+
+  });
+
+}
 
 deleteProduct(id: number) {
 
@@ -155,4 +169,24 @@ deleteProduct(id: number) {
   trackById(index: number, item: any) {
     return item.id;
   }
+
+  isDropdownOpen = false;
+
+selectedCategoryId: number | null = null;
+selectedCategoryName: string = '';
+
+selectCategory(category: any) {
+
+  if (category) {
+    this.selectedCategoryId = category.id;
+    this.selectedCategoryName = category.name;
+  } else {
+    this.selectedCategoryId = null;
+    this.selectedCategoryName = 'All';
+  }
+
+  this.isDropdownOpen = false;
+
+  this.applyFilters();
+}
 }

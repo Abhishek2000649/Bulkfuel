@@ -1,200 +1,285 @@
-<!-- <h2>Add New Product</h2>
 
-<ul class="error" *ngIf="errors.length">
-  <li *ngFor="let err of errors">{{ err }}</li>
-</ul>
+<div class="min-h-screen bg-gray-100 p-8">
 
-<form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+<div class="max-w-6xl mx-auto">
 
-  <input type="text" formControlName="name" placeholder="Product Name" />
+<app-spinner [isLoading]="isLoading" [loaderSize]="100"></app-spinner>
 
-  <input type="number" formControlName="price" placeholder="Price" />
+<!-- BACK -->
+<div class="mb-8">
+<a routerLink="/admin/product"
+class="text-gray-500 text-sm flex items-center gap-2 hover:text-red-700">
 
-  <input type="number" formControlName="stock" placeholder="Stock" />
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+d="M15 19l-7-7 7-7" />
+</svg>
 
-  <select formControlName="category_id">
-    <option value="">-- Select Category --</option>
-    <option *ngFor="let c of categories" [value]="c.id">
-      {{ c.name }}
-    </option>
-  </select>
-
-  <textarea
-    formControlName="description"
-    placeholder="Description">
-  </textarea>
-
-  <button type="submit" [disabled]="productForm.invalid">
-    Add Product
-  </button>
-</form> -->
-<div class="min-h-screen bg-slate-50 text-slate-900 p-4 md:p-8 lg:p-12">
-
-<div class="max-w-[1400px] mx-auto">
-  <app-spinner [isLoading]="isLoading" [loaderSize]="100"></app-spinner>
-  <div class="mb-14">
-      <a  routerLink="/admin/product"
-        class="inline-flex items-center text-gray-400 hover:text-[#8B0000]
-        font-black text-xl uppercase tracking-[0.30em] transition-all group">
-        <svg class="w-4 h-4 mr-4 group-hover:-translate-x-2 transition-transform"
-          fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-width="3" stroke-linecap="round" stroke-linejoin="round"
-            d="M15 19l-7-7 7-7" />
-        </svg>
-        Registry System Back
-      </a>
-    </div>
-
-  <!-- Header -->
-  <header class="mb-12 flex items-center gap-3">
-    <div class="w-12 h-12 bg-red-800 rounded-xl flex items-center justify-center text-white shadow-lg shadow-red-200">
-      🛍️
-    </div>
-    <div>
-      <h1 class="text-3xl font-black tracking-tight uppercase">
-        Add New Product
-      </h1>
-      <p class="text-slate-500 font-medium">
-        Create a stunning listing for your catalog
-      </p>
-    </div>
-  </header>
-
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
-
-    <!-- FORM -->
-    <div class="space-y-10">
-
-      <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="space-y-10">
-
-        <!-- Product Name -->
-        <div class="space-y-2">
-          <label class="text-xs font-bold text-slate-400 uppercase tracking-widest">
-            Product Name
-          </label>
-          <input
-            type="text"
-            formControlName="name"
-            placeholder="e.g. Premium Wireless Headphones"
-            class="w-full bg-transparent text-4xl font-bold placeholder:text-slate-300 py-3 input-underline"
-          />
-          <p *ngIf="formErrors.name" class="mt-1 text-xs text-red-600 font-semibold ml-1">
-            {{ formErrors.name }}
-          </p>
-        </div>
-
-        <!-- Image Upload (Static) -->
-        <div class="space-y-4">
-          <label class="text-xs font-bold text-slate-400 uppercase tracking-widest">
-            Product Visuals
-          </label>
-
-          <div class="border-2 border-dashed border-slate-300 rounded-2xl bg-white px-6 py-10 text-center">
-            <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto text-slate-400 mb-4">
-              ⬆️
-            </div>
-            <p class="text-lg font-bold text-slate-700">
-              Drop image here or click to upload
-            </p>
-            <p class="text-sm text-slate-400">
-              PNG, JPG or WebP (max. 5MB)
-            </p>
-            <input type="file" class="hidden" />
-          </div>
-        </div>
-
-        <!-- Price & Stock -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-          <div class="space-y-2">
-            <label class="text-xs font-bold text-slate-400 uppercase tracking-widest">
-              Unit Price ($)
-            </label>
-            <input
-              type="number"
-              formControlName="price"
-              placeholder="0.00"
-              class="w-full bg-transparent text-xl font-semibold py-3 input-underline"
-            />
-            <p *ngIf="formErrors.price" class="mt-1 text-xs text-red-600 font-semibold ml-1">
-            {{ formErrors.price }}
-          </p>
-          </div>
-
-          <div class="space-y-2">
-            <label class="text-xs font-bold text-slate-400 uppercase tracking-widest">
-              Stock Level
-            </label>
-            <input
-              type="number"
-              formControlName="stock"
-              placeholder="100"
-              class="w-full bg-transparent text-xl font-semibold py-3 input-underline"
-            />
-            <p *ngIf="formErrors.stock" class="mt-1 text-xs text-red-600 font-semibold ml-1">
-            {{ formErrors.stock }}
-          </p>
-          </div>
-        </div>
-
-        <!-- Category -->
-        <div class="space-y-2">
-          <label class="text-xs font-bold text-slate-400 uppercase tracking-widest">
-            Product Category
-          </label>
-          <select formControlName="category_id"
-            class="w-full bg-transparent text-lg font-medium py-3 input-underline cursor-pointer">
-            <option value="">-- Select Category --</option>
-    <option *ngFor="let c of categories" [value]="c.id">
-      {{ c.name }}
-    </option>
-          </select>
-          <p *ngIf="formErrors.category_id" class="mt-1 text-xs text-red-600 font-semibold ml-1">
-            {{ formErrors.category_id }}
-          </p>
-        </div>
-
-        <!-- Description -->
-        <div class="space-y-3">
-          <div class="flex justify-between items-center">
-            <label class="text-xs font-bold text-slate-400 uppercase tracking-widest">
-              Description
-            </label>
-            <span class="text-xs font-bold text-red-800">
-              ✨ Magic Enhance with AI
-            </span>
-          </div>
-
-          <textarea
-          formControlName="description"
-            rows="5"
-            placeholder="Describe your product's unique value..."
-            class="w-full bg-transparent text-lg leading-relaxed py-3 input-underline resize-none min-h-[160px]">
-          </textarea>
-          <p *ngIf="formErrors.description" class="mt-1 text-xs text-red-600 font-semibold ml-1">
-            {{ formErrors.description }}
-          </p>
-        </div>
-
-        <!-- Submit -->
-        <div class="pt-6">
-          <button
-            type="submit"
-            class="px-12 py-5 bg-red-800 text-white font-bold rounded-2xl shadow-xl shadow-red-100 hover:bg-red-900 transition">
-            💾 Publish Product
-          </button>
-        </div>
-
-      </form>
-    </div>
-
-    <!-- PREVIEW PLACEHOLDER -->
-    <div class="hidden lg:flex items-center justify-center bg-white rounded-2xl border border-slate-200 text-slate-400 text-xl font-semibold">
-      Product Preview
-    </div>
-
-  </div>
+Back to Registry System
+</a>
 </div>
 
+<!-- HEADER -->
+<div class="flex items-center gap-4 mb-8">
+
+<div class="w-12 h-12 bg-red-700 rounded-xl flex items-center justify-center text-white shadow-lg">
+🛍️
+</div>
+
+<div>
+<h1 class="text-2xl font-bold">CREATE NEW PRODUCT</h1>
+<p class="text-gray-500 text-sm">
+Create a stunning listing for your catalog
+</p>
+</div>
+
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+<!-- LEFT FORM CARD -->
+<div class="bg-white p-8 rounded-xl shadow">
+
+<form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="space-y-6">
+
+<!-- PRODUCT NAME -->
+<div>
+<label class="text-xs font-semibold text-gray-500 uppercase">
+Product Name
+</label>
+
+<input
+type="text"
+formControlName="name"
+placeholder="e.g. Premium Wireless Headphones"
+class="w-full mt-2 text-lg border-b-2 border-gray-300 focus:border-red-600 outline-none py-3"
+/>
+
+<p *ngIf="formErrors.name" class="text-xs text-red-600 mt-1">
+{{ formErrors.name }}
+</p>
+</div>
+
+
+<!-- IMAGE UPLOAD -->
+<div>
+
+<div class="flex justify-between items-center mb-2">
+<label class="text-xs font-semibold text-gray-500 uppercase">
+Product Visuals
+</label>
+
+<span class="text-red-600 text-xs">● Require</span>
+</div>
+
+<div class="border-2 border-dashed border-gray-300 rounded-xl p-10 text-center bg-gray-50">
+
+<div class="text-3xl mb-2 text-gray-400">⬆</div>
+
+<p class="font-medium text-gray-700">
+Drag & drop or click to upload
+</p>
+
+<p class="text-xs text-gray-400 mt-1">
+JPG, PNG, or WEBP | Max size: 5MB
+</p>
+
+<input type="file" class="hidden"/>
+
+</div>
+
+</div>
+
+
+<!-- PRICE + STOCK -->
+<div class="grid grid-cols-2 gap-6">
+
+<div>
+
+<label class="text-xs font-semibold text-gray-500 uppercase">
+Pricing & Stock
+</label>
+
+<input
+type="number"
+formControlName="price"
+placeholder="0.00"
+class="w-full mt-2 border rounded-lg p-3"
+/>
+
+<p *ngIf="formErrors.price" class="text-xs text-red-600 mt-1">
+{{ formErrors.price }}
+</p>
+
+</div>
+
+
+<div>
+
+<label class="text-xs font-semibold text-gray-500 uppercase">
+Stock Level
+</label>
+
+<input
+type="number"
+formControlName="stock"
+placeholder="100"
+class="w-full mt-2 border rounded-lg p-3"
+/>
+
+<p *ngIf="formErrors.stock" class="text-xs text-red-600 mt-1">
+{{ formErrors.stock }}
+</p>
+
+</div>
+
+</div>
+
+
+<!-- CATEGORY -->
+<div class="space-y-2 relative" #dropdownWrapper>
+
+<label class="text-xs font-semibold text-gray-500 uppercase">
+Category
+</label>
+
+<!-- Selected Category -->
+<div
+(click)="isDropdownOpen = !isDropdownOpen"
+class="w-full mt-2 border rounded-lg p-3 flex justify-between items-center cursor-pointer hover:border-red-600 transition">
+
+<span class="text-gray-700">
+{{ selectedCategory || '-- Select Category --' }}
+</span>
+
+<svg class="w-4 h-4 text-gray-400 transition"
+     [class.rotate-180]="isDropdownOpen"
+     fill="none"
+     stroke="currentColor"
+     viewBox="0 0 24 24">
+<path stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+d="M19 9l-7 7-7-7"/>
+</svg>
+
+</div>
+
+
+<!-- DROPDOWN -->
+<div *ngIf="isDropdownOpen" 
+     class="absolute w-full mt-2 bg-white border border-gray-200 rounded-xl shadow-xl overflow-hidden z-50">
+
+<div
+class="px-4 py-3 bg-gray-50 text-gray-500 font-semibold border-b">
+
+Select Category
+
+</div>
+
+<div *ngFor="let c of categories"
+     (click)="selectCategory(c)"
+     class="px-4 py-3 text-gray-700 hover:bg-red-600 hover:text-white cursor-pointer transition">
+
+{{ c.name }}
+
+</div>
+
+</div>
+
+
+<p *ngIf="formErrors.category_id"
+class="text-xs text-red-600 mt-1">
+{{ formErrors.category_id }}
+</p>
+
+</div>
+
+
+<!-- DESCRIPTION -->
+<div>
+
+<div class="flex justify-between mb-1">
+
+<label class="text-xs font-semibold text-gray-500 uppercase">
+Description
+</label>
+
+<span class="text-orange-500 text-xs">
++ Magic Enhance with AI
+</span>
+
+</div>
+
+<textarea
+rows="4"
+formControlName="description"
+placeholder="Describe your product's unique value..."
+class="w-full border rounded-lg p-3">
+</textarea>
+
+<p *ngIf="formErrors.description" class="text-xs text-red-600 mt-1">
+{{ formErrors.description }}
+</p>
+
+</div>
+
+
+<!-- BUTTON -->
+<button
+type="submit"
+class="bg-red-700 hover:bg-red-800 text-white px-6 py-3 rounded-lg shadow">
+
+💾 Publish Product
+
+</button>
+
+<p class="text-xs text-gray-400 mt-2">
+Create and list your product in the catalog.
+</p>
+
+</form>
+
+</div>
+
+
+
+<!-- RIGHT PRODUCT PREVIEW -->
+<div class="bg-white p-6 rounded-xl shadow h-fit">
+
+<h3 class="text-sm font-semibold text-gray-500 mb-4">
+PRODUCT PREVIEW
+</h3>
+
+<div class="bg-gray-50 rounded-lg p-6 text-center">
+
+<img
+src="https://images.unsplash.com/photo-1518441902117-04c96e3f9b0f"
+class="mx-auto rounded-lg mb-4"
+/>
+
+<h2 class="font-semibold text-lg">
+Premium Wireless Headphones
+</h2>
+
+<p class="text-xl font-bold mt-1">$0.00</p>
+
+<p class="text-sm text-gray-500">
+In Stock: 100
+</p>
+
+<p class="text-sm text-gray-400 mt-3">
+Description of the product's unique value will appear here...
+</p>
+
+<button class="mt-4 w-full bg-red-700 text-white py-3 rounded-lg">
+🛒 Add to Cart
+</button>
+
+</div>
+
+</div>
+
+</div>
+</div>
 </div>
 
 

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Product } from '../../../../core/services/admin/product/product';
 import { Spinner } from '../../../../shared/spinner/spinner';
 import { finalize } from 'rxjs';
@@ -9,12 +9,23 @@ import Swal from 'sweetalert2';
 type ProductFormFields = 'name' | 'price' | 'stock' | 'category_id' | 'description';
 @Component({
   selector: 'app-edit-product',
-  imports: [CommonModule, ReactiveFormsModule, Spinner],
+  imports: [CommonModule, ReactiveFormsModule, Spinner, RouterModule],
   templateUrl: './edit-product.html',
   styleUrl: './edit-product.css',
 })
 export class EditProduct {
+ @ViewChild('dropdownWrapper') dropdownWrapper!: ElementRef;
 
+@HostListener('document:click', ['$event'])
+clickOutside(event: Event): void {
+
+  const target = event.target as HTMLElement;
+
+  if (this.dropdownWrapper && !this.dropdownWrapper.nativeElement.contains(target)) {
+    this.isDropdownOpen = false;
+  }
+
+}
    productForm!: FormGroup;
   productId!: number;
   categories: any[] = [];
@@ -120,23 +131,18 @@ loadCategories() {
 
   this.adminService.getCategories().subscribe({
     next: (res: any) => {
-      this.categories = res.data || 0;
+
+      this.categories = res.data || [];
+
+      this.loadProduct();   // ✅ call here
+
       this.isLoading = false;
       this.cdr.detectChanges();
     },
+
     error: (err) => {
       this.isLoading = false;
       console.error(err);
-
-      Swal.fire({
-        title: err.error?.message || 'Failed to load categories',
-        icon: 'error',
-        confirmButtonText: 'OK',
-        confirmButtonColor: '#d4af37',
-        background: 'linear-gradient(135deg, #3b0000, #1a0000)',
-        color: '#ffffff',
-        iconColor: '#ef4444'
-      });
     }
   });
 }
@@ -146,28 +152,30 @@ loadCategories() {
 
   this.adminService.getProductById(this.productId).subscribe({
     next: (res: any) => {
+
+      const product = res.data.product;
+
       this.productForm.patchValue({
-        name: res.data.product.name,
-        price: res.data.product.price,
-        stock: res.data.product.stock,
-        category_id: res.data.product.category_id,
-        description: res.data.product.description,
+        name: product.name,
+        price: product.price,
+        stock: product.stock,
+        category_id: product.category_id,
+        description: product.description,
       });
+
+      // 🔥 set selected category name
+      const category = this.categories.find(c => c.id == product.category_id);
+
+      if (category) {
+        this.selectedCategory = category.name;
+      }
+
       this.isLoading = false;
     },
+
     error: (err) => {
       this.isLoading = false;
       console.error(err);
-
-      Swal.fire({
-        title: err.error?.message || 'Failed to load product',
-        icon: 'error',
-        confirmButtonText: 'OK',
-        confirmButtonColor: '#d4af37',
-        background: 'linear-gradient(135deg, #3b0000, #1a0000)',
-        color: '#ffffff',
-        iconColor: '#ef4444'
-      });
     }
   });
 }
@@ -222,5 +230,14 @@ onSubmit() {
       },
     });
 }
+isDropdownOpen = false;
+selectedCategory: string = '';
 
+selectCategory(category:any){
+this.selectedCategory = category.name;
+this.productForm.patchValue({
+category_id: category.id
+});
+this.isDropdownOpen = false;
+}
 }

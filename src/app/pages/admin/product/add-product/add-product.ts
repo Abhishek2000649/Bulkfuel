@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Product } from '../../../../core/services/admin/product/product';
 import { Router, RouterLink, RouterModule } from '@angular/router';
@@ -14,6 +14,19 @@ type ProductFormFields = 'name' | 'price' | 'stock' | 'category_id' | 'descripti
   styleUrl: './add-product.css',
 })
 export class AddProduct implements OnInit {
+
+  @ViewChild('dropdownWrapper') dropdownWrapper!: ElementRef;
+
+@HostListener('document:click', ['$event'])
+clickOutside(event: Event): void {
+
+  const target = event.target as HTMLElement;
+
+  if (this.dropdownWrapper && !this.dropdownWrapper.nativeElement.contains(target)) {
+    this.isDropdownOpen = false;
+  }
+
+}
 
   productForm!: FormGroup;
   categories: any[] = [];
@@ -174,5 +187,16 @@ export class AddProduct implements OnInit {
       });
     },
   });
+}
+
+isDropdownOpen = false;
+selectedCategory: string = '';
+
+selectCategory(category:any){
+this.selectedCategory = category.name;
+this.productForm.patchValue({
+category_id: category.id
+});
+this.isDropdownOpen = false;
 }
 }
