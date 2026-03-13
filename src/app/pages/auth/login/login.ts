@@ -115,7 +115,7 @@ export class Login {
 
       switch (user.role) {
         case 'ADMIN':
-          this.router.navigate(['/admin']);
+          this.router.navigate(['/admin/product']);
           break;
         case 'delivery_agent':
           this.router.navigate(['/delivery/available']);
