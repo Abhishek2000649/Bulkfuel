@@ -25,6 +25,7 @@ type LoginFormFields = 'email' | 'password';
 export class Login {
   loginForm!: FormGroup;
   isLoading = false;
+  showPassword = false;
   formErrors: Record<LoginFormFields, string> = {
     email: '',
     password: '',

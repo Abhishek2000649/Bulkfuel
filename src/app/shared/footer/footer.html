@@ -1,153 +1,472 @@
-<footer class="bg-gradient-to-b from-[#3a0808] to-[#1a0303] text-white pt-8 pb-4 relative overflow-hidden">
+<footer class="bg-gradient-to-r from-red-700 via-red-700 to-red-600 text-gray-200 relative overflow-hidden">
 
-  <!-- ambient glow -->
-  <div class="absolute top-0 right-0 w-48 h-48 bg-red-600/5 blur-[90px] rounded-full -mr-24 -mt-24"></div>
+  <div class="my-2 mx-6">
+    <div class="bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-2xl
+                py-4 px-6 flex flex-col gap-6 lg:flex-row items-center justify-between shadow-lg">
+      <div class="flex space-x-4">
+        <div class="relative group">
 
-  <div class="max-w-[1700px] mx-auto px-4 relative z-10">
+          <div class="absolute inset-0 bg-red-500 blur-xl opacity-40 rounded-2xl group-hover:opacity-70 transition">
+          </div>
 
-    <!-- ================= NEWSLETTER ================= -->
-    <div class="mb-8">
-      <div
-        class="bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-2xl
-               p-4 md:p-6 flex flex-col lg:flex-row items-center justify-between shadow-lg"
-      >
+          <div
+            class="relative bg-red-200 w-12 h-12 flex items-center justify-center rounded-2xl border border-white/20 shadow-2xl backdrop-blur-xl transition-transform duration-300 group-hover:scale-105">
 
-        <div class="max-w-xl text-center lg:text-left mb-4 lg:mb-0">
-          <h2 class="text-2xl md:text-3xl font-semibold mb-1">
-            The <span class="italic text-amber-400">Inner Circle</span>
-          </h2>
-          <p class="text-red-100/50 text-sm max-w-sm mx-auto lg:mx-0">
-            Limited drops and private collections.
+            <div class="w-10 h-10 flex justify-center items-center overflow-hidden rounded-lg">
+              <img src="assets/images/logo-dark.png" class="w-full h-full object-contain">
+            </div>
+
+          </div>
+
+        </div>
+        <div class="flex flex-col justify-center items-center">
+          <h3 class="text-xl font-semibold">
+            AZIZI NEXUS
+          </h3>
+
+          <p class="text-gray-300">
+            PREMIUM EDITION
           </p>
         </div>
 
-        <div
-          class="flex flex-col sm:flex-row gap-1.5 bg-black/20 p-1 rounded-xl
-                 border border-white/5"
-        >
-          <input
-            type="email"
-            placeholder="Your email..."
-            class="px-4 py-2.5 bg-transparent text-white placeholder-red-100/20
-                   focus:outline-none w-full lg:min-w-[240px] text-xs"
-          />
-          <button
-            class="px-6 py-2.5 bg-amber-400 text-black font-black uppercase
-                   tracking-[0.2em] text-[9px] rounded-lg
-                   hover:bg-white transition"
-          >
-            Join
-          </button>
-        </div>
-
       </div>
+
+      <div class="flex overflow-hidden rounded-lg">
+        <input type="email" placeholder="Enter your email" class="w-full px-4 py-2 text-gray-700 outline-none">
+
+        <button class="bg-red-200 text-red-700 px-6 py-2 font-medium hover:bg-red-700 hover:text-white transition">
+          Subscribe
+        </button>
+      </div>
+
     </div>
+  </div>
+  
 
-    <!-- ================= FOOTER LINKS ================= -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-y-6 lg:gap-x-10 mb-8">
+  <div class="relative  mx-auto px-8 py-6">
 
-      <!-- Brand -->
-      <div class="lg:col-span-4 space-y-3">
-        <span class="text-2xl font-black">MY SHOP.</span>
-        <p class="text-red-100/40 text-sm max-w-xs">
-          Luxury digital commerce with performance delivery.
-        </p>
-      </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 lg:gap-24 gap-12">
 
-      <!-- Static -->
-      <div class="lg:col-span-2">
-        <h4 class="text-[8px] uppercase tracking-[0.3em] text-amber-400 mb-4">
-          House
-        </h4>
-        <ul class="space-y-2">
-          <li><a class="text-red-100/60 hover:text-white text-sm">Legacy</a></li>
-          <li><a class="text-red-100/60 hover:text-white text-sm">Philosophy</a></li>
-          <li><a class="text-red-100/60 hover:text-white text-sm">Ateliers</a></li>
-          <li><a class="text-red-100/60 hover:text-white text-sm">Careers</a></li>
-        </ul>
-      </div>
+      <div class="">
 
-      <div class="lg:col-span-2">
-        <h4 class="text-[8px] uppercase tracking-[0.3em] text-amber-400 mb-4">
-          Support
-        </h4>
-        <ul class="space-y-2">
-          <li><a class="text-red-100/60 hover:text-white text-sm">Contact</a></li>
-          <li><a class="text-red-100/60 hover:text-white text-sm">Returns</a></li>
-          <li><a class="text-red-100/60 hover:text-white text-sm">Sizing</a></li>
-          <li><a class="text-red-100/60 hover:text-white text-sm">FAQ</a></li>
-        </ul>
-      </div>
 
-      <!-- ================= PORTAL ================= -->
-      <div class="lg:col-span-4" *ngIf="auth.user$ | async as user">
-        <div class="bg-white/[0.02] border border-white/5 p-4 rounded-xl">
+        <h3 class="text-xl font-semibold mb-2 text-center md:text-start">
+          Join Our Community
+        </h3>
 
-          <h4 class="text-[8px] uppercase tracking-[0.3em] text-amber-400 mb-4">
-            {{
-              user.role === 'GUEST'
-                ? 'Start'
-                : (user.name.split(' ')[0] + '\'s Portal')
-            }}
-          </h4>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-
-            <ng-container *ngIf="user.role === 'USER'">
-              <a class="footer-btn">Order Archive</a>
-              <a class="footer-btn">Venture Rewards</a>
-              <a class="footer-btn">Premium Lounge</a>
-              <a class="footer-btn">Help & Concierge</a>
-            </ng-container>
-
-            <ng-container *ngIf="user.role === 'ADMIN'">
-              <a class="footer-btn">Control Center</a>
-              <a class="footer-btn">Security Audit</a>
-              <a class="footer-btn">Revenue Streams</a>
-              <a class="footer-btn">Global Inventory</a>
-            </ng-container>
-
-            <ng-container *ngIf="user.role === 'delivery_agent'">
-              <a class="footer-btn">Route Optimizer</a>
-              <a class="footer-btn">Safety Protocol</a>
-              <a class="footer-btn">Earnings Portal</a>
-              <a class="footer-btn">Agent Support</a>
-            </ng-container>
-
-            <ng-container *ngIf="!user.role">
-              <a class="footer-btn">Start Selling</a>
-              <a class="footer-btn">Logistics Partner</a>
-              <a class="footer-btn">Curated Gifts</a>
-              <a class="footer-btn">Privilege Club</a>
-            </ng-container>
-
+        <div class="flex justify-center md:justify-start gap-3 mt-5">
+          <div class="w-9 h-9 bg-red-100 rounded flex items-center justify-center hover:bg-red-300 cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="red" class="w-6 h-6">
+              <path
+                d="M22 12.07C22 6.48 17.52 2 11.93 2S1.86 6.48 1.86 12.07c0 5.02 3.66 9.19 8.44 9.93v-7.02H7.9v-2.91h2.4V9.41c0-2.37 1.41-3.68 3.57-3.68 1.03 0 2.11.18 2.11.18v2.32h-1.19c-1.17 0-1.54.73-1.54 1.48v1.78h2.62l-.42 2.91h-2.2V22c4.78-.74 8.44-4.91 8.44-9.93z" />
+            </svg>
+          </div>
+          <div class="w-9 h-9 bg-red-100 rounded flex items-center justify-center hover:bg-red-300 cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="red" class="w-6 h-6">
+              <path
+                d="M22.46 6c-.77.35-1.6.58-2.46.69a4.3 4.3 0 001.88-2.37c-.84.5-1.78.86-2.78 1.05A4.28 4.28 0 0015.5 4c-2.37 0-4.29 1.92-4.29 4.29 0 .34.04.67.11.98C7.69 9.1 4.07 7.13 1.64 4.16c-.37.64-.58 1.38-.58 2.18 0 1.5.76 2.83 1.92 3.61-.71-.02-1.38-.22-1.97-.54v.05c0 2.1 1.49 3.85 3.47 4.25-.36.1-.75.15-1.14.15-.28 0-.55-.03-.81-.08.55 1.72 2.15 2.97 4.05 3-1.48 1.16-3.35 1.86-5.38 1.86-.35 0-.7-.02-1.04-.06C2.21 19.29 4.84 20 7.63 20c9.16 0 14.17-7.59 14.17-14.17 0-.22 0-.43-.02-.65.97-.7 1.8-1.57 2.46-2.56z" />
+            </svg>
+          </div>
+          <div class="w-9 h-9 bg-red-100 rounded flex items-center justify-center hover:bg-red-300 cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="red" class="w-6 h-6">
+              <path
+                d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.05-1.86-3.05-1.87 0-2.15 1.46-2.15 2.96v5.66H9.34V9h3.41v1.56h.05c.48-.9 1.65-1.86 3.4-1.86 3.63 0 4.3 2.39 4.3 5.49v6.26zM5.34 7.43a2.06 2.06 0 110-4.12 2.06 2.06 0 010 4.12zM7.12 20.45H3.56V9h3.56v11.45z" />
+            </svg>
+          </div>
+          <div class="w-9 h-9 bg-red-100 rounded flex items-center justify-center hover:bg-red-300  cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="red" class="w-6 h-6">
+              <path
+                d="M7.75 2C4.57 2 2 4.57 2 7.75v8.5C2 19.43 4.57 22 7.75 22h8.5C19.43 22 22 19.43 22 16.25v-8.5C22 4.57 19.43 2 16.25 2h-8.5zm0 2h8.5C18.22 4 20 5.78 20 7.75v8.5c0 1.97-1.78 3.75-3.75 3.75h-8.5C5.78 20 4 18.22 4 16.25v-8.5C4 5.78 5.78 4 7.75 4zm4.25 2.5A5.75 5.75 0 106.25 12 5.76 5.76 0 0012 6.5zm0 2A3.75 3.75 0 118.25 12 3.75 3.75 0 0112 8.5zm5.5-.88a1.12 1.12 0 11-1.12-1.12 1.12 1.12 0 011.12 1.12z" />
+            </svg>
           </div>
         </div>
       </div>
 
-    </div>
 
-    <!-- ================= BOTTOM ================= -->
-    <div
-      class="pt-5 border-t border-white/5 flex flex-col lg:flex-row
-             items-center justify-between gap-4"
-    >
-      <div class="flex gap-x-6 gap-y-2">
-        <a class="text-[8px] uppercase tracking-[0.2em] text-red-100/20 hover:text-amber-400">
-          Privacy
-        </a>
-        <a class="text-[8px] uppercase tracking-[0.2em] text-red-100/20 hover:text-amber-400">
-          Terms
-        </a>
-        <a class="text-[8px] uppercase tracking-[0.2em] text-red-100/20 hover:text-amber-400">
-          Access
-        </a>
+      <div *ngIf="auth.user$ | async as user">
+        <h3 class="text-lg font-semibold mb-4 text-center md:text-start">Quick Links</h3>
+
+        <nav class="flex justify-center md:justify-start items-center space-x-4" >
+
+        <ng-container *ngIf="user.role === 'USER'">
+          <div class="flex flex-col space-y-3 ">
+            <div class="flex flex-row space-x-2 items-center  text-gray-300 hover:text-white cursor-pointer transition-all duration-200"
+              routerLink="/user" >
+
+              <span class=" rounded-lg hover:bg-white/10 transition">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                  stroke-linecap="round" stroke-linejoin="round">
+
+                  <path d="M3 10L12 3l9 7"></path>
+                  <path d="M5 10v10h14V10"></path>
+
+                </svg>
+              </span>
+
+              <span
+                class="text-sm ">
+                Home
+              </span>
+
+            </div>
+
+            <div class="flex flex-row space-x-2 items-center text-gray-300 hover:text-white cursor-pointer transition-all duration-200"
+              routerLink="/user/orders" >
+
+              <span class=" rounded-lg hover:bg-white/10 transition">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                  stroke-linecap="round" stroke-linejoin="round">
+
+                  <path d="M9 11l3 3L22 4"></path>
+                  <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+
+                </svg>
+              </span>
+
+              <span
+                class="text-sm ">
+                My Orders
+              </span>
+
+            </div>
+
+            <div class="flex flex-row space-x-2 items-center text-gray-300 hover:text-white cursor-pointer transition-all duration-200"
+              routerLink="/user/cart" >
+
+              <span class=" rounded-lg hover:bg-white/10 transition">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                  stroke-linecap="round" stroke-linejoin="round">
+
+                  <circle cx="9" cy="20" r="1"></circle>
+                  <circle cx="18" cy="20" r="1"></circle>
+                  <path d="M3 3h2l3 12h10l3-9H6"></path>
+
+                </svg>
+              </span>
+
+              <span
+                class="text-sm ">
+                My Cart
+              </span>
+
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="user.role === 'ADMIN'">
+          <div class="flex flex-col space-y-3  ">
+            <div
+              class="flex text-gray-300 hover:text-white flex-row items-center space-x-2 justify-start  cursor-pointer router-link-active:text-amber-300 transition-all duration-200"
+              routerLink="/admin/product" >
+
+              <!-- Icon -->
+              <span class=" rounded-lg hover:bg-white/10 transition">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M6 8h12l-1 12H7L6 8z"></path>
+                  <path d="M9 8V6a3 3 0 0 1 6 0v2"></path>
+                </svg>
+              </span>
+
+              <!-- Text -->
+              <span class="text-sm transition">
+                Products
+              </span>
+
+            </div>
+            <div class="flex flex-row justify-start space-x-2  items-center  text-gray-300 hover:text-white cursor-pointer transition-all duration-200"
+              routerLink="/admin/stock" >
+
+              <!-- Icon -->
+              <span class=" rounded-lg hover:bg-white/10 transition">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M4 6h16"></path>
+                  <path d="M4 12h16"></path>
+                  <path d="M4 18h10"></path>
+                </svg>
+              </span>
+
+              <!-- Text -->
+              <span
+                class="text-sm ">
+                Stock
+              </span>
+
+            </div>
+            <div class="flex flex-row justify-start items-center space-x-2 text-gray-300 hover:text-white cursor-pointer transition-all duration-200"
+              routerLink="/admin/userManagement" >
+
+              <!-- Icon -->
+              <span class=" rounded-lg hover:bg-white/10 transition">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M16 11c1.66 0 3-1.79 3-4s-1.34-4-3-4-3 1.79-3 4 1.34 4 3 4z"></path>
+                  <path d="M8 11c1.66 0 3-1.79 3-4S9.66 3 8 3 5 4.79 5 7s1.34 4 3 4z"></path>
+                  <path d="M2 21v-2c0-2.21 3.58-4 6-4"></path>
+                  <path d="M22 21v-2c0-2.21-3.58-4-6-4"></path>
+                </svg>
+              </span>
+
+              <!-- Text -->
+              <span
+                class="text-sm ">
+                Users
+              </span>
+
+            </div>
+            <div class="flex flex-row justify-start items-center space-x-2 text-gray-300 hover:text-white cursor-pointer transition-all duration-200"
+              routerLink="/admin/order" >
+
+              <!-- Icon -->
+              <span class=" rounded-lg hover:bg-white/10 transition">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                  stroke-linecap="round" stroke-linejoin="round">
+
+                  <circle cx="9" cy="21" r="1"></circle>
+                  <circle cx="20" cy="21" r="1"></circle>
+                  <path d="M1 1h4l2.6 12.4a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L23 6H6"></path>
+
+                </svg>
+              </span>
+
+              <!-- Text -->
+              <span
+                class="text-sm ">
+                New Orders
+              </span>
+
+            </div>
+            <div class="flex flex-row justify-start space-x-2 items-center text-gray-300 hover:text-white cursor-pointer transition-all duration-200"
+              routerLink="/admin/order-history" >
+
+              <!-- Icon -->
+              <span class=" rounded-lg hover:bg-white/10 transition">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                  stroke-linecap="round" stroke-linejoin="round">
+
+                  <path d="M3 3v5h5"></path>
+                  <path d="M3.05 13a9 9 0 1 0 2.13-5.36L3 8"></path>
+                  <path d="M12 7v5l3 3"></path>
+
+                </svg>
+              </span>
+
+              <!-- Text -->
+              <span
+                class="text-sm ">
+                Order History
+              </span>
+
+            </div>
+            <div class="flex flex-row justify-start space-x-2 items-center  text-gray-300 hover:text-white cursor-pointer transition-all duration-200"
+              routerLink="/admin/settlement" routerLinkActive="text-amber-300">
+
+              <!-- Icon -->
+              <span class=" rounded-lg hover:bg-white/10 transition">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                  stroke-linecap="round" stroke-linejoin="round">
+
+                  <rect x="2" y="6" width="20" height="12" rx="2"></rect>
+                  <path d="M2 10h20"></path>
+                  <circle cx="16" cy="14" r="2"></circle>
+
+                </svg>
+              </span>
+
+              <!-- Text -->
+              <span
+                class="text-sm ">
+                Settlement
+              </span>
+
+            </div>
+          </div>
+        </ng-container>
+
+        <!-- DELIVERY -->
+        <ng-container *ngIf="user.role === 'delivery_agent'">
+          <div class="flex flex-col space-y-3">
+            <div class="flex flex-row space-x-2 items-center text-gray-300 hover:text-white cursor-pointer transition-all duration-200"
+              routerLink="/delivery"  >
+
+              <!-- Icon -->
+              <span class=" rounded-lg hover:bg-white/10 transition">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                  stroke-linecap="round" stroke-linejoin="round">
+
+                  <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+                  <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+                  <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+                  <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+
+                </svg>
+              </span>
+
+              <!-- Text -->
+              <span
+                class="text-sm ">
+                Dashboard
+              </span>
+
+            </div>
+
+            <div class="flex flex-row space-x-2 items-center text-gray-300 hover:text-white cursor-pointer transition-all duration-200"
+              routerLink="/delivery/available" >
+
+              <!-- Icon -->
+              <span class=" rounded-lg hover:bg-white/10 transition">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                  stroke-linecap="round" stroke-linejoin="round">
+
+                  <circle cx="12" cy="12" r="9"></circle>
+                  <polyline points="9 12 11 14 15 10"></polyline>
+
+                </svg>
+              </span>
+
+              <!-- Text -->
+              <span
+                class="text-sm ">
+                Available
+              </span>
+
+            </div>
+
+            <div class="flex flex-row space-x-2 items-center text-gray-300 hover:text-white cursor-pointer transition-all duration-200"
+              routerLink="/delivery/orders" >
+
+              <!-- Icon -->
+              <span class=" rounded-lg hover:bg-white/10 transition">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                  stroke-linecap="round" stroke-linejoin="round">
+
+                  <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+                  <path d="M7 8h10"></path>
+                  <path d="M7 12h10"></path>
+                  <path d="M7 16h6"></path>
+
+                </svg>
+              </span>
+
+              <!-- Text -->
+              <span
+                class="text-sm ">
+                Orders
+              </span>
+
+            </div>
+          </div>
+        </ng-container>
+      </nav>
+      </div>
+      <div class="flex flex-col justify-start items-center md:items-start">
+        <h3 class="text-lg font-semibold mb-4 md:text-start">Company</h3>
+
+        <ul class="space-y-3 text-gray-300 ">
+          <li class="flex items-center gap-2">
+
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+              class="w-4 h-4">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M8 10a4 4 0 118 0 4 4 0 01-8 0zM6 20a6 6 0 0112 0" />
+            </svg>
+
+            FAQ
+
+          </li>
+          <li class="flex items-center gap-2">
+
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+              class="w-4 h-4">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M18 10a6 6 0 10-12 0v4a2 2 0 002 2h2v-4H8v-2a4 4 0 118 0v2h-2v4h2a2 2 0 002-2v-4z" />
+            </svg>
+
+            Support
+
+          </li>
+          <li class="flex items-center gap-2">
+
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+              class="w-4 h-4">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M20 7h-4V5a2 2 0 00-2-2H10a2 2 0 00-2 2v2H4a2 2 0 00-2 2v3h20V9a2 2 0 00-2-2z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6" />
+            </svg>
+
+            Careers
+
+          </li>
+          <li class="flex items-center gap-2">
+
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+              class="w-4 h-4">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M8.228 9a3.5 3.5 0 116.544 1.5c0 2-3 2-3 4m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+
+            Help Center
+
+          </li>
+        </ul>
       </div>
 
-      <p class="text-[8px] uppercase tracking-[0.3em] text-red-100/10">
-        © {{ currentYear }} MY SHOP.
-      </p>
+
+      <!-- Contact -->
+      <div class="flex flex-col justify-start items-center md:items-start">
+        <h3 class="text-lg font-semibold mb-4 md:text-start">Contact Us</h3>
+
+        <ul class="space-y-4 text-gray-300 ">
+
+          <li class="flex items-center gap-3">
+
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+              class="w-5 h-5">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M3 8l9 6 9-6M4 6h16a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V8a2 2 0 012-2z" />
+            </svg>
+
+            info@example.com
+          </li>
+
+          <li class="flex items-center gap-3">
+
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+              class="w-5 h-5">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M3 5a2 2 0 012-2h2.28a2 2 0 011.94 1.51l.7 2.8a2 2 0 01-.45 1.84l-1.27 1.27a16 16 0 006.36 6.36l1.27-1.27a2 2 0 011.84-.45l2.8.7A2 2 0 0121 16.72V19a2 2 0 01-2 2h-1C9.72 21 3 14.28 3 6V5z" />
+            </svg>
+
+            (123) 456-7890
+          </li>
+
+          <li class="flex items-start gap-3">
+
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+              class="w-5 h-5 mt-1">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+
+            <p>
+              1234 Main Street,<br>
+              City, State 67345
+            </p>
+
+          </li>
+
+        </ul>
+      </div>
+
+
+      <!-- Company -->
+
+
     </div>
+
+
+
 
   </div>
 </footer>

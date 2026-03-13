@@ -1,189 +1,236 @@
-<div class="min-h-screen w-full flex flex-col lg:flex-row font-['Inter'] relative">
+<div class="min-h-screen flex ">
   <app-spinner [isLoading]="isLoading" [loaderSize]="100"></app-spinner>
-  <!-- ================= LEFT BRAND SECTION ================= -->
+
+  <!-- LEFT SIDE -->
+
   <div
-    class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-[#450a0a] to-[#1a0303] relative items-center justify-center p-20 overflow-hidden"
-  >
-    <div
-      class="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-red-600/10 blur-[120px] rounded-full"
-    ></div>
-    <div
-      class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-amber-500/5 blur-[100px] rounded-full"
-    ></div>
+    class="hidden lg:flex w-1/2 bg-gradient-to-br from-red-900 via-red-800 to-red-950 flex-col relative overflow-hidden">
 
-    <div class="relative z-10 max-w-lg text-center lg:text-left">
-      <div class="mb-12 inline-flex items-center space-x-4">
-        <div class="bg-white/10 p-3 rounded-3xl backdrop-blur-xl border border-white/20">
-          <!-- <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-          </svg> -->
-          <div class="w-12 h-12 flex justify-center flex-srink-0 overflow-hidden rounded-lg">
-            <img src="assets/images/logo-dark.png" alt="" class="w-full h-full object-contain" />
+    <!-- Light Radial Glow -->
+    <div class="absolute top-0 left-0 w-[500px] h-[500px] bg-red-500 opacity-20 blur-[150px] rounded-full"></div>
+
+    <!-- Decorative Gradient Line -->
+    <div class="absolute bottom-0 left-0 w-full h-48 bg-gradient-to-t from-red-700/40 to-transparent"></div>
+
+    <!-- Logo -->
+    <div class="flex mt-24 ms-16 mb-6 relative z-10">
+
+      <div class="relative group">
+
+        <!-- Glow Effect -->
+        <div class="absolute inset-0 bg-red-500 blur-xl opacity-40 rounded-2xl group-hover:opacity-70 transition"></div>
+
+        <!-- Logo Box -->
+        <div
+          class="relative bg-gradient-to-br from-red-600 to-red-800 w-20 h-20 flex items-center justify-center rounded-2xl border border-white/20 shadow-2xl backdrop-blur-xl transition-transform duration-300 group-hover:scale-105">
+
+          <div class="w-16 h-16 flex justify-center items-center overflow-hidden rounded-lg">
+            <img src="assets/images/logo-dark.png" class="w-full h-full object-contain">
           </div>
+
         </div>
 
-        <div class="flex flex-col leading-none">
-          <span class="text-3xl font-black text-white tracking-tighter">AZIZI NEXUS</span>
-          <span class="text-[10px] uppercase tracking-[0.4em] text-amber-400 font-black mt-1">
-            Premium Edition
-          </span>
-        </div>
       </div>
 
-      <h1 class="text-6xl text-white leading-tight mb-8">
-        Experience <br />
-        <span class="italic text-amber-400">Pure Luxury</span><br />
-        In Every Click.
-      </h1>
+    </div>
 
-      <p class="text-red-100/60 text-lg leading-relaxed mb-12 font-light tracking-wide">
-        Join thousands of curated shoppers and discover the world's most exquisite collections
-        delivered with lightning speed.
+
+    <!-- Small Label -->
+    <p class="tracking-widest font-medium mt-10 ms-16 text-yellow-400 text-lg relative z-10">
+      LOGIN
+    </p>
+
+
+    <!-- Brand -->
+    <h1 class="text-6xl mt-4 ms-16 font-bold tracking-wide text-yellow-200 relative z-10">
+      AZIZI NEXUS
+    </h1>
+
+
+    <!-- Subtitle -->
+    <p class="tracking-[0.4em] ms-16 mt-3 text-yellow-300 text-sm relative z-10">
+      PREMIUM EDITION
+    </p>
+
+
+    <!-- Bottom Decorative Spark -->
+    <div class="absolute bottom-0 left-0 w-full h-64 bg-gradient-to-t from-red-900/80 to-transparent"></div>
+
+  </div>
+
+
+
+  <!-- RIGHT SIDE -->
+  <div class="lg:w-1/2 w-full lg:bg-red-100 bg-red-800 flex items-center justify-center p-6">
+
+    <div
+      class="lg:bg-gray-50 bg-gray-100 w-full max-w-xl lg:max-w-lg  p-6 rounded-3xl shadow-xl border border-gray-200">
+      <div class="lg:hidden flex justify-center mb-6">
+
+        <div class="relative group">
+
+          <!-- Glow Effect -->
+          <div class="absolute inset-0 bg-red-500 blur-xl opacity-40 rounded-2xl group-hover:opacity-70 transition">
+          </div>
+
+          <!-- Logo Box -->
+          <div
+            class="relative bg-gradient-to-br from-red-600 to-red-800 w-16 h-16 flex items-center justify-center rounded-2xl border border-white/20 shadow-xl backdrop-blur-xl transition-transform duration-300 group-hover:scale-105">
+
+            <div class="w-12 h-12 flex justify-center items-center overflow-hidden rounded-lg">
+              <img src="assets/images/logo-dark.png" class="w-full h-full object-contain">
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Title -->
+      <h2 class="text-3xl font-semibold text-gray-800 text-center">
+        Welcome Back
+      </h2>
+
+      <p class="text-gray-500 text-center mt-2 mb-6">
+        Please log in to access your premium account.
       </p>
 
-      <div class="flex items-center space-x-8">
-        <div>
-          <span class="text-white font-black text-2xl">50k+</span>
-          <span class="block text-red-100/40 text-[10px] uppercase font-bold tracking-widest">
-            Premium Clients
-          </span>
-        </div>
-        <div class="w-px h-10 bg-white/10"></div>
-        <div>
-          <span class="text-white font-black text-2xl">99.9%</span>
-          <span class="block text-red-100/40 text-[10px] uppercase font-bold tracking-widest">
-            Satisfaction
-          </span>
-        </div>
-      </div>
-    </div>
-  </div>
+      <!-- Social Login -->
+      <div class="flex gap-3 mb-6">
 
-  <!-- ================= RIGHT LOGIN FORM ================= -->
-  <div class="flex-1 bg-[#FDFDFD] flex items-center justify-center p-6 sm:p-12 lg:p-24 relative">
-    <!-- Mobile Logo -->
-    <div class="absolute top-8 left-8 lg:hidden flex items-center space-x-3">
-      <div class="bg-[#8B0000] p-2 rounded-xl">
-        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-          />
-        </svg>
-      </div>
-      <span class="text-xl font-black tracking-tighter text-[#450a0a]">MY SHOP.</span>
-    </div>
-
-    <div class="w-full max-w-md">
-      <div class="mb-10 text-center lg:text-left">
-        <h2 class="text-4xl font-black text-[#1a0303] mb-3">Welcome Back</h2>
-        <p class="text-gray-500 text-sm font-medium">
-          Please enter your details to access your premium account.
-        </p>
-      </div>
-
-      <!-- ================= FORM ================= -->
-      <form class="space-y-5" [formGroup]="loginForm" (ngSubmit)="login()">
-        <!-- Social -->
-        <div class="grid grid-cols-2 gap-4 mb-8">
-          <button
-            type="button"
-            class="flex items-center justify-center space-x-3 py-3 px-4 border border-gray-200 rounded-2xl hover:bg-gray-50 font-bold text-sm"
-          >
-            <span>Google</span>
-          </button>
-
-          <button
-            type="button"
-            class="flex items-center justify-center space-x-3 py-3 px-4 bg-black rounded-2xl hover:bg-gray-900 font-bold text-sm text-white"
-          >
-            <span>Apple</span>
-          </button>
-        </div>
-
-        <div class="flex items-center mb-8">
-          <div class="flex-grow border-t border-gray-100"></div>
-          <span class="mx-4 text-gray-400 text-[10px] font-black uppercase tracking-widest">
-            Or login with Email
-          </span>
-          <div class="flex-grow border-t border-gray-100"></div>
-        </div>
-
-        <!-- Email -->
-        <div>
-          <label
-            class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1"
-          >
-            Email Address
-          </label>
-          <input
-            type="email"
-            formControlName="email"
-            placeholder="john@example.com"
-            class="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-amber-400/40 outline-none text-sm shadow-sm"
-          />
-          <p *ngIf="formErrors.email" class="mt-1 text-xs text-red-600 font-semibold ml-1">
-            {{ formErrors.email }}
-          </p>
-        </div>
-        <!-- Email -->
-
-        <!-- Password -->
-        <div>
-          <div class="flex justify-between mb-2 ml-1">
-            <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">
-              Password
-            </label>
-            <a class="text-[10px] font-black text-amber-600 uppercase tracking-widest"> Forgot? </a>
-          </div>
-          <input
-            type="password"
-            formControlName="password"
-            placeholder="••••••••"
-            class="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-amber-400/40 outline-none text-sm shadow-sm"
-          />
-          <p *ngIf="formErrors.password" class="mt-1 text-xs text-red-600 font-semibold ml-1">
-            {{ formErrors.password }}
-          </p>
-        </div>
-
-        <!-- Password -->
-
-        <!-- Remember -->
-        <div class="flex items-center">
-          <input type="checkbox" class="w-4 h-4 rounded text-[#8B0000] cursor-pointer" />
-          <label class="ml-2 text-xs font-bold text-gray-600"> Remember me for 30 days </label>
-        </div>
-        <!-- Submit -->
-        <button
-          type="submit"
-          
-          class="w-full py-4 bg-[#8B0000] text-white font-black uppercase tracking-[0.2em] text-xs rounded-2xl hover:bg-[#600000] transition-all"
-        >
-          Sign In to AZIZI NEXUS
+        <button class="flex items-center justify-center gap-2 border rounded-xl px-4 py-3 w-full hover:bg-gray-50">
+          <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-5">
+          <span class="md:flex hidden">Log in with</span> Google
         </button>
 
-        <p class="text-center text-sm font-medium text-gray-500 pt-6">
-          Don't have a premium account?<br />
-          <a routerLink="/signUp">
-            <span class="text-[#8B0000] font-black uppercase tracking-widest text-[11px]">
-              Join the Circle
-            </span>
-          </a>
+        <button class="flex items-center justify-center gap-2 bg-black text-white rounded-xl px-4 py-3 w-full">
+
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
+            <path
+              d="M16.365 1.43c0 1.14-.466 2.188-1.225 2.97-.78.806-2.057 1.43-3.17 1.343-.14-1.088.42-2.22 1.15-2.998.8-.843 2.13-1.45 3.245-1.315zm4.125 15.26c-.465 1.04-.69 1.5-1.29 2.42-.84 1.28-2.025 2.87-3.49 2.88-1.305.012-1.64-.84-3.41-.83-1.77.01-2.14.845-3.445.835-1.465-.01-2.585-1.44-3.425-2.72C2.71 17.17 1.6 13.32 3.42 10.37c.905-1.46 2.52-2.38 4.27-2.41 1.335-.026 2.6.905 3.41.905.81 0 2.33-1.12 3.93-.955.67.028 2.56.27 3.77 2.04-3.31 1.81-2.77 6.56 1.69 7.74z" />
+          </svg>
+
+          Apple
+
+        </button>
+
+      </div>
+
+      <!-- Divider -->
+      <div class="flex items-center mb-6">
+        <div class="flex-grow border-t"></div>
+        <span class="px-3 text-gray-400 text-sm">OR</span>
+        <div class="flex-grow border-t"></div>
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="login()">
+        <!-- Email -->
+        <label class="text-sm text-gray-500 tracking-wider">EMAIL ADDRESS</label>
+
+        <div class="group flex items-center border rounded-xl px-4 py-3 mt-2 mb-1 bg-gray-50 focus-within:ring-2 focus-within:ring-red-700 text-red-700">
+
+          <!-- SVG Icon -->
+          <span class="mr-3 text-gray-400 group-focus-within:text-red-700">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+              stroke="currentColor" class="w-5 h-5">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25H4.5A2.25 2.25 0 012.25 17.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5H4.5A2.25 2.25 0 002.25 6.75m19.5 0v.243a2.25 2.25 0 01-1.07 1.912l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.905a2.25 2.25 0 01-1.07-1.912V6.75" />
+            </svg>
+          </span>
+
+          <input formControlName="email" type="email" placeholder="john@example.com"
+            class="w-full outline-none bg-transparent ">
+        </div>
+        <p *ngIf="formErrors.email" class=" text-xs text-red-600 font-semibold ml-1">
+          {{ formErrors.email }}
         </p>
+
+
+
+
+        <!-- Password -->
+        <div class="mt-2 flex justify-between items-center">
+          <label class="text-sm text-gray-500 tracking-wider">PASSWORD</label>
+          <a href="#" class="text-sm text-orange-500">Forgot password?</a>
+        </div>
+
+        <div class="group flex items-center border rounded-xl px-4 py-3 mt-2 mb-1 bg-gray-50 focus-within:ring-2 focus-within:ring-red-700 text-red-700">
+
+          <span class="mr-3 text-gray-400 group-focus-within:text-red-700">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+              stroke="currentColor" class="w-5 h-5">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M16.5 10.5V7.875a4.5 4.5 0 10-9 0V10.5m-1.5 0h12A1.5 1.5 0 0119.5 12v6A1.5 1.5 0 0118 19.5H6A1.5 1.5 0 014.5 18v-6A1.5 1.5 0 016 10.5z" />
+            </svg>
+          </span>
+
+          <input formControlName="password" [type]="showPassword ? 'text' : 'password'" placeholder="••••••••"
+            class="w-full outline-none bg-transparent ">
+          <button *ngIf="!showPassword" type="button" (click)="showPassword = true" class="ml-2 text-red-700">
+            <!-- Eye Icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5
+        c4.477 0 8.268 2.943 9.542 7
+        -1.274 4.057-5.065 7-9.542 7
+        -4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+          </button>
+
+          <!-- HIDE PASSWORD ICON -->
+          <button *ngIf="showPassword" type="button" (click)="showPassword = false" class="ml-2 text-red-700">
+            <!-- Eye Slash Icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19
+        c-4.477 0-8.268-2.943-9.542-7
+        a9.956 9.956 0 012.042-3.368M6.223 6.223
+        A9.956 9.956 0 0112 5
+        c4.477 0 8.268 2.943 9.542 7
+        a9.956 9.956 0 01-4.043 5.058M15 12
+        a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3l18 18" />
+            </svg>
+          </button>
+        </div>
+        <p *ngIf="formErrors.password" class=" text-xs text-red-600 font-semibold ml-1">
+          {{ formErrors.password }}
+        </p>
+
+
+
+        <!-- Remember -->
+        <div class="mt-3 flex items-center mb-6">
+          <input type="checkbox" class="mr-3 w-5 h-5 accent-red-500 cursor-pointer">
+
+          <span class="text-gray-600 text-sm">
+            Remember me for 30 days
+          </span>
+        </div>
+
+
+        <!-- Button -->
+        <button type="submit"
+          class="w-full bg-red-700 hover:bg-red-800 text-white py-3 rounded-xl font-semibold tracking-wide shadow-md">
+          SIGN IN TO AZIZI NEXUS
+        </button>
       </form>
 
-      <!-- Footer -->
-      <div class="mt-12 pt-8 border-t border-gray-50 flex justify-center space-x-6">
-        <span class="text-[9px] font-black text-gray-300 uppercase tracking-widest">
-          © 2024 MY SHOP
-        </span>
-        <a class="text-[9px] font-black text-gray-400 uppercase tracking-widest">Privacy</a>
-        <a class="text-[9px] font-black text-gray-400 uppercase tracking-widest">Terms</a>
-      </div>
+
+      <!-- Register -->
+      <p class="text-center text-gray-500 text-sm mt-6">
+        Don't have a premium account?
+        <a routerLink="/signUp" class="text-orange-500 font-semibold">
+          Sign-Up
+        </a>
+      </p>
+
+
+
     </div>
   </div>
+
 </div>
