@@ -19,7 +19,7 @@
 
         <!-- Address -->
         <div *ngIf="user.role === 'USER'" class="hidden lg:flex items-center bg-white/10 backdrop-blur-xl
-                    border border-white/20 px-5 py-1 rounded-2xl shadow">
+                    border border-white/20 px-5 py-1 rounded-lg shadow">
 
           <svg class="w-5 h-5 mr-3 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -547,7 +547,7 @@
 
       <!-- USER INFO -->
       <ng-container *ngIf="auth.user$ | async as user">
-        <div class="flex items-center gap-4 pb-4 border-b border-white/20">
+        <div routerLink="/profile-update" class="flex items-center gap-4 pb-4 border-b border-white/20">
           <img src="https://i.pravatar.cc/100" class="w-12 h-12 rounded-xl border-2 border-white/30" />
           <div>
             <p class="font-semibold text-lg">{{ user.name }}</p>
@@ -556,6 +556,9 @@
             </p>
           </div>
         </div>
+        
+
+        
 
         <!-- USER -->
         <ng-container *ngIf="user.role === 'USER'">

@@ -1,37 +1,37 @@
 <div class="bg-slate-50 overflow-hidden">
   <app-spinner [isLoading]="isLoading" [loaderSize]="60"></app-spinner>
   <div class=" ">
-    <section class=" relative lg:h-[720px] md:h-[950px] h-[1600px] overflow-hidden font-sans text-white">
+    <section class=" relative  h-screen overflow-hidden font-sans text-white">
       <video #heroVideo muted loop playsinline preload="metadata" poster="assets/images/hero-fallback.jpg"
         class="absolute inset-0 w-full h-full object-cover">
         <source src="assets/videos/HeroPageVideo.mp4" type="video/mp4" />
       </video>
 
-      <div class="absolute w-full h-full bg-black/65"></div>
+      <div class="absolute w-full h-full bg-black/55"></div>
 
       <div
-        class="absolute lg:top-[32%] md:top-[20%] top-[20%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-center w-full">
+        class="absolute top-[40%]  left-1/2 -translate-x-1/2 -translate-y-1/2 text-center w-full">
         <h1 class="lg:text-[60px] text-[40px] font-semibold mb-5">
           Build Serious Muscle Mass Faster
         </h1>
-        <p class="text-[20px] text-gray-300 mb-8">
+        <p class="text-[20px] text-gray-300 mb-10">
           High-calorie mass gainer packed with protein and essential nutrients to help you gain weight, build muscle,
           and recover faster.
         </p>
 
         <div class="flex flex-col md:flex-row md:justify-center gap-4 md:gap-0 space-y-4 md:space-y-0">
           <a (click)="scrollToProducts()"
-            class="px-10 py-3 rounded-lg text-base mx-3 bg-[#d3122f] hover:bg-[#a90f25] transition duration-300">
+            class="px-10 py-3 rounded-lg text-lg cursor-pointer mx-3 bg-red-600 hover:bg-red-800 transition duration-300">
             Shop Gainers Now
           </a>
 
           <a href="#"
-            class="px-10 py-3 rounded-lg text-base mx-3 border-2 border-white hover:bg-white hover:text-black transition duration-300">
+            class="px-10 py-3 rounded-lg text-lg cursor-pointer mx-3 border-2 border-white hover:bg-red-100 hover:text-red-700 hover:border-red-700 transition duration-300">
             View Nutrition Facts
           </a>
         </div>
       </div>
-      <div
+      <!-- <div
         class="absolute lg:top-[55%] md:top-[45%] top-[40%] lg:left-[100px] md:left-[45px] left-[20px] grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1  lg:gap-20 md:gap-12 gap-9">
         <div class="  lg:w-[380px] md:[320px] p-7 rounded-[20px] 
               bg-white/5 backdrop-blur-xl border border-white/20 
@@ -83,7 +83,7 @@
             Explore Now
           </a>
         </div>
-      </div>
+      </div> -->
 
     </section>
     <!-- <section class="py-20 bg-gray-50">
@@ -206,28 +206,24 @@
 
 </section> -->
 
-    <section class="py-20 bg-cover bg-center bg-no-repeat"
+    <!-- <section class="py-20 bg-cover bg-center bg-no-repeat"
       style="background-image: url('https://images.unsplash.com/photo-1604079628040-94301bb21b91');">
 
       <div class="max-w-6xl mx-auto px-6 text-center">
 
-        <!-- Heading -->
         <h1 class="text-4xl md:text-5xl font-bold text-white leading-tight">
           A Simple & Powerful Way to Gain Serious Muscle Mass
         </h1>
 
-        <!-- Subtext -->
         <p class="text-red-100 mt-4 max-w-2xl mx-auto text-sm md:text-base">
           Trusted by 10,000+ fitness enthusiasts across India.
           Premium mass gainers designed to help you build muscle faster and more effectively.
         </p>
 
-        <!-- Cards Container -->
         <div class="mt-12 bg-[#5a0f0f]/80 backdrop-blur-sm p-6 md:p-8 rounded-2xl shadow-2xl">
 
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-            <!-- Large Left Card -->
             <div class="relative rounded-xl overflow-hidden md:row-span-2">
               <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee"
                 class="w-full h-full object-cover">
@@ -242,7 +238,6 @@
               </div>
             </div>
 
-            <!-- Top Middle -->
             <div class="relative rounded-xl overflow-hidden">
               <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9" class="w-full h-64 object-cover">
               <span class="absolute top-3 left-3 bg-red-500 text-xs px-3 py-1 rounded-full font-semibold text-white">
@@ -255,7 +250,6 @@
               </div>
             </div>
 
-            <!-- Top Right -->
             <div class="relative rounded-xl overflow-hidden">
               <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9" class="w-full h-64 object-cover">
               <span class="absolute top-3 left-3 bg-red-600 text-xs px-3 py-1 rounded-full font-semibold text-white">
@@ -268,7 +262,6 @@
               </div>
             </div>
 
-            <!-- Bottom Middle -->
             <div class="relative rounded-xl overflow-hidden">
               <img src="https://images.unsplash.com/photo-1581291518857-4e27b48ff24e" class="w-full h-64 object-cover">
               <span class="absolute top-3 left-3 bg-red-500 text-xs px-3 py-1 rounded-full font-semibold text-white">
@@ -281,7 +274,6 @@
               </div>
             </div>
 
-            <!-- Bottom Right -->
             <div class="relative rounded-xl overflow-hidden">
               <img src="https://images.unsplash.com/photo-1606813907291-d86efa9b94db" class="w-full h-64 object-cover">
               <span class="absolute top-3 left-3 bg-red-500 text-xs px-3 py-1 rounded-full font-semibold text-white">
@@ -299,7 +291,7 @@
 
       </div>
 
-    </section>
+    </section> -->
 
     <section class="relative overflow-hidden py-20">
 
@@ -418,11 +410,15 @@
 
           <div class="flex-1 bg-white border-2 border-slate-900 rounded-2xl p-3 shadow-lg">
             <div class="flex items-center gap-4">
-              <div class="w-10 h-10 bg-rose-900 text-white rounded-xl flex items-center justify-center text-xl shadow">
-                🛒
+              <div class="w-10 h-10 bg-red-600 text-white rounded-xl flex items-center justify-center text-xl shadow">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                  stroke="currentColor" class="w-5 h-5">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M2.25 3h1.386c.51 0 .955.343 1.087.835L5.383 6.5m0 0h13.867c.621 0 1.087.568.965 1.176l-1.5 7.5a1.125 1.125 0 01-1.102.924H8.25a1.125 1.125 0 01-1.102-.924L5.383 6.5zM8.25 20.25a1.125 1.125 0 100-2.25 1.125 1.125 0 000 2.25zm9 0a1.125 1.125 0 100-2.25 1.125 1.125 0 000 2.25z" />
+                </svg>
               </div>
               <div>
-                <p class="text-rose-900 text-[10px] uppercase tracking-[0.25em] font-black">
+                <p class="text-red-700 text-[10px] uppercase tracking-[0.25em] font-black">
                   Curated Selection
                 </p>
                 <h2 class="text-xl font-black text-slate-900">
@@ -433,11 +429,11 @@
           </div>
 
           <div
-            class="md:w-44 bg-rose-900 rounded-2xl p-3 text-white flex flex-col items-center justify-center shadow-lg">
+            class="md:w-44 bg-red-600 rounded-2xl p-3 text-white flex flex-col items-center justify-center shadow-lg">
             <span class="text-xl font-black">
               {{ group.items.length }}
             </span>
-            <span class="text-[9px] uppercase tracking-widest text-rose-200 font-bold">
+            <span class="text-sm  tracking-widest text-gray-50 font-bold">
               Products
             </span>
           </div>
@@ -523,7 +519,7 @@
 
         </div> -->
         <div class="flex lg:gap-9 gap-12 overflow-x-auto pb-4 snap-x snap-mandatory">
-          <div *ngFor="let p of group.items; trackBy: trackByProductId" class="w-[290px] rounded-3xl shadow-lg"
+          <!-- <div *ngFor="let p of group.items; trackBy: trackByProductId" class="w-[290px] rounded-3xl shadow-lg"
             style="background:linear-gradient(90deg,#f3f4f6,#dbeafe,#fde68a); backdrop-filter: blur(10px);">
 
             <div class="  flex items-center justify-center">
@@ -541,12 +537,10 @@
                 {{ p.description }}
               </p>
 
-              <!-- STARS -->
               <div class="flex mt-1 text-yellow-400 text-lg">
                 ★ ★ ★ ★ ☆
               </div>
 
-              <!-- PRICE -->
               <div class="mt-2 ">
                 <p class="text-gray-400 tracking-widest text-sm">PRICE ₹</p>
                 <p class="text-2xl font-bold text-gray-900">₹{{ p.price }}</p>
@@ -575,10 +569,8 @@
               </div>
 
 
-              <!-- CART CONTROLS -->
               <div class="flex items-center mt-2 space-x-6">
 
-                <!-- QUANTITY -->
                 <div *ngIf="p.totalStock > 0"
                   class="flex items-center rounded-full shadow-lg bg-gray-200 px-4 py-2 space-x-12">
 
@@ -602,7 +594,91 @@
 
             </div>
 
+          </div> -->
+          <div class="flex gap-12 overflow-x-auto no-scrollbar p-2">
+
+            <div *ngFor="let p of group.items; trackBy: trackByProductId"
+              class="min-w-[280px] max-w-[280px] bg-white rounded-2xl shadow p-5 flex-shrink-0">
+
+              <!-- IMAGE -->
+              <img [src]="'https://picsum.photos/seed/' + p.id + '/400/300'"
+                class="rounded-lg w-full h-40 object-cover mb-4">
+              <div class="flex flex-col justify-between space-y-4">
+                <!-- NAME + CATEGORY -->
+                <div class="flex justify-between items-center">
+                  <h3 class="text-xl font-semibold">
+                    {{ p.name }}
+                  </h3>
+
+                  <span class="bg-orange-100 text-orange-700 text-xs px-3 py-1 rounded-full">
+                    {{ p.category?.name }}
+                  </span>
+                </div>
+
+                <!-- DESCRIPTION -->
+                <p class="text-gray-600 ">
+                  {{ p.description?.split(' ').slice(0,8).join(' ') }}
+                  <span *ngIf="p.description?.split(' ').length > 8">...</span>
+                </p>
+
+                <!-- STOCK STATUS -->
+                <span *ngIf="
+          p.totalStock - (cart[p.id] || 0) > 0 &&
+          p.totalStock - (cart[p.id] || 0) < 5
+        " class="text-[10px] font-bold px-2 py-1 rounded-full bg-emerald-50 text-emerald-700">
+                  {{ p.totalStock - (cart[p.id] || 0) }} LEFT
+                </span>
+
+                <span *ngIf="p.totalStock - (cart[p.id] || 0) === 0"
+                  class="text-[10px] font-bold px-2 py-1 rounded-full bg-rose-50 text-rose-700">
+                  OUT
+                </span>
+
+
+
+                <!-- PRICE -->
+                <div class="flex justify-between items-center ">
+
+                  <span class=" text-lg font-semibold">
+                    ₹{{ p.price }}
+                  </span>
+
+                  <div class="flex mt-1 text-yellow-400 text-lg">
+                    ★ ★ ★ ★ ☆
+                  </div>
+
+                </div>
+
+                <!-- CART -->
+                <div class="flex items-center justify-center  space-x-6">
+
+                  <div *ngIf="p.totalStock > 0"
+                    class="flex items-center rounded-full w-full shadow bg-gray-100 px-4 py-2 justify-between">
+
+                    <button *ngIf="(cart[p.id] || 0) > 0" (click)="decrease(p)"
+                      class="w-8 h-8 rounded-full bg-red-500 text-white font-bold">
+                      -
+                    </button>
+
+                    <span class="font-semibold">
+                      {{ cart[p.id] || 0 }}
+                    </span>
+
+                    <button *ngIf="(cart[p.id] || 0) < p.totalStock" (click)="increase(p)"
+                      class="w-8 h-8 rounded-full bg-green-500 text-white font-bold">
+                      +
+                    </button>
+
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+
           </div>
+
+
         </div>
 
       </section>
@@ -616,7 +692,7 @@
       </div> -->
       <div class="sticky bottom-6 left-6">
         <button (click)="goToCart()"
-          class="fixed bottom-6  border-t-4 border-yellow-600 left-6 px-8 py-2 bg-slate-900 text-white rounded-xl font-black uppercase tracking-widest shadow-lg hover:bg-rose-900 transition duration-300">
+          class="fixed bottom-6  left-6  bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-2 justify-center font-semibold">
           Go To Cart →
         </button>
       </div>
