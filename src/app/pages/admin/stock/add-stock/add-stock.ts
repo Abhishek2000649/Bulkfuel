@@ -1,20 +1,58 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Stock } from '../../../../core/services/admin/stock/stock';
-import { Router } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { Spinner } from '../../../../shared/spinner/spinner';
 import { pattern, required } from '@angular/forms/signals';
 import { finalize } from 'rxjs';
 import Swal from 'sweetalert2';
 type StockFormFields = 'warehouse_id' | 'product_id' | 'stock_quantity';
+
 @Component({
   selector: 'app-add-stock',
-  imports: [CommonModule, ReactiveFormsModule, Spinner],
+  imports: [CommonModule, ReactiveFormsModule, Spinner, RouterLink],
   templateUrl: './add-stock.html',
   styleUrl: './add-stock.css',
 })
 export class AddStock {
+  @ViewChild('warehouseWrapper') warehouseWrapper!: ElementRef;
+@ViewChild('productWrapper') productWrapper!: ElementRef;
+  isWarehouseOpen = false;
+isProductOpen = false;
+
+@HostListener('document:click', ['$event'])
+onClickOutside(event: Event): void {
+  const target = event.target as HTMLElement;
+
+  if (
+    this.warehouseWrapper &&
+    !this.warehouseWrapper.nativeElement.contains(target)
+  ) {
+    this.isWarehouseOpen = false;
+  }
+
+  if (
+    this.productWrapper &&
+    !this.productWrapper.nativeElement.contains(target)
+  ) {
+    this.isProductOpen = false;
+  }
+}
+selectedWarehouse: string | null = null;
+selectedProduct: string | null = null;
+
+selectWarehouse(w:any){
+this.selectedWarehouse = w.name;
+this.stockForm.patchValue({warehouse_id: w.id});
+this.isWarehouseOpen = false;
+}
+
+selectProduct(p:any){
+this.selectedProduct = p.name;
+this.stockForm.patchValue({product_id: p.id});
+this.isProductOpen = false;
+}
 
     stockForm!: FormGroup;
   warehouses: any[] = [];

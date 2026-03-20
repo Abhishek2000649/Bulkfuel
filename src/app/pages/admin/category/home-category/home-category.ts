@@ -92,8 +92,6 @@ export class HomeCategory implements OnInit{
 
           this.loadCategories();
         },
-
-        // ❌ ERROR
         error: (err: any) => {
 
           this.isLoading = false;

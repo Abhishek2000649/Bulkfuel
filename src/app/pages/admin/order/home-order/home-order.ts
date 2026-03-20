@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectorRef, HostListener } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AdminOrder } from '../../../../core/services/admin/AdminOrder/admin-order';
 import { Spinner } from '../../../../shared/spinner/spinner';
@@ -13,6 +13,28 @@ import Swal from 'sweetalert2';
   styleUrl: './home-order.css',
 })
 export class HomeOrder {
+
+  openDropdownId: number | null = null;
+
+// Toggle dropdown
+toggleDropdown(orderId: number) {
+  this.openDropdownId = this.openDropdownId === orderId ? null : orderId;
+}
+
+// Select status
+selectStatus(orderId: number, status: string) {
+  this.tempStatus[orderId] = status;
+  this.openDropdownId = null; // close after select
+}
+
+// Click outside close
+@HostListener('document:click', ['$event'])
+handleClickOutside(event: any) {
+  const clickedInside = event.target.closest('.dropdown-wrapper');
+  if (!clickedInside) {
+    this.openDropdownId = null;
+  }
+}
   orders: any[] = [];
   isLoading:boolean=false;
   // TEMP status (important)

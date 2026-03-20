@@ -1,202 +1,216 @@
-<!-- <h2>Edit Warehouse</h2>
-
-<form [formGroup]="warehouseForm" (ngSubmit)="onSubmit()" class="warehouse-form">
-
-  <input type="text" formControlName="name" placeholder="Warehouse Name" />
-  <input type="text" formControlName="address" placeholder="Enter address" />
-  <input type="text" formControlName="city" placeholder="City" />
-  <input type="text" formControlName="state" placeholder="State" />
-  <input type="text" formControlName="pincode" placeholder="Pincode" />
-
-  <div class="error"
-       *ngIf="warehouseForm.invalid && warehouseForm.touched">
-    All fields are required
-  </div>
-
-  <button type="submit" [disabled]="warehouseForm.invalid">
-    Update
-  </button>
-
-</form> -->
 
 
-<div class="bg-[#f6f7f9] min-h-screen font-sans">
-  
+<div class="min-h-screen bg-gray-100 p-8 font-['Inter']">
 
-  <!-- ================= PAGE HEADER ================= -->
-  <div class="max-w-7xl mx-auto pt-14 pb-10 px-6">
+  <div class="max-w-6xl mx-auto">
+
+    <!-- LOADER -->
     <app-spinner [isLoading]="isLoading" [loaderSize]="100"></app-spinner>
-    <button
-      type="button"
-      routerLink="/admin/warehouse"
-      class="flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-red-900 transition mb-6"
-    >
-      <span class="text-xl">←</span>
-      Back to Warehouses
-    </button>
-    <h1 class="text-4xl font-black text-gray-900 mb-3">
-      Create Warehouse
-    </h1>
-    <p class="text-gray-500 max-w-3xl">
-      Register a new warehouse node to expand your logistics network with
-      real-time inventory synchronization and secure infrastructure.
-    </p>
-  </div>
 
-  <!-- ================= MAIN LAYOUT ================= -->
-  <div class="max-w-7xl mx-auto px-6 pb-20 grid grid-cols-1 lg:grid-cols-2 gap-12">
+    <!-- BACK -->
+    <div class="mb-8">
+      <a routerLink="/admin/warehouse"
+        class="text-gray-500 text-sm flex items-center gap-2 hover:text-red-700">
 
-    <!-- ================= LEFT (MODAL TYPE CARD) ================= -->
-    <div
-      class="relative rounded-[2.5rem] shadow-2xl overflow-hidden
-             bg-gradient-to-br from-[#0b1326] via-[#121b33] to-[#1b1430]
-             p-12 text-white flex flex-col justify-between"
-    >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            d="M15 19l-7-7 7-7" />
+        </svg>
 
-      <!-- Top Content -->
+        Back to Warehouses
+      </a>
+    </div>
+
+    <!-- HEADER -->
+    <div class="flex items-center gap-4 mb-8">
+
+      <div class="w-12 h-12 bg-red-700 rounded-xl flex items-center justify-center text-white shadow-lg">
+
+  <!-- Warehouse SVG -->
+  <svg xmlns="http://www.w3.org/2000/svg"
+       class="w-6 h-6"
+       viewBox="0 0 24 24"
+       fill="currentColor">
+
+    <!-- Roof -->
+    <path d="M12 3L2 9h2v9a2 2 0 002 2h3v-6h6v6h3a2 2 0 002-2V9h2L12 3z"/>
+
+    <!-- Boxes inside -->
+    <rect x="9" y="14" width="2" height="2" />
+    <rect x="13" y="14" width="2" height="2" />
+
+  </svg>
+
+</div>
+
       <div>
-        <span class="inline-block px-4 py-2 text-[10px] tracking-[0.2em] uppercase font-bold rounded-full bg-white/10 border border-white/10 mb-8">
-          Live Network Intelligence
-        </span>
-
-        <h2 class="text-4xl font-extrabold tracking-tight mb-10">
-          Expanding the <span class="text-red-500">Global Mesh.</span>
-        </h2>
-
-        <div class="flex gap-6">
-          <div class="bg-white/5 border border-white/10 rounded-2xl px-6 py-5 w-40">
-            <div class="text-3xl font-black">142+</div>
-            <div class="text-[10px] uppercase tracking-widest text-gray-400 mt-1">
-              Active Hubs
-            </div>
-          </div>
-
-          <div class="bg-white/5 border border-white/10 rounded-2xl px-6 py-5 w-40">
-            <div class="text-3xl font-black text-red-500">99.9%</div>
-            <div class="text-[10px] uppercase tracking-widest text-gray-400 mt-1">
-              Uptime SLA
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Bottom Features -->
-      <div class="mt-16 space-y-6">
-        <div class="flex gap-4">
-          <div class="w-10 h-10 rounded-2xl bg-red-600 flex items-center justify-center">⚡</div>
-          <div>
-            <p class="font-bold">Instant Synchronization</p>
-            <p class="text-sm text-gray-400">
-              Millisecond latency across global inventory nodes.
-            </p>
-          </div>
-        </div>
-
-        <div class="flex gap-4">
-          <div class="w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center">🛡️</div>
-          <div>
-            <p class="font-bold">AES-256 Security</p>
-            <p class="text-sm text-gray-400">
-              Enterprise-grade encryption for logistics data.
-            </p>
-          </div>
-        </div>
+        <h1 class="text-2xl font-bold">Update WAREHOUSE</h1>
+        <p class="text-gray-500 text-sm">
+          UPdate and manage warehouse infrastructure in your system
+        </p>
       </div>
 
     </div>
 
-    <!-- ================= RIGHT (NORMAL PAGE STYLE) ================= -->
-    <div class="pt-8">
+    <!-- GRID -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
-      <form [formGroup]="warehouseForm" (ngSubmit)="onSubmit()" class="space-y-10 max-w-xl">
+      <!-- ================= LEFT FORM ================= -->
+      <div class="bg-white p-8 rounded-xl shadow">
 
-        <!-- Warehouse Name -->
-        <div>
-          <label class="block text-[11px] font-black uppercase tracking-[0.2em] text-gray-400 mb-2">
-            Main Hub Alias
-          </label>
-          <input
-            type="text"
-            formControlName="name"
-            placeholder="New Warehouse Name"
-            class="w-full border-b border-gray-200 focus:border-red-900 outline-none py-4 text-3xl font-extrabold bg-transparent"
-          />
-          <p *ngIf="formErrors.name" class="mt-1 text-xs text-red-600 font-semibold ml-1">
-            {{ formErrors.name }}
-          </p>
-        </div>
+        <form [formGroup]="warehouseForm" (ngSubmit)="onSubmit()" class="space-y-6">
 
-        <!-- Address -->
-        <div>
-          <label class="block text-[11px] font-black uppercase tracking-[0.2em] text-gray-400 mb-2">
-            Deployment Location
-          </label>
-          <textarea
-            
-            formControlName="address"
-            placeholder="Street address or zone"
-            class="w-full border-b border-gray-200 focus:border-red-900 outline-none py-4 bg-transparent"
-          ></textarea>
-          <p *ngIf="formErrors.address" class="mt-1 text-xs text-red-600 font-semibold ml-1">
-            {{ formErrors.address}}
-          </p>
-        </div>
-
-        <!-- City / State -->
-        <div class="grid grid-cols-2 gap-10">
+          <!-- NAME -->
           <div>
-            <label class="block text-[11px] font-black uppercase tracking-[0.2em] text-gray-400 mb-2">
-              City
+            <label class="text-xs font-semibold text-gray-500 uppercase">
+              Warehouse Name
             </label>
-            <input
-              type="text"
-              formControlName="city"
-              class="w-full border-b border-gray-200 focus:border-red-900 outline-none py-4 bg-transparent"
-            />
-            <p *ngIf="formErrors.city" class="mt-1 text-xs text-red-600 font-semibold ml-1">
-            {{ formErrors.city }}
-          </p>
+
+            <input type="text" formControlName="name"
+              placeholder="e.g. Delhi Central Hub"
+              class="w-full mt-2 text-lg rounded-lg border-2 border-gray-300 focus:border-red-600 outline-none py-3" />
+
+            <p *ngIf="formErrors.name" class="text-xs text-red-600 mt-1">
+              {{ formErrors.name }}
+            </p>
           </div>
 
+          <!-- ADDRESS -->
           <div>
-            <label class="block text-[11px] font-black uppercase tracking-[0.2em] text-gray-400 mb-2">
-              State
+            <label class="text-xs font-semibold text-gray-500 uppercase">
+              Address
             </label>
-            <input
-              type="text"
-              formControlName="state"
-              class="w-full border-b border-gray-200 focus:border-red-900 outline-none py-4 bg-transparent"
-            />
-            <p *ngIf="formErrors.state" class="mt-1 text-xs text-red-600 font-semibold ml-1">
-            {{ formErrors.state }}
-          </p>
+
+            <textarea formControlName="address"
+              placeholder="Enter warehouse address"
+              class="w-full mt-2 px-2 border-2 rounded-lg border-gray-300 focus:border-red-600 outline-none py-2"></textarea>
+
+            <p *ngIf="formErrors.address" class="text-xs text-red-600 mt-1">
+              {{ formErrors.address }}
+            </p>
           </div>
-        </div>
 
-        <!-- Pincode -->
-        <div>
-          <label class="block text-[11px] font-black uppercase tracking-[0.2em] text-gray-400 mb-2">
-            Postal Code
-          </label>
-          <input
-            type="text"
-            formControlName="pincode"
-            class="w-full border-b border-gray-200 focus:border-red-900 outline-none py-4 bg-transparent"
-          />
-          <p *ngIf="formErrors.pincode" class="mt-1 text-xs text-red-600 font-semibold ml-1">
-            {{ formErrors.pincode }}
+          <!-- CITY + STATE -->
+          <div class="grid grid-cols-2 gap-4">
+
+            <div>
+              <label class="text-xs font-semibold text-gray-500 uppercase">
+                City
+              </label>
+
+              <input type="text" formControlName="city"
+                class="w-full mt-2 border-2 rounded-lg border-gray-300 focus:border-red-600 outline-none py-3" />
+
+              <p *ngIf="formErrors.city" class="text-xs text-red-600 mt-1">
+                {{ formErrors.city }}
+              </p>
+            </div>
+
+            <div>
+              <label class="text-xs font-semibold text-gray-500 uppercase">
+                State
+              </label>
+
+              <input type="text" formControlName="state"
+                class="w-full mt-2 border-2 rounded-lg border-gray-300 focus:border-red-600 outline-none py-3" />
+
+              <p *ngIf="formErrors.state" class="text-xs text-red-600 mt-1">
+                {{ formErrors.state }}
+              </p>
+            </div>
+
+          </div>
+
+          <!-- PINCODE -->
+          <div>
+            <label class="text-xs font-semibold text-gray-500 uppercase">
+              Pincode
+            </label>
+
+            <input type="text" formControlName="pincode"
+              class="w-full mt-2 border-2  rounded-lg border-gray-300 focus:border-red-600 outline-none py-3" />
+
+            <p *ngIf="formErrors.pincode" class="text-xs text-red-600 mt-1">
+              {{ formErrors.pincode }}
+            </p>
+          </div>
+
+          <!-- OPTIONAL IMAGE UPLOAD -->
+          <div>
+
+            <div class="flex justify-between items-center mb-2">
+              <label class="text-xs font-semibold text-gray-500 uppercase">
+                Warehouse Image
+              </label>
+
+              <span class="text-gray-400 text-xs">Optional</span>
+            </div>
+
+            <div
+              class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center bg-gray-50 cursor-pointer hover:bg-gray-100 transition">
+
+              <div class="text-3xl mb-2 text-gray-400">⬆</div>
+
+              <p class="font-medium text-gray-700">
+                Drag & drop or click to upload
+              </p>
+
+              <p class="text-xs text-gray-400 mt-1">
+                JPG, PNG, WEBP | Max 5MB
+              </p>
+
+              <input type="file"  class="hidden" />
+
+            </div>
+
+          </div>
+
+          <!-- INFO -->
+          <div class="bg-gray-50 border rounded-lg p-4">
+            <p class="text-sm text-gray-600">
+              Ensure accurate warehouse details for proper logistics tracking.
+            </p>
+          </div>
+
+          <!-- BUTTON -->
+          <button type="submit"
+            class="bg-red-700 hover:bg-red-800 text-white px-6 py-3 rounded-lg shadow w-full"
+            [disabled]="warehouseForm.invalid">
+
+            🚀 Update Warehouse
+          </button>
+
+        </form>
+
+      </div>
+
+      <!-- ================= RIGHT PREVIEW ================= -->
+      <div class="bg-white p-6 rounded-xl shadow h-fit">
+
+        <h3 class="text-sm font-semibold text-gray-500 mb-4">
+          WAREHOUSE PREVIEW
+        </h3>
+
+        <div class="bg-gray-50 rounded-lg p-6 text-center">
+
+          <div class="text-5xl mb-4">🏭</div>
+
+          <h2 class="font-semibold text-lg">
+            {{ warehouseForm.get('name')?.value || 'New Warehouse' }}
+          </h2>
+
+          <p class="text-sm text-gray-500 mt-2">
+            {{ warehouseForm.get('city')?.value || 'City' }},
+            {{ warehouseForm.get('state')?.value || 'State' }}
           </p>
+
+          <div class="mt-4 bg-red-100 text-red-700 px-4 py-2 rounded-lg text-sm inline-block">
+            Active Node ⚡
+          </div>
+
         </div>
 
-        <!-- Submit -->
-        <button
-          type="submit"
-          class="mt-12 bg-red-900 hover:bg-[#1a0303] text-white font-black text-lg px-12 py-5 rounded-full shadow-lg transition"
-        >
-          Deploy Infrastructure
-        </button>
-
-      </form>
+      </div>
 
     </div>
 
