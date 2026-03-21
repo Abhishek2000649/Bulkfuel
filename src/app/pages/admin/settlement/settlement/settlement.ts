@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SettlementService } from '../../../../core/services/admin/settlement/settlement-service';
@@ -14,6 +14,8 @@ import Swal from 'sweetalert2';
 })
 export class Settlement implements OnInit {
 
+  isAgentDropdownOpen = false;
+@ViewChild('agentDropdown') agentDropdown!: ElementRef;
   // ================= DATA =================
   agents: any[] = [];
   settlement: any = null;
@@ -35,7 +37,24 @@ export class Settlement implements OnInit {
   ngOnInit(): void {
     this.loadAgents();
   }
+toggleAgentDropdown() {
+  this.isAgentDropdownOpen = !this.isAgentDropdownOpen;
+} 
+selectAgent(agent: any) {
+  this.selectedAgentId = agent.id;
+  this.isAgentDropdownOpen = false;
 
+  this.onAgentChange(); // already exists ✅
+} 
+@HostListener('document:click', ['$event'])
+handleClickOutside(event: any) {
+  if (
+    this.agentDropdown &&
+    !this.agentDropdown.nativeElement.contains(event.target)
+  ) {
+    this.isAgentDropdownOpen = false;
+  }
+}
   // ================= COMPUTED =================
   get selectedAgent(): any | null {
     return this.agents.find(a => a.id === this.selectedAgentId) || null;

@@ -1,96 +1,3 @@
-<!-- <h2>Checkout</h2>
-
-<hr />
-
-<h3>Order Summary</h3>
-
-<table border="1" width="100%" cellpadding="10">
-  <tr>
-    <th>Product</th>
-    <th>Price</th>
-    <th>Qty</th>
-    <th>Subtotal</th>
-  </tr>
-  <tr *ngFor="let item of cartItems">
-    <td>{{ item.product.name }}</td>
-    <td>₹ {{ item.product.price }}</td>
-    <td>{{ item.quantity }}</td>
-    <td>₹ {{ item.product.price * item.quantity }}</td>
-  </tr>
-</table>
-
-<h3>Total Amount: ₹ {{ totalAmount }}</h3>
-
-<hr />
-
-<h3>Delivery Details</h3>
-
-<form
-  (ngSubmit)="placeOrder($event)"
-  #checkoutForm="ngForm"
-  novalidate
->
-
-  <label>Address</label><br />
-  <textarea
-    [(ngModel)]="form.address"
-    name="address"
-    required
-  ></textarea>
-  <br /><br />
-  <label>City</label><br />
-  <input
-    type="text"
-    [(ngModel)]="form.city"
-    name="city"
-    required
-  />
-  <br /><br />
-  <label>State</label><br />
-  <input
-    type="text"
-    [(ngModel)]="form.state"
-    name="state"
-    required
-  />
-  <br /><br />
-  <label>Pincode</label><br />
-  <input
-    type="text"
-    [(ngModel)]="form.pincode"
-    name="pincode"
-    required
-  />
-  <br /><br />
-  <label>Payment Method</label><br />
-
-  <label>
-    <input
-      type="radio"
-      value="COD"
-      [(ngModel)]="form.payment_method"
-      name="payment_method"
-    />
-    Cash On Delivery
-  </label>
-
-  <label style="margin-left: 15px;">
-    <input
-      type="radio"
-      value="online"
-      [(ngModel)]="form.payment_method"
-      name="payment_method"
-    />
-    Online Payment
-  </label>
-
-  <br /><br />
-
-  <button type="submit">
-    Place Order
-  </button>
-</form> -->
-
 
 
 
@@ -98,11 +5,8 @@
   <div class="max-w-[1400px] mx-auto px-3 py-9">
     <app-spinner [isLoading]="isLoading" [loaderSize]="100"></app-spinner>
     <!-- Back Button -->
-    <button
-      type="button"
-      (click)="goBackToCart()"
-      class="flex items-center gap-2 text-red-900 font-bold transition-all mb-3"
-    >
+    <button type="button" (click)="goBackToCart()"
+      class="flex items-center gap-2 text-red-900 font-bold transition-all mb-3">
       <i data-lucide="arrow-left" class="w-4 h-4"></i>
       Back to Shopping Cart
     </button>
@@ -131,49 +35,36 @@
                 <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">
                   Street Address
                 </label>
-                <textarea
-                   formControlName="address"
-                  
+                <textarea formControlName="address"
                   class="w-full mt-1 bg-slate-50 border border-gray-100 rounded-xl p-2.5 outline-none min-h-[65px]"
-                  placeholder="H.No, Street, Landmark..."
-                ></textarea>
+                  placeholder="H.No, Street, Landmark..."></textarea>
                 <p *ngIf="formErrors.address" class="mt-1 text-xs text-red-600 font-semibold ml-1">
-            {{ formErrors.address}}
-          </p>
+                  {{ formErrors.address}}
+                </p>
               </div>
 
               <div class="grid md:grid-cols-3 gap-3">
                 <div>
-                <input
-                 formControlName="city"
-                  
-                  class="bg-slate-50 border border-gray-100 rounded-xl p-2.5 outline-none"
-                  placeholder="City"
-                />
-                <p *ngIf="formErrors.city" class="mt-1 text-xs text-red-600 font-semibold ml-1">
-            {{ formErrors.city}}
-          </p>
-          </div>
-          <div>
-                <input
-                  formControlName="state"
-                  class="bg-slate-50 border border-gray-100 rounded-xl p-2.5 outline-none"
-                  placeholder="State"
-                />
-                <p *ngIf="formErrors.state" class="mt-1 text-xs text-red-600 font-semibold ml-1">
-            {{ formErrors.state}}
-          </p>
-          </div>
-          <div>
-                <input
-                  formControlName="pincode"
-                  class="bg-slate-50 border border-gray-100 rounded-xl p-2.5 outline-none"
-                  placeholder="Pincode"
-                />
-                <p *ngIf="formErrors.pincode" class="mt-1 text-xs text-red-600 font-semibold ml-1">
-            {{ formErrors.pincode}}
-          </p>
-          </div>
+                  <input formControlName="city" class="bg-slate-50 border border-gray-100 rounded-xl p-2.5 outline-none"
+                    placeholder="City" />
+                  <p *ngIf="formErrors.city" class="mt-1 text-xs text-red-600 font-semibold ml-1">
+                    {{ formErrors.city}}
+                  </p>
+                </div>
+                <div>
+                  <input formControlName="state"
+                    class="bg-slate-50 border border-gray-100 rounded-xl p-2.5 outline-none" placeholder="State" />
+                  <p *ngIf="formErrors.state" class="mt-1 text-xs text-red-600 font-semibold ml-1">
+                    {{ formErrors.state}}
+                  </p>
+                </div>
+                <div>
+                  <input formControlName="pincode"
+                    class="bg-slate-50 border border-gray-100 rounded-xl p-2.5 outline-none" placeholder="Pincode" />
+                  <p *ngIf="formErrors.pincode" class="mt-1 text-xs text-red-600 font-semibold ml-1">
+                    {{ formErrors.pincode}}
+                  </p>
+                </div>
               </div>
             </div>
           </section>
@@ -192,23 +83,15 @@
             <div class="grid md:grid-cols-2 gap-3">
 
               <!-- ONLINE -->
-              <label
+              <label *ngIf="allowedPayment.includes('online')"
                 class="flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer"
-                [class.border-red-800]="checkoutForm.get('payment_method')?.value === 'ONLINE'"
-                [class.bg-red-50/30]="checkoutForm.get('payment_method')?.value === 'ONLINE'"
-              >
-                <input
-                  type="radio"
-                  name="payment_method"
-                  value="ONLINE"
-                  formControlName="payment_method"
-                  class="hidden"
-                />
+                [class.border-red-800]="checkoutForm.get('payment_method')?.value === 'online'"
+                [class.bg-red-50]="checkoutForm.get('payment_method')?.value === 'online'">
+                <input type="radio" name="payment_method" value="online" formControlName="payment_method"
+                  class="hidden" />
                 <div class="w-4 h-4 rounded-full border-2 border-red-800 flex items-center justify-center">
-                  <div
-                     *ngIf="checkoutForm.get('payment_method')?.value === 'ONLINE'"
-                    class="w-2 h-2 bg-red-800 rounded-full"
-                  ></div>
+                  <div *ngIf="checkoutForm.get('payment_method')?.value === 'online'"
+                    class="w-2 h-2 bg-red-800 rounded-full"></div>
                 </div>
                 <div class="leading-tight">
                   <p class="font-bold text-sm">Online</p>
@@ -217,27 +100,18 @@
                 <i data-lucide="credit-card" class="ml-auto w-4 h-4 text-gray-400"></i>
               </label>
 
-              <!-- COD -->
-              <label
+              <!-- cash -->
+              <label *ngIf="allowedPayment.includes('cash')"
                 class="flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer"
-                [class.border-red-800]="checkoutForm.get('payment_method')?.value === 'COD'"
-                [class.bg-red-50/30]="checkoutForm.get('payment_method')?.value === 'COD'"
-              >
-                <input
-                  type="radio"
-                  name="payment_method"
-                  value="COD"
-                  formControlName="payment_method"
-                  class="hidden"
-                />
+                [class.border-red-800]="checkoutForm.get('payment_method')?.value === 'cash'"
+                [class.bg-red-50]="checkoutForm.get('payment_method')?.value === 'cash'">
+                <input type="radio" name="payment_method" value="cash" formControlName="payment_method" class="hidden" />
                 <div class="w-4 h-4 rounded-full border-2 border-gray-300 flex items-center justify-center">
-                  <div
-                     *ngIf="checkoutForm.get('payment_method')?.value === 'COD'"
-                    class="w-2 h-2 bg-red-800 rounded-full"
-                  ></div>
+                  <div *ngIf="checkoutForm.get('payment_method')?.value === 'cash'"
+                    class="w-2 h-2 bg-red-800 rounded-full"></div>
                 </div>
                 <div class="leading-tight">
-                  <p class="font-bold text-sm">COD</p>
+                  <p class="font-bold text-sm">cash</p>
                   <p class="text-[10px] text-gray-500">Pay later</p>
                 </div>
                 <i data-lucide="truck" class="ml-auto w-4 h-4 text-gray-400"></i>
@@ -247,10 +121,8 @@
           </section>
 
           <!-- PLACE ORDER -->
-          <button
-            type="submit"
-            class="mt-auto w-full bg-red-950 text-white py-3 rounded-xl font-black text-base flex items-center justify-center gap-2 shadow-lg"
-          >
+          <button type="submit"
+            class="mt-auto w-full bg-red-950 text-white py-3 rounded-xl font-black text-base flex items-center justify-center gap-2 shadow-lg">
             <i data-lucide="check-circle-2" class="w-4 h-4"></i>
             Place Order
           </button>
@@ -312,7 +184,3 @@
     </div>
   </div>
 </div>
-
-
-
-
