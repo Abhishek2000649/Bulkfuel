@@ -1,186 +1,218 @@
+<div class="min-h-screen bg-gray-100 p-6">
 
+  <div class="max-w-6xl mx-auto">
 
-
-<div class="bg-slate-50 text-gray-900">
-  <div class="max-w-[1400px] mx-auto px-3 py-9">
     <app-spinner [isLoading]="isLoading" [loaderSize]="100"></app-spinner>
-    <!-- Back Button -->
-    <button type="button" (click)="goBackToCart()"
-      class="flex items-center gap-2 text-red-900 font-bold transition-all mb-3">
-      <i data-lucide="arrow-left" class="w-4 h-4"></i>
-      Back to Shopping Cart
-    </button>
 
-    <div class="grid lg:grid-cols-12 gap-6 items-stretch">
+    <!-- BACK -->
+    <div class="mb-6">
+      <button (click)="goBackToCart()" class="text-gray-500 text-sm flex items-center gap-2 hover:text-red-700">
 
-      <!-- ================= LEFT COLUMN ================= -->
-      <div class="lg:col-span-7 flex flex-col">
+        <!-- SVG -->
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+        </svg>
 
-        <form [formGroup]="checkoutForm" (ngSubmit)="placeOrder()">
+        Back to Cart
+      </button>
+    </div>
 
+    <!-- HEADER -->
+    <div class="flex items-center gap-4 mb-8">
+      <div class="w-12 h-12 bg-red-700 rounded-xl flex items-center justify-center text-white shadow-lg">
 
-          <!-- DELIVERY DETAILS -->
-          <section class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
-            <div class="flex items-center gap-2 mb-4">
-              <div class="p-1.5 bg-red-50 text-red-900 rounded-lg">
-                <i data-lucide="map-pin" class="w-4 h-4"></i>
-              </div>
-              <h2 class="text-base font-black uppercase">
-                Delivery Details
-              </h2>
+        <!-- SVG -->
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M3 3h18l-2 13H5L3 3z" />
+        </svg>
+
+      </div>
+
+      <div>
+        <h1 class="text-2xl font-bold">CHECKOUT</h1>
+        <p class="text-gray-500 text-sm">
+          Complete your order securely
+        </p>
+      </div>
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-8">
+
+      <!-- ================= LEFT ================= -->
+      <div class="bg-white p-6 rounded-xl shadow">
+
+        <form [formGroup]="checkoutForm" (ngSubmit)="placeOrder()" class="space-y-6">
+
+          <!-- DELIVERY -->
+          <div>
+            <h3 class="text-sm font-semibold text-gray-500 mb-4">
+              DELIVERY DETAILS
+            </h3>
+
+            <textarea formControlName="address" placeholder="Full Address..."
+              class="w-full border rounded-lg focus:border-red-600 p-3 mb-3 border-gray-300 focus:outline-none focus:ring-1 focus:ring-red-500"></textarea>
+
+            <div class="grid grid-cols-3 gap-3">
+              <input formControlName="city" class="border border-gray-300 p-3 rounded-lg 
+         focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-500 " />
+              <input formControlName="state" placeholder="State"
+                class="border p-3 border-gray-300 rounded-lg focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-500" />
+              <input formControlName="pincode" placeholder="Pincode"
+                class="border p-3 rounded-lg border-gray-300 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-500" />
             </div>
+          </div>
 
-            <div class="space-y-3">
-              <div>
-                <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">
-                  Street Address
-                </label>
-                <textarea formControlName="address"
-                  class="w-full mt-1 bg-slate-50 border border-gray-100 rounded-xl p-2.5 outline-none min-h-[65px]"
-                  placeholder="H.No, Street, Landmark..."></textarea>
-                <p *ngIf="formErrors.address" class="mt-1 text-xs text-red-600 font-semibold ml-1">
-                  {{ formErrors.address}}
-                </p>
-              </div>
+          <!-- PAYMENT -->
+          <div>
+            <h3 class="text-sm font-semibold text-gray-500 mb-4">
+              PAYMENT METHOD
+            </h3>
 
-              <div class="grid md:grid-cols-3 gap-3">
-                <div>
-                  <input formControlName="city" class="bg-slate-50 border border-gray-100 rounded-xl p-2.5 outline-none"
-                    placeholder="City" />
-                  <p *ngIf="formErrors.city" class="mt-1 text-xs text-red-600 font-semibold ml-1">
-                    {{ formErrors.city}}
-                  </p>
-                </div>
-                <div>
-                  <input formControlName="state"
-                    class="bg-slate-50 border border-gray-100 rounded-xl p-2.5 outline-none" placeholder="State" />
-                  <p *ngIf="formErrors.state" class="mt-1 text-xs text-red-600 font-semibold ml-1">
-                    {{ formErrors.state}}
-                  </p>
-                </div>
-                <div>
-                  <input formControlName="pincode"
-                    class="bg-slate-50 border border-gray-100 rounded-xl p-2.5 outline-none" placeholder="Pincode" />
-                  <p *ngIf="formErrors.pincode" class="mt-1 text-xs text-red-600 font-semibold ml-1">
-                    {{ formErrors.pincode}}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <!-- PAYMENT METHOD -->
-          <section class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
-            <div class="flex items-center gap-2 mb-4">
-              <div class="p-1.5 bg-red-50 text-red-900 rounded-lg">
-                <i data-lucide="credit-card" class="w-4 h-4"></i>
-              </div>
-              <h2 class="text-base font-black uppercase">
-                Payment Method
-              </h2>
-            </div>
-
-            <div class="grid md:grid-cols-2 gap-3">
+            <div class="grid grid-cols-2 gap-4">
 
               <!-- ONLINE -->
               <label *ngIf="allowedPayment.includes('online')"
-                class="flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer"
-                [class.border-red-800]="checkoutForm.get('payment_method')?.value === 'online'"
+                class="border-2 p-4 rounded-xl cursor-pointer flex items-center justify-between transition-all"
+                [class.border-red-600]="checkoutForm.get('payment_method')?.value === 'online'"
                 [class.bg-red-50]="checkoutForm.get('payment_method')?.value === 'online'">
-                <input type="radio" name="payment_method" value="online" formControlName="payment_method"
-                  class="hidden" />
-                <div class="w-4 h-4 rounded-full border-2 border-red-800 flex items-center justify-center">
-                  <div *ngIf="checkoutForm.get('payment_method')?.value === 'online'"
-                    class="w-2 h-2 bg-red-800 rounded-full"></div>
+
+                <div class="flex items-center gap-3">
+
+                  <!-- HIDDEN RADIO -->
+                  <input type="radio" value="online" formControlName="payment_method" class="hidden" />
+
+                  <!-- CUSTOM RADIO -->
+                  <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center"
+                    [class.border-red-600]="checkoutForm.get('payment_method')?.value === 'online'"
+                    [class.border-gray-300]="checkoutForm.get('payment_method')?.value !== 'online'">
+
+                    <div *ngIf="checkoutForm.get('payment_method')?.value === 'online'"
+                      class="w-2.5 h-2.5 bg-red-600 rounded-full">
+                    </div>
+                  </div>
+
+                  <!-- TEXT -->
+                  <div>
+                    <p class="font-semibold">Online</p>
+                    <p class="text-xs text-gray-400">UPI / Card</p>
+                  </div>
+
                 </div>
-                <div class="leading-tight">
-                  <p class="font-bold text-sm">Online</p>
-                  <p class="text-[10px] text-gray-500">UPI / Card</p>
-                </div>
-                <i data-lucide="credit-card" class="ml-auto w-4 h-4 text-gray-400"></i>
+
+                <!-- SVG -->
+                <svg class="w-5 h-5" [class.text-red-600]="checkoutForm.get('payment_method')?.value === 'online'"
+                  [class.text-gray-400]="checkoutForm.get('payment_method')?.value !== 'online'" fill="none"
+                  stroke="currentColor" viewBox="0 0 24 24">
+
+                  <rect x="2" y="5" width="20" height="14" rx="2" stroke-width="2" />
+                </svg>
+
               </label>
 
-              <!-- cash -->
+              <!-- CASH -->
               <label *ngIf="allowedPayment.includes('cash')"
-                class="flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer"
-                [class.border-red-800]="checkoutForm.get('payment_method')?.value === 'cash'"
+                class="border-2 p-4 rounded-xl cursor-pointer flex items-center justify-between transition-all"
+                [class.border-red-600]="checkoutForm.get('payment_method')?.value === 'cash'"
                 [class.bg-red-50]="checkoutForm.get('payment_method')?.value === 'cash'">
-                <input type="radio" name="payment_method" value="cash" formControlName="payment_method" class="hidden" />
-                <div class="w-4 h-4 rounded-full border-2 border-gray-300 flex items-center justify-center">
-                  <div *ngIf="checkoutForm.get('payment_method')?.value === 'cash'"
-                    class="w-2 h-2 bg-red-800 rounded-full"></div>
+
+                <div class="flex items-center gap-3">
+
+                  <!-- HIDDEN RADIO -->
+                  <input type="radio" value="cash" formControlName="payment_method" class="hidden" />
+
+                  <!-- CUSTOM RADIO -->
+                  <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center"
+                    [class.border-red-600]="checkoutForm.get('payment_method')?.value === 'cash'"
+                    [class.border-gray-300]="checkoutForm.get('payment_method')?.value !== 'cash'">
+
+                    <div *ngIf="checkoutForm.get('payment_method')?.value === 'cash'"
+                      class="w-2.5 h-2.5 bg-red-600 rounded-full">
+                    </div>
+                  </div>
+
+                  <!-- TEXT -->
+                  <div>
+                    <p class="font-semibold">Cash</p>
+                    <p class="text-xs text-gray-400">Pay later</p>
+                  </div>
+
                 </div>
-                <div class="leading-tight">
-                  <p class="font-bold text-sm">cash</p>
-                  <p class="text-[10px] text-gray-500">Pay later</p>
-                </div>
-                <i data-lucide="truck" class="ml-auto w-4 h-4 text-gray-400"></i>
+
+                <!-- SVG -->
+                <svg class="w-5 h-5" [class.text-red-600]="checkoutForm.get('payment_method')?.value === 'cash'"
+                  [class.text-gray-400]="checkoutForm.get('payment_method')?.value !== 'cash'" fill="none"
+                  stroke="currentColor" viewBox="0 0 24 24">
+
+                  <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h5" />
+                </svg>
+
               </label>
 
             </div>
-          </section>
+          </div>
 
-          <!-- PLACE ORDER -->
+          <!-- BUTTON -->
           <button type="submit"
-            class="mt-auto w-full bg-red-950 text-white py-3 rounded-xl font-black text-base flex items-center justify-center gap-2 shadow-lg">
-            <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+            class="w-full bg-red-700 hover:bg-red-800 text-white py-3 rounded-lg shadow flex items-center justify-center gap-2">
+
+            <!-- SVG -->
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+
             Place Order
           </button>
 
         </form>
+
       </div>
 
-      <!-- ================= RIGHT COLUMN ================= -->
-      <div class="lg:col-span-5">
-        <div class="bg-red-950 rounded-2xl p-4 text-white shadow-xl sticky top-20 flex flex-col">
+      <!-- ================= RIGHT ================= -->
+      <div class="bg-white p-6 rounded-xl shadow h-fit">
 
-          <div class="flex items-center gap-2 mb-4 border-b border-white/10 pb-3">
-            <i data-lucide="package" class="w-4 h-4 text-red-400"></i>
-            <h2 class="text-sm font-bold uppercase tracking-wider">
-              Order Summary
-            </h2>
-          </div>
+        <h3 class="text-sm font-semibold text-gray-500 mb-4">
+          ORDER SUMMARY
+        </h3>
 
-          <!-- ITEMS -->
-          <div class="flex-1 space-y-3 mb-4">
-            <div *ngFor="let item of cartItems" class="flex gap-2 items-center">
-              <div class="w-12 h-12 bg-white/10 rounded-lg"></div>
+        <div class="space-y-4">
 
-              <div class="flex-1 leading-tight">
-                <p class="font-bold text-sm">
-                  {{ item.product.name }}
-                </p>
-                <p class="text-[10px] text-red-300">
-                  Qty: {{ item.quantity }}
-                </p>
-              </div>
-
-              <p class="font-bold text-sm">
-                ₹ {{ item.product.price * item.quantity }}
-              </p>
-            </div>
-          </div>
-
-          <!-- TOTAL -->
-          <div class="space-y-2 border-t border-white/10 pt-3">
-            <div class="flex justify-between text-[10px] text-red-200/70">
-              <span>Shipping</span>
-              <span class="text-green-400 font-black">FREE</span>
-            </div>
+          <div *ngFor="let item of cartItems" class="flex justify-between items-center">
 
             <div>
-              <span class="block text-[9px] uppercase text-red-400 tracking-widest">
-                Final Amount
-              </span>
-              <span class="text-2xl font-black">
-                ₹ {{ totalAmount }}
-              </span>
+              <p class="font-semibold text-sm">
+                {{ item.product.name }}
+              </p>
+              <p class="text-xs text-gray-400">
+                Qty: {{ item.quantity }}
+              </p>
             </div>
+
+            <p class="font-bold">
+              ₹ {{ item.product.price * item.quantity }}
+            </p>
+
           </div>
 
         </div>
+
+        <!-- TOTAL -->
+        <div class="border-t mt-6 pt-4 space-y-2">
+
+          <div class="flex justify-between text-sm text-gray-500">
+            <span>Shipping</span>
+            <span class="text-green-600 font-bold">FREE</span>
+          </div>
+
+          <div class="flex justify-between text-lg font-bold">
+            <span>Total</span>
+            <span>₹ {{ totalAmount }}</span>
+          </div>
+
+        </div>
+
       </div>
 
     </div>
+
   </div>
 </div>
