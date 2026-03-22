@@ -1,214 +1,311 @@
-<!-- <h3>Available Orders for Delivery</h3>
-<hr />
-<p *ngIf="successMessage" class="success">{{ successMessage }}</p>
-<p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
-<p *ngIf="orders.length === 0">No available orders right now.</p>
-<div *ngFor="let delivery of orders" class="order-card">
-  <p><b>Order ID:</b> {{ delivery.order.id }}</p>
-  <p><b>Customer:</b> {{ delivery.order.user.name }}</p>
-  <p><b>Payment Mode:</b> {{ delivery.order.payment_method }}</p>
-  <h4>Warehouses & Products</h4>
-  <div
-    *ngFor="let wh of delivery.order.warehouses"
-    class="warehouse-box"
-    style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
-    <p>
-      <b>Warehouse:</b>
-      {{ wh.name }} <br />
-
-      <b>Address: </b>{{ wh.address }}, {{ wh.city }}, {{ wh.state }} - {{ wh.pincode }}
-    </p>
-   <ul>
-  <ng-container *ngFor="let item of delivery.order.items">
-    <ng-container *ngFor="let wp of item.product.warehouse_products">
-      <li *ngIf="wp.warehouse_id === wh.id">
-        {{ item.product.name }} × {{ item.quantity }}
-      </li>
-    </ng-container>
-  </ng-container>
-</ul>
-
-  </div>
-  <p>
-    <b>Delivery Address:</b><br />
-    {{ delivery.order.address }},
-    {{ delivery.order.city }},
-    {{ delivery.order.state }} -
-    {{ delivery.order.pincode }}
-  </p>
-  <div class="action-buttons">
-    <button class="accept" (click)="acceptOrder(delivery.id)">
-      Accept
-    </button>
-  </div>
-
-</div> -->
 
 
-<div class="bg-gray-50 text-gray-900">
-  
 
-  <div class="max-w-[1400px] mx-auto px-6 py-10 space-y-8">
-    <app-spinner [isLoading]="isLoading" [loaderSize]="100"></app-spinner>
-    <!-- HEADER -->
-    <div class="flex items-start justify-between">
-      <div>
-        <h1 class="text-3xl font-bold">Available Orders</h1>
-        <p class="text-gray-500 mt-1">
-          Manage pending deliveries and finalize warehouse settlements.
-        </p>
-      </div>
 
-      <!-- <div class="flex items-center gap-3">
-        <span class="text-xs font-semibold text-gray-500 border px-3 py-1 rounded-full">
-          SYSTEM STATUS
-        </span>
-        <span class="flex items-center gap-2 bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full">
-          <span class="w-2 h-2 bg-green-500 rounded-full"></span>
-          ONLINE
-        </span>
-      </div> -->
+<div class="max-w-[1400px] mx-auto py-6 px-2 font-sans">
+  <app-spinner [isLoading]="isLoading" [loaderSize]="100"></app-spinner>
+
+  <!-- ================= HEADER ================= -->
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10 ">
+    <div>
+      <h2 class="text-4xl font-black text-gray-900">
+        Available <span class="text-red-700">Deliveries</span>
+      </h2>
+      <p class="text-gray-500 text-sm mt-1">
+        Manage pending deliveries and accept orders.
+      </p>
     </div>
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-    <!-- MAIN CARD -->
-    <div *ngFor="let delivery of orders" class="bg-white rounded-xl shadow border">
 
-      <!-- TOP BAR -->
-      <div class="flex items-center justify-between px-6 py-5 border-b">
-        <div class="flex items-center gap-4">
-          <div class="w-10 h-10 flex items-center justify-center bg-red-100 text-red-700 font-bold rounded-lg">
-            #
-          </div>
-          <div>
-            <p class="text-xs text-gray-500 uppercase tracking-wide">
-              Delivery Reference
-            </p>
-            <p class="font-bold text-lg">{{ delivery.order.id }}</p>
-          </div>
+    <div class="bg-white px-5 py-3 rounded-xl border flex items-center gap-4 shadow-sm hover:shadow-xl">
+      <div class="w-9 h-9 bg-red-100 rounded-lg flex items-center justify-center text-red-600">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       class="w-5 h-5"
+       fill="none"
+       viewBox="0 0 24 24"
+       stroke="currentColor"
+       stroke-width="2">
+
+    <!-- Box Top -->
+    <path stroke-linecap="round" stroke-linejoin="round"
+      d="M3 7l9-4 9 4-9 4-9-4z" />
+
+    <!-- Box Body -->
+    <path stroke-linecap="round" stroke-linejoin="round"
+      d="M3 7v10l9 4 9-4V7" />
+
+    <!-- Divider -->
+    <path stroke-linecap="round" stroke-linejoin="round"
+      d="M12 11v10" />
+
+  </svg>
+</div>
+      <div>
+        <p class="text-xs text-gray-400 uppercase">Total Orders</p>
+        <p class="text-lg font-bold">{{ orders.length }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= CARDS ================= -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 ">
+
+    <div *ngFor="let delivery of orders" class="bg-white rounded-xl border shadow-sm flex flex-col justify-between">
+
+      <!-- HEADER -->
+      <div class="flex items-center justify-between px-6 py-4 border-b bg-red-600 text-white rounded-t-xl">
+
+        <!-- LEFT: ORDER ID -->
+        <div class="font-bold text-lg">
+          #{{ delivery.order.id }}
         </div>
 
-        <div class="flex items-center gap-3">
-          <span class="flex items-center gap-2 text-sm border rounded-full px-4 py-2">
-            🕒 {{ delivery.order.createdAt | date:'dd/MM/yyyy' }}
-          </span>
-          <span class="flex items-center gap-2 text-sm border rounded-full px-4 py-2">
-            {{ delivery.order.payment_method }}
-          </span>
+
+
+        <!-- CENTER: STATUS -->
+        <div class="px-4 py-1 rounded-full text-xs font-semibold border" [ngClass]="{
+      'border-red-200 bg-red-50 text-red-700': delivery.order.status === 'CANCELLED',
+      'border-green-200 bg-green-50 text-green-700': delivery.order.status === 'DELIVERED',
+      'border-blue-200 bg-blue-50 text-blue-700': 
+        delivery.order.status === 'OUT FOR DELIVERY' || 
+        delivery.order.status === 'CONFIRMED' || 
+        delivery.order.status === 'PACKED',
+      'border-yellow-200 bg-yellow-50 text-yellow-700': delivery.order.status === 'PENDING',
+      'border-purple-200 bg-purple-50 text-purple-700': delivery.order.status === 'SHIPPED'
+    }">
+          {{ delivery.order.status }}
         </div>
+
+        <!-- RIGHT: DATE -->
+
+
       </div>
 
-      <!-- CONTENT -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 px-6 py-6">
+      <!-- BODY -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
 
-        <!-- LEFT COLUMN -->
-        <div class="space-y-6">
+        <!-- LEFT SIDE -->
+        <div class="space-y-5">
 
-          <!-- CUSTOMER PROFILE -->
-          <div>
-            <p class="text-xs font-semibold text-gray-400 uppercase mb-2">
-              Customer Profile
-            </p>
-            <div class="border rounded-lg p-4">
-              <p class="font-semibold">{{ delivery.order.user.name }}</p>
-              <p class="text-sm text-gray-500">{{ delivery.order.user.email }}</p>
+
+          <div class="flex gap-3">
+            <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center text-red-600">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor" stroke-width="2">
+
+                <!-- Head -->
+                <circle cx="12" cy="8" r="4"></circle>
+
+                <!-- Body -->
+                <path d="M6 20c0-3.3 2.7-6 6-6s6 2.7 6 6"></path>
+              </svg>
+            </div>
+            <div>
+              <p class="text-xs text-gray-400 uppercase font-semibold">Customer</p>
+              <p class="font-medium text-gray-900">{{ delivery.order.user?.name }}</p>
+              <p class="text-xs text-gray-500">{{ delivery.order.user?.email }}</p>
             </div>
           </div>
 
-          <!-- DELIVERY DESTINATION -->
-          <div>
-            <p class="text-xs font-semibold text-gray-400 uppercase mb-2">
-              Delivery Destination
-            </p>
-            <div class="border border-red-200 bg-red-50 rounded-lg p-4 text-sm">
-              <p>{{ delivery.order.address }},</p>
-              <p>
-                {{ delivery.order.city }}, {{ delivery.order.state }} -
-                <span class="font-bold text-red-700">{{ delivery.order.pincode }}</span>
+
+          <!-- PAYMENT -->
+
+          <div class="flex gap-3">
+            <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center text-red-600">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor" stroke-width="2">
+
+                <!-- Calendar outline -->
+                <rect x="3" y="5" width="18" height="16" rx="2"></rect>
+
+                <!-- Top bars -->
+                <path d="M16 3v4M8 3v4"></path>
+
+                <!-- Divider -->
+                <path d="M3 11h18"></path>
+              </svg>
+            </div>
+            <div>
+              <p class="text-xs text-gray-400 uppercase font-semibold">Order Date</p>
+              <p class="text-gray-900">
+                {{ delivery.order.created_at | date:'dd MMM yyyy' }}
               </p>
             </div>
           </div>
+
         </div>
 
-        <!-- RIGHT COLUMN -->
-        <div class="space-y-6  h-96 overflow-y-auto hide-scrollbar">
+        <!-- RIGHT SIDE -->
+        <div class="space-y-4 ">
+          <div class="flex gap-3">
+            <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center text-red-600">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor" stroke-width="2">
 
-          <p class="text-xs font-semibold text-gray-400 uppercase">
-            Warehouse Logistics
-          </p>
+                <!-- Pin shape -->
+                <path d="M12 21s-6-5.33-6-10a6 6 0 1 1 12 0c0 4.67-6 10-6 10z"></path>
 
-          <!-- WAREHOUSE 1 -->
-          <div  *ngFor="let wh of delivery.order.warehouses" class=" border rounded-lg">
-            <div class="flex items-center justify-between px-4 py-3 border-b">
-              <p class="font-semibold text-red-700">
-                {{ wh.name }} 
+                <!-- Center dot -->
+                <circle cx="12" cy="11" r="2"></circle>
+              </svg>
+            </div>
+            <div>
+              <p class="text-xs text-gray-400 uppercase font-semibold">Address</p>
+              <p class="text-gray-900">
+                {{ delivery.order.address }},
+                {{ delivery.order.city }}, {{ delivery.order.state }} - <span class="text-red-800 font-semibold">{{
+                  delivery.order.pincode }}</span>
               </p>
-              <span class="text-xs text-gray-400">#{{wh.id}}</span>
-            </div>
-
-            <p class="text-xs text-gray-500 px-4 py-2">
-              {{ wh.address }}, {{ wh.city }}, {{ wh.state }} - {{ wh.pincode }}
-            </p>
-            <div *ngFor="let item of delivery.order.items">
-              <div *ngFor="let wp of item.product.warehouse_products">
-            <div *ngIf="wp.warehouse_id === wh.id" class="flex items-center my-1 justify-between bg-gray-50 mx-4 mb-4 p-3 rounded-lg">
-              
-              <div class="flex items-center gap-3">
-                <div class="w-9 h-9 flex items-center justify-center border rounded-md bg-white">
-                  📦
-                </div>
-                <p class="text-sm font-medium">{{ item.product.name }}</p>
-              </div>
-              <span class="bg-red-700 text-white text-xs font-bold px-3 py-1 rounded-full">
-                × {{ item.quantity }}
-              </span>
-            </div>
-            </div>
             </div>
           </div>
+          <div class="flex items-center gap-3 px-4 py-2 rounded-lg border" [ngClass]="{
+    'bg-green-50 border-green-200 text-green-700': delivery.order.payment_method?.toLowerCase() !== 'cash' && delivery.order.payment_method?.toLowerCase() !== 'cod',
+    'bg-yellow-50 border-yellow-200 text-yellow-700': delivery.order.payment_method?.toLowerCase() === 'cash' || delivery.order.payment_method?.toLowerCase() === 'cod'
+  }">
 
-          <!-- WAREHOUSE 2 -->
-          <!-- <div class="border rounded-lg">
-            <div class="flex items-center justify-between px-4 py-3 border-b">
-              <p class="font-semibold text-red-700">
-                Satellite Storage B
-              </p>
-              <span class="text-xs text-gray-400">WH-02</span>
+            <!-- ICON -->
+            <div class="w-8 h-8 flex items-center justify-center rounded-md" [ngClass]="{
+         'bg-green-100 text-green-700': delivery.order.payment_method?.toLowerCase() !== 'cash' && delivery.order.payment_method?.toLowerCase() !== 'cod',
+         'bg-yellow-100 text-yellow-700': delivery.order.payment_method?.toLowerCase() === 'cash' || delivery.order.payment_method?.toLowerCase() === 'cod'
+       }">
+
+              <!-- SVG ICON -->
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h2m-9 4h14a2 2 0 002-2V7a2 2 0 
+        00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+
             </div>
 
-            <p class="text-xs text-gray-500 px-4 py-2">
-              99 Export Way, Queens, NY 11101
-            </p>
+            <!-- TEXT -->
+            <div class="flex justify-between w-full item-start">
+              <div>
+                <p class="text-xs uppercase font-semibold opacity-70">Payment</p>
+                <p class="font-semibold">
+                  {{ delivery.order.payment_method }}
 
-            <div class="flex items-center justify-between bg-gray-50 mx-4 mb-4 p-3 rounded-lg">
-              <div class="flex items-center gap-3">
-                <div class="w-9 h-9 flex items-center justify-center border rounded-md bg-white">
-                  ⌨️
-                </div>
-                <p class="text-sm font-medium">
-                  Mechanical Keyboard RGB
                 </p>
               </div>
-              <span class="bg-red-700 text-white text-xs font-bold px-3 py-1 rounded-full">
-                ×1
-              </span>
-            </div>
-          </div> -->
+              <p class="font-semibold">
+                {{ delivery.order.payment_status }}
 
+              </p>
+            </div>
+
+          </div>
         </div>
       </div>
 
-      <!-- FOOTER -->
-      <div class="flex justify-end px-6 py-6 border-t">
-        <button (click)="acceptOrder(delivery.id)"
-          class="bg-red-700 hover:bg-red-800 text-white font-semibold px-6 py-3 rounded-lg flex items-center gap-2"
-        >
-          ✔ Accept Order Delivery →
-        </button>
+      <p class="text-xs text-gray-400 uppercase font-semibold mx-4">
+        Warehouses
+      </p>
+
+  <div *ngFor="let wh of delivery.order.warehouses"
+     class="bg-white shadow-sm hover:shadow-md transition rounded-xl p-4 md:flex gap-4 m-4 border">
+
+  <!-- LEFT SIDE -->
+  <div class="md:w-1/4 w-full md:border-r md:pr-4 flex flex-row md:flex-col gap-3 items-start md:items-center">
+
+    <!-- ICON -->
+    <div class="w-10 h-10 flex items-center justify-center rounded-xl bg-red-100 text-red-600 flex-shrink-0">
+      <svg xmlns="http://www.w3.org/2000/svg"
+           class="w-5 h-5"
+           fill="none"
+           viewBox="0 0 24 24"
+           stroke="currentColor"
+           stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M3 21h18M5 21V7l7-4 7 4v14M9 9h2v2H9V9zm0 4h2v2H9v-2zm4-4h2v2h-2V9zm0 4h2v2h-2v-2z" />
+      </svg>
+    </div>
+
+    <!-- TEXT -->
+    <div class="flex-1">
+
+      <div class="flex justify-between items-center">
+        <p class="font-semibold text-red-700 text-sm md:text-base">
+          {{ wh.name }}
+        </p>
+       
       </div>
+
+      <p class="text-xs text-gray-500 mt-1 leading-tight">
+        {{ wh.address }}, {{ wh.city }},
+        {{ wh.state }} - {{ wh.pincode }}
+      </p>
+
+    </div>
+
+  </div>
+
+  <!-- RIGHT SIDE -->
+  <div class="md:w-3/4 w-full mt-3 md:mt-0">
+
+    <p class="text-xs font-semibold text-gray-400 mb-2 uppercase">
+      Products
+    </p>
+
+    <div class="max-h-36 overflow-y-auto hide-scrollbar space-y-2 pr-1">
+
+      <ng-container *ngFor="let item of delivery.order.items">
+        <ng-container *ngFor="let wp of item.product.warehouse_products">
+
+          <div *ngIf="wp.warehouse_id === wh.id"
+               class="flex justify-between items-center bg-gray-50 hover:bg-gray-100 transition px-3 py-2 rounded-lg">
+            <p class="text-sm text-gray-700 truncate">
+              #{{ item.product.id }}
+            </p>
+            <!-- PRODUCT -->
+            <p class="text-sm text-gray-700 truncate">
+              {{ item.product.name }}
+            </p>
+            
+            <p class="text-sm text-gray-700 truncate">
+              ₹ {{ item.product.price }}
+            </p>
+            
+            
+
+
+            <!-- QTY -->
+            <span class="text-xs bg-red-500 text-white px-2 py-1 rounded-full">
+              x {{ item.quantity }}
+            </span>
+            <p class="text-sm text-gray-700 truncate">
+             =  {{ item.product.price * item.quantity }}
+            </p>
+
+          </div>
+
+        </ng-container>
+      </ng-container>
 
     </div>
 
   </div>
 
 </div>
+
+
+
+      <!-- FOOTER -->
+      <div class="flex items-center justify-between px-6 py-4 border-t">
+
+        <div class="flex flex-col">
+          <p class="text-xs text-gray-400 uppercase font-semibold">Total Amount</p>
+
+          <p class="text-lg font-bold text-red-700 mt-1">
+            ₹{{ delivery.order.total_amount }}
+          </p>
+        </div>
+
+        <button (click)="acceptOrder(delivery.id)"
+          class="bg-red-700 text-white px-6 py-2.5 rounded-lg  font-semibold hover:bg-red-800">
+          ✔ Accept Delivery →
+        </button>
+
+      </div>
+
+    </div>
+  </div>
 </div>
