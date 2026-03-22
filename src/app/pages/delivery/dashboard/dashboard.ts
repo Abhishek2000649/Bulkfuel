@@ -49,88 +49,117 @@ export class Dashboard {
     },
   });
 }
-  markDelivered(deliveryId: number) {
-  this.isLoading = true;
+markDelivered(deliveryId: number) {
 
-  this.deliveryService.markDelivered(deliveryId).subscribe({
-    next: (res: any) => {
-      this.isLoading = false;
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'Do you want to mark this order as delivered?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Deliver it!',
+    cancelButtonText: 'Cancel',
+    confirmButtonColor: '#22c55e',
+    cancelButtonColor: '#ef4444',
+    background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+    color: '#ffffff',
+  }).then((result) => {
 
-      Swal.fire({
-        title: res?.message || 'Order delivered successfully',
-        icon: 'success',
-        confirmButtonText: 'OK',
-        confirmButtonColor: '#d4af37',
-        background: 'linear-gradient(135deg, #3b0000, #1a0000)',
-        color: '#ffffff',
-        iconColor: '#22c55e'
-      }).then(() => {
-        this.loadAssignedDeliveries(); // refresh after alert close
-        this.cdr.detectChanges();
+    if (result.isConfirmed) {
+      this.isLoading = true;
+
+      this.deliveryService.markDelivered(deliveryId).subscribe({
+        next: (res: any) => {
+          this.isLoading = false;
+
+          Swal.fire({
+            title: res?.message || 'Order delivered successfully',
+            icon: 'success',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#d4af37',
+            background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+            color: '#ffffff',
+            iconColor: '#22c55e'
+          }).then(() => {
+            this.loadAssignedDeliveries();
+            this.cdr.detectChanges();
+          });
+        },
+
+        error: (err) => {
+          this.isLoading = false;
+
+          Swal.fire({
+            title: err?.error?.message || 'Failed to mark delivered',
+            icon: 'error',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#d4af37',
+            background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+            color: '#ffffff',
+            iconColor: '#ef4444'
+          });
+        },
       });
-    },
 
-    error: (err) => {
-      this.isLoading = false;
-
-      Swal.fire({
-        title: err?.error?.message || 'Failed to mark delivered',
-        icon: 'error',
-        confirmButtonText: 'OK',
-        confirmButtonColor: '#d4af37',
-        background: 'linear-gradient(135deg, #3b0000, #1a0000)',
-        color: '#ffffff',
-        iconColor: '#ef4444'
-      });
-    },
+    }
   });
 }
- cancelDelivery(deliveryId: number, reason: string) {
-  this.isLoading = true;
+cancelDelivery(deliveryId: number, reason: string) {
 
- 
   if (!reason) {
-    this.isLoading = false;
-
-   this.errorMessage = 'Cancellation reason is required';
-
+    this.errorMessage = 'Cancellation reason is required';
     return;
   }
 
-  this.deliveryService.cancelDelivery(deliveryId, reason).subscribe({
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'Do you want to cancel this delivery?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, Cancel it!',
+    cancelButtonText: 'No',
+    confirmButtonColor: '#ef4444',
+    cancelButtonColor: '#22c55e',
+    background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+    color: '#ffffff',
+  }).then((result) => {
 
-    
-    next: (res: any) => {
-      this.isLoading = false;
+    if (result.isConfirmed) {
+      this.isLoading = true;
 
-      Swal.fire({
-        title: res?.message || 'Delivery cancelled successfully',
-        icon: 'success',
-        confirmButtonText: 'OK',
-        confirmButtonColor: '#d4af37',
-        background: 'linear-gradient(135deg, #3b0000, #1a0000)',
-        color: '#ffffff',
-        iconColor: '#22c55e'
-      }).then(() => {
-        this.loadAssignedDeliveries();
-        this.cdr.detectChanges();
+      this.deliveryService.cancelDelivery(deliveryId, reason).subscribe({
+
+        next: (res: any) => {
+          this.isLoading = false;
+
+          Swal.fire({
+            title: res?.message || 'Delivery cancelled successfully',
+            icon: 'success',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#d4af37',
+            background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+            color: '#ffffff',
+            iconColor: '#22c55e'
+          }).then(() => {
+            this.loadAssignedDeliveries();
+            this.cdr.detectChanges();
+          });
+        },
+
+        error: (err) => {
+          this.isLoading = false;
+
+          Swal.fire({
+            title: err?.error?.message || 'Failed to cancel delivery',
+            icon: 'error',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#d4af37',
+            background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+            color: '#ffffff',
+            iconColor: '#ef4444'
+          });
+        },
       });
-    },
-
-    
-    error: (err) => {
-      this.isLoading = false;
-
-      Swal.fire({
-        title: err?.error?.message || 'Failed to cancel delivery',
-        icon: 'error',
-        confirmButtonText: 'OK',
-        confirmButtonColor: '#d4af37',
-        background: 'linear-gradient(135deg, #3b0000, #1a0000)',
-        color: '#ffffff',
-        iconColor: '#ef4444'
-      });
-    },
+    }
   });
 }
 

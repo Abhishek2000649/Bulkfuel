@@ -50,25 +50,31 @@ clickOutside(event: Event): void {
   this.isLoading = true;
 
   this.adminService.getProducts().subscribe({
-    next: (res: any) => {
+next: (res: any) => {
 
-      this.products = res.data || [];
-      this.filteredProducts = res.data || [];
+  const data = res.data || [];  // ✅ define data
 
-      // Extract unique categories
-      const map = new Map<number, any>();
+  // 🔥 Sort latest first
+  this.products = data.sort((a: any, b: any) => {
+    return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+  });
 
-      (res.data || []).forEach((p: any) => {
-        if (p.category) {
-          map.set(p.category.id, p.category);
-        }
-      });
+  this.filteredProducts = [...this.products]; // ✅ use sorted data
 
-      this.categories = Array.from(map.values());
+  // Extract unique categories
+  const map = new Map<number, any>();
 
-      this.isLoading = false;
-      this.cdr.detectChanges();
-    },
+  data.forEach((p: any) => {
+    if (p.category) {
+      map.set(p.category.id, p.category);
+    }
+  });
+
+  this.categories = Array.from(map.values());
+
+  this.isLoading = false;
+  this.cdr.detectChanges();
+},
     error: (err) => {
       console.error(err);
       this.isLoading = false;

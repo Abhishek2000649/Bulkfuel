@@ -6,7 +6,7 @@ import { Product } from '../../../../core/services/admin/product/product';
 import { Spinner } from '../../../../shared/spinner/spinner';
 import { finalize } from 'rxjs';
 import Swal from 'sweetalert2';
-type ProductFormFields = 'name' | 'price' | 'stock' | 'category_id' | 'description';
+type ProductFormFields = 'name' | 'price' | 'stock' | 'category_id' | 'description'|  'payment_type';
 @Component({
   selector: 'app-edit-product',
   imports: [CommonModule, ReactiveFormsModule, Spinner, RouterModule],
@@ -14,6 +14,33 @@ type ProductFormFields = 'name' | 'price' | 'stock' | 'category_id' | 'descripti
   styleUrl: './edit-product.css',
 })
 export class EditProduct {
+@ViewChild('paymentDropdownWrapper') paymentDropdownWrapper!: ElementRef;
+  // PAYMENT DROPDOWN STATE
+isPaymentDropdownOpen = false;
+selectedPaymentType: string = '';
+
+// OPTIONS
+paymentTypes = [
+  { label: 'Cash (COD)', value: 'cash' },
+  { label: 'Online Payment', value: 'online' },
+  { label: 'Both', value: 'both' }
+];
+
+// TOGGLE
+togglePaymentDropdown() {
+  this.isPaymentDropdownOpen = !this.isPaymentDropdownOpen;
+}
+
+// SELECT
+selectPaymentType(payment: any) {
+  this.selectedPaymentType = payment.label;
+
+  this.productForm.patchValue({
+    payment_type: payment.value
+  });
+
+  this.isPaymentDropdownOpen = false;
+}
  @ViewChild('dropdownWrapper') dropdownWrapper!: ElementRef;
 
 @HostListener('document:click', ['$event'])
@@ -23,6 +50,9 @@ clickOutside(event: Event): void {
 
   if (this.dropdownWrapper && !this.dropdownWrapper.nativeElement.contains(target)) {
     this.isDropdownOpen = false;
+  }
+   if (this.paymentDropdownWrapper && !this.paymentDropdownWrapper.nativeElement.contains(target)) {
+    this.isPaymentDropdownOpen = false;
   }
 
 }
@@ -38,6 +68,7 @@ clickOutside(event: Event): void {
     stock: '',
     category_id: '',
     description: '',
+     payment_type: '',
   };
   validationMessages: Record<ProductFormFields, any> = {
     name: {
@@ -56,6 +87,9 @@ clickOutside(event: Event): void {
     },
     description: {
       required: ' Enter Description',
+    },
+     payment_type: {
+      required: 'Select payment type'
     }
   };
   constructor(
@@ -77,7 +111,6 @@ clickOutside(event: Event): void {
    
 
     this.loadCategories();
-    this.loadProduct();
   }
   createForm() {
   this.productForm = this.fb.group({
@@ -104,6 +137,7 @@ clickOutside(event: Event): void {
     category_id: ['', [Validators.required]],
 
     description: ['', [Validators.required]],
+     payment_type: ['', [Validators.required]],
   });
 }
 
@@ -147,7 +181,7 @@ loadCategories() {
   });
 }
 
-  loadProduct() {
+ loadProduct() {
   this.isLoading = true;
 
   this.adminService.getProductById(this.productId).subscribe({
@@ -157,17 +191,26 @@ loadCategories() {
 
       this.productForm.patchValue({
         name: product.name,
-        price: product.price,
+        price: Math.floor(product.price),
         stock: product.stock,
         category_id: product.category_id,
         description: product.description,
+        payment_type: product.payment_type,
       });
 
-      // 🔥 set selected category name
+      // ✅ Category set
       const category = this.categories.find(c => c.id == product.category_id);
-
       if (category) {
         this.selectedCategory = category.name;
+      }
+
+      // ✅ Payment set (THIS WAS MISSING 🔥)
+      const payment = this.paymentTypes.find(
+        p => p.value === product.payment_type
+      );
+
+      if (payment) {
+        this.selectedPaymentType = payment.label;
       }
 
       this.isLoading = false;

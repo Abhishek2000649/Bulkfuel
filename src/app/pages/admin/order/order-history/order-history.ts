@@ -45,7 +45,10 @@ export class OrderHistory implements OnInit {
 
   this.orderService.getOrderHistory().subscribe({
     next: (res: any) => {
-      this.orders = res?.data || [];
+      this.orders = (res?.data || []).sort(
+        (a: any, b: any) =>
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      );
       this.filteredOrders = [...this.orders];
       this.isLoading = false;
       this.cdr.detectChanges();

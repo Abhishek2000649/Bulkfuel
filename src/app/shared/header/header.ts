@@ -1,14 +1,16 @@
-import { Component, HostListener } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Auth } from '../../core/services/Auth/authservice/auth';
 import Swal from 'sweetalert2';
+import { Spinner } from '../spinner/spinner';
+import { AdminOrder } from '../../core/services/admin/AdminOrder/admin-order';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, Spinner],
   templateUrl: './header.html',
   styleUrls: ['./header.css'],
 })
@@ -19,11 +21,49 @@ export class Header {
   isMobileMenuOpen = false;
   isProfileOpen = false;
   isSettingsOpen = false;
-
+  orderCount: number = 0;
+  isLoading = false;
   constructor(
     public auth: Auth,
-    private router: Router
+    private router: Router,
+    private adminService: AdminOrder,
+    private cdr:ChangeDetectorRef
   ) {}
+  ngOnInit(): void {
+  this.loadOrderCount();
+
+  // 🔄 auto refresh (optional but recommended)
+  setInterval(() => {
+    this.loadOrderCount();
+    this.cdr.detectChanges();
+  }, 5000);
+}
+
+  statusPriority: { [key: string]: number } = {
+  PENDING: 1,
+  CONFIRMED: 2,
+  PACKED: 3,
+  SHIPPED: 4,
+  OUT_FOR_DELIVERY: 5,
+  DELIVERED: 6,
+  CANCELLED: 7,
+}; 
+
+loadOrderCount() {
+  this.adminService.getOrders().subscribe({
+    next: (res: any) => {
+      const orders = res?.data || [];
+
+      this.orderCount = orders.filter((order: any) =>
+        this.statusPriority[order.status] <
+        this.statusPriority['SHIPPED']
+      ).length;
+    },
+    error: (err) => {
+      console.error('Order count error', err);
+    }
+  });
+}
 
   // ================= PROFILE =================
   toggleProfile(event: Event): void {
@@ -57,12 +97,13 @@ export class Header {
 
   // ================= LOGOUT =================
  logout(): void {
-
+this.isLoading= true;
   this.closeAll();
 
   this.auth.logout().subscribe({
 
     next: (res: any) => {
+      this.isLoading= false;
 
       if (res?.success || res?.status) {
 
@@ -96,7 +137,7 @@ export class Header {
     },
 
     error: (err: any) => {
-
+      this.isLoading= false;
       let title = 'Error';
       
       // 🔴 Backend not running
