@@ -32,6 +32,7 @@ import { Available } from './pages/delivery/available/available';
 import { OrderHistory } from './pages/admin/order/order-history/order-history';
 import { Profile as ProfileUpdate } from './shared/profile/profile';
 import { Settlement } from './pages/admin/settlement/settlement/settlement';
+import { VerifyOtp } from './pages/auth/verify-otp/verify-otp';
 
 export const routes: Routes = [
 
@@ -116,6 +117,8 @@ export const routes: Routes = [
       
       { path: 'login', component: Login, canActivate: [guardGuard] },
       { path: 'signUp', component: SignUp },
+      { path: 'verify-otp', component: VerifyOtp },
+
     ],
   },
   // { path: '**', redirectTo: '' },

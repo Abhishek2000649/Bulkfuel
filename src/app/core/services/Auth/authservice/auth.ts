@@ -16,7 +16,7 @@ export class Auth {
   }
 
   register(data: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/register`, data);
+    return this.http.post<any>(`${this.apiUrl}/send-otp`, data);
   }
 
   logout(): Observable<any> {
@@ -51,5 +51,21 @@ export class Auth {
 
   get user() {
     return this.userSubject.value;
+  }
+  verifyOtp(data: any) {
+  return this.http.post<any>(`${this.apiUrl}/verify-otp`, data);
+}
+private data: any;
+
+  setData(data: any) {
+    this.data = data;
+  }
+
+  getData() {
+    return this.data;
+  }
+
+  clearData() {
+    this.data = null;
   }
 }

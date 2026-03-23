@@ -8,7 +8,7 @@ import { Spinner } from '../../../../shared/spinner/spinner';
 import { finalize } from 'rxjs';
 import { required } from '@angular/forms/signals';
 import Swal from 'sweetalert2';
-type UserManagementFormFields = 'name' | 'email' | 'role' | 'password'| 'confirmPassword';
+type UserManagementFormFields = 'name' | 'email' | 'role' ;
 @Component({
   selector: 'app-edit-user-management',
   imports: [CommonModule, ReactiveFormsModule, RouterModule, Spinner],
@@ -21,15 +21,13 @@ export class EditUserManagement {
     userForm!: FormGroup;
   userId!: number;
   errors: string[] = [];
-  showPassword = false;
-  showConfirmPassword = false;
+  
   isLoading:boolean=false;
    formErrors: Record<UserManagementFormFields, string> = {
       name: '',
       email: '',
       role: '',
-      password: '',
-       confirmPassword: '',
+      
     };
     validationMessages: Record<UserManagementFormFields, any> = {
       name: {
@@ -42,16 +40,7 @@ export class EditUserManagement {
       },
       role:{
         required: 'select any role',
-      },
-      password: {
-        required: 'Enter password',
-        minlength: 'Password must be at least 6 characters',
-      },
-       confirmPassword:{
-      required: 'Confirm your password',
-      minlength: 'Password must be at least 6 characters',
-      passwordMismatch: 'Passwords do not match',
-    }
+      }
     };
   constructor(
     private fb: FormBuilder,
@@ -63,32 +52,14 @@ export class EditUserManagement {
      this.userForm = this.fb.group({
       name: ['', [Validators.required,      Validators.pattern(/^[A-Za-z\s]+$/)]],
       email: ['', [Validators.required, Validators.email]],
-        role: ['', Validators.required],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-confirmPassword: ['', [Validators.required, Validators.minLength(6)]]    } ,{
-  validators: this.passwordMatchValidator
+        role: ['', Validators.required]
+         } ,{
 });
      this.userForm.valueChanges.subscribe(() => {
       this.updateFormErrors();
     });
   }
-   passwordMatchValidator(form: FormGroup) {
-
-  const password = form.get('password');
-  const confirmPassword = form.get('confirmPassword');
-
-  if (!password || !confirmPassword) return;
-
-  if (confirmPassword.errors && !confirmPassword.errors['passwordMismatch']) {
-    return;
-  }
-
-  if (password.value !== confirmPassword.value) {
-    confirmPassword.setErrors({ passwordMismatch: true });
-  } else {
-    confirmPassword.setErrors(null);
-  }
-}
+ 
 
   ngOnInit(): void {
     this.userId = Number(this.route.snapshot.paramMap.get('id'));

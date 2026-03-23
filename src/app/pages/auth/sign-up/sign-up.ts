@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 import { finalize } from 'rxjs';
 import Swal from 'sweetalert2';
 
-type SignUpFormFields = 'name' | 'email' | 'password' | 'confirmPassword';
+type SignUpFormFields = 'name' | 'email' | 'terms';
 
 @Component({
   selector: 'app-sign-up',
@@ -20,14 +20,11 @@ export class SignUp {
 
   registerForm!: FormGroup;
   isLoading: boolean = false;
-  showPassword: boolean = false;
-  showConfirmPassword: boolean = false;
 
   formErrors: Record<SignUpFormFields, string> = {
     name: '',
     email: '',
-    password: '',
-    confirmPassword: '',
+     terms: '',
   };
 
   validationMessages: Record<SignUpFormFields, any> = {
@@ -40,16 +37,11 @@ export class SignUp {
       required: 'Enter email',
       email: 'Enter a valid email address',
     },
+     terms: {
+    required: 'You must accept Terms & Policy'
+  }
 
-    password: {
-      required: 'Enter password',
-      minlength: 'Password must be at least 6 characters',
-    },
 
-    confirmPassword: {
-      required: 'Confirm your password',
-      mismatch: 'Passwords do not match'
-    }
 
   };
 
@@ -63,8 +55,7 @@ export class SignUp {
     this.registerForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', Validators.required],
+      terms: [false, Validators.requiredTrue]
     });
 
     this.registerForm.valueChanges.subscribe(() => {
@@ -98,18 +89,17 @@ export class SignUp {
 
     // PASSWORD MATCH VALIDATION
 
-    const password = this.registerForm.get('password')?.value;
-    const confirmPassword = this.registerForm.get('confirmPassword')?.value;
 
-    if (password && confirmPassword && password !== confirmPassword) {
-      this.formErrors.confirmPassword = this.validationMessages.confirmPassword.mismatch;
-    }
 
   }
 
 
 
   register() {
+    const userData = {
+      email: this.registerForm.value.email,
+      name: this.registerForm.value.name
+    };
 
     this.isLoading = true;
 
@@ -118,16 +108,6 @@ export class SignUp {
       this.updateFormErrors();
       this.isLoading = false;
       return;
-    }
-
-    // PASSWORD MATCH CHECK
-
-    if (this.registerForm.value.password !== this.registerForm.value.confirmPassword) {
-
-      this.formErrors.confirmPassword = 'Passwords do not match';
-      this.isLoading = false;
-      return;
-
     }
 
     this.auth.register(this.registerForm.value)
@@ -143,8 +123,11 @@ export class SignUp {
 
           if (res.status) {
 
+
+            this.auth.setData(userData);
+
             Swal.fire({
-              title: res.message || "Register successfully",
+              title: res.message || "OTP Send",
               icon: 'success',
               confirmButtonText: 'OK',
               confirmButtonColor: '#d4af37',
@@ -153,7 +136,7 @@ export class SignUp {
               iconColor: '#22c55e',
             });
 
-            this.router.navigate(['/login']);
+            this.router.navigate(['/verify-otp']);
           }
 
         },

@@ -1,0 +1,222 @@
+<div class="min-h-screen flex">
+
+    <app-spinner [isLoading]="isLoading" [loaderSize]="100"></app-spinner>
+
+    <!-- LEFT SIDE (SAME) -->
+    <div
+        class="hidden lg:flex w-1/2 bg-gradient-to-br from-red-900 via-red-800 to-red-950 flex-col relative overflow-hidden">
+
+        <div class="absolute top-0 left-0 w-[500px] h-[500px] bg-red-500 opacity-20 blur-[150px] rounded-full"></div>
+
+        <div class="flex mt-24 ms-16 mb-6 relative z-10">
+            <div class="relative group">
+                <div class="absolute inset-0 bg-red-500 blur-xl opacity-40 rounded-2xl"></div>
+
+                <div
+                    class="relative bg-gradient-to-br from-red-600 to-red-800 w-20 h-20 flex items-center justify-center rounded-2xl border border-white/20 shadow-2xl">
+                    <div class="w-16 h-16 flex justify-center items-center overflow-hidden rounded-lg">
+                        <img src="assets/images/logo-dark.png" class="w-full h-full object-contain">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <p class="tracking-widest font-medium mt-10 ms-16 text-yellow-400 text-lg">
+            VERIFY ACCOUNT
+        </p>
+
+        <h1 class="text-6xl mt-4 ms-16 font-bold tracking-wide text-yellow-200">
+            AZIZI NEXUS
+        </h1>
+
+        <p class="tracking-[0.4em] ms-16 mt-3 text-yellow-300 text-sm">
+            PREMIUM EDITION
+        </p>
+
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="lg:w-1/2 w-full lg:bg-red-100 bg-red-800 flex items-center justify-center py-6 px-2">
+
+        <div
+            class="lg:bg-gray-50 bg-red-50 w-full max-w-xl lg:max-w-lg p-6 rounded-3xl shadow-xl border border-gray-200">
+
+            <h2 class="text-3xl font-semibold text-gray-800 text-center">
+                Verify OTP
+            </h2>
+
+            <p class="text-gray-500 text-center mt-2 mb-6">
+                Enter OTP and create your password.
+            </p>
+
+            <form [formGroup]="verifyForm" (ngSubmit)="submit()">
+
+                <!-- OTP -->
+                <label class="text-sm text-gray-500 tracking-wider">OTP</label>
+
+                <div class="flex justify-between mt-2 mb-3 gap-2">
+                    <input *ngFor="let i of [0,1,2,3,4,5]; let idx = index" type="text" maxlength="1"
+                        class="w-12 h-12 text-center border rounded-xl outline-none focus:ring-2 focus:ring-red-700 text-lg font-semibold"
+                        (input)="onOtpInput($event, idx)" (keydown)="onKeyDown($event, idx)" [id]="'otp-' + idx">
+                </div>
+
+                <div *ngIf="formErrors.otp" class="text-red-600 text-sm mb-2">
+                    {{ formErrors.otp }}
+                </div>
+
+
+                <!-- PASSWORD -->
+                <label class="text-sm text-gray-500 tracking-wider mt-3 block">
+          PASSWORD
+        </label>
+
+        <div class="group flex items-center border rounded-xl px-4 py-3 mt-2 mb-1 bg-gray-50 focus-within:ring-2 focus-within:ring-red-700 focus-within:text-red-700 text-gray-400">
+
+          <span class="mr-3 text-gray-400 group-focus-within:text-red-700">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+              stroke="currentColor" class="w-5 h-5">
+
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V7.875a4.5 4.5 0 10-9 0V10.5m-1.5 0h12
+               A1.5 1.5 0 0119.5 12v6A1.5 1.5 0 0118 19.5H6
+               A1.5 1.5 0 014.5 18v-6A1.5 1.5 0 016 10.5z" />
+
+            </svg>
+          </span>
+
+          <input formControlName="password" [type]="showPassword ? 'text' : 'password'" placeholder="••••••••"
+            class="w-full outline-none bg-transparent">
+
+
+
+          <button *ngIf="!showPassword" type="button" (click)="showPassword = true" class="ml-2 text-red-700">
+
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0" />
+
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5
+                c4.477 0 8.268 2.943 9.542 7
+                -1.274 4.057-5.065 7-9.542 7
+                -4.477 0-8.268-2.943-9.542-7z" />
+
+            </svg>
+
+          </button>
+
+          <button *ngIf="showPassword" type="button" (click)="showPassword = false" class="ml-2 text-red-700">
+
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19
+        c-4.477 0-8.268-2.943-9.542-7
+        a9.956 9.956 0 012.042-3.368M6.223 6.223
+        A9.956 9.956 0 0112 5
+        c4.477 0 8.268 2.943 9.542 7
+        a9.956 9.956 0 01-4.043 5.058M15 12
+        a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3l18 18" />
+            </svg>
+
+          </button>
+
+        </div>
+
+        <p *ngIf="formErrors.password" class="text-xs text-red-600 font-semibold ml-1">
+          {{ formErrors.password }}
+        </p>
+
+
+
+
+        <label class="text-sm text-gray-500 tracking-wider mt-3 block">
+          CONFIRM PASSWORD
+        </label>
+
+        <div class="group flex items-center border rounded-xl px-4 py-3 mt-2 mb-1 bg-gray-50 focus-within:ring-2 focus-within:ring-red-700 focus-within:text-red-700 text-gray-400">
+
+          <span class="mr-3 text-gray-400 group-focus-within:text-red-700">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+              stroke="currentColor" class="w-5 h-5">
+
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V7.875a4.5 4.5 0 10-9 0V10.5m-1.5 0h12
+               A1.5 1.5 0 0119.5 12v6A1.5 1.5 0 0118 19.5H6
+               A1.5 1.5 0 014.5 18v-6A1.5 1.5 0 016 10.5z" />
+
+            </svg>
+          </span>
+
+          <input formControlName="confirmPassword" [type]="showConfirmPassword ? 'text' : 'password'"
+            placeholder="••••••••" class="w-full outline-none bg-transparent">
+
+
+          <button *ngIf="!showConfirmPassword" type="button" (click)="showConfirmPassword = true"
+            class="ml-2 text-red-700">
+
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0" />
+
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5
+                c4.477 0 8.268 2.943 9.542 7
+                -1.274 4.057-5.065 7-9.542 7
+                -4.477 0-8.268-2.943-9.542-7z" />
+
+            </svg>
+
+          </button>
+
+          <button *ngIf="showConfirmPassword" type="button" (click)="showConfirmPassword = false"
+            class="ml-2 text-red-700">
+
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19
+        c-4.477 0-8.268-2.943-9.542-7
+        a9.956 9.956 0 012.042-3.368M6.223 6.223
+        A9.956 9.956 0 0112 5
+        c4.477 0 8.268 2.943 9.542 7
+        a9.956 9.956 0 01-4.043 5.058M15 12
+        a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3l18 18" />
+            </svg>
+
+          </button>
+
+        </div>
+
+        <p *ngIf="formErrors.confirmPassword" class="text-xs text-red-600 font-semibold ml-1">
+          {{ formErrors.confirmPassword }}
+        </p> 
+                <!-- BUTTON -->
+                <button type="submit" [disabled]="isLoading"
+                    class="mt-6 w-full bg-red-700 hover:bg-red-800 text-white py-3 rounded-xl font-semibold disabled:opacity-50">
+
+                    {{ isLoading ? 'Processing...' : 'VERIFY & CREATE ACCOUNT' }}
+
+                </button>
+
+            </form>
+
+            <!-- RESEND -->
+           <p class="text-center text-gray-500 text-sm mt-4">
+  Didn’t receive OTP?
+
+  <span 
+    class="text-orange-500 cursor-pointer"
+    [class.opacity-50]="!canResend"
+    (click)="resendOtp()">
+
+    {{ canResend ? 'Resend' : 'Resend in ' + resendCooldown + 's' }}
+
+  </span>
+</p>
+
+        </div>
+
+    </div>
+
+</div>
