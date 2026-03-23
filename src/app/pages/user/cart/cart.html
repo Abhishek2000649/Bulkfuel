@@ -1,204 +1,123 @@
-<!-- <h2>My Cart</h2>
-
-<p *ngIf="cartItems.length === 0">Your cart is empty</p>
-
-<table *ngIf="cartItems.length > 0" border="1" width="100%" cellpadding="10">
-  <thead>
-    <tr>
-      <th>Select</th>
-      <th>Product</th>
-      <th>Price</th>
-      <th>Qty</th>
-      <th>Subtotal</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <tr *ngFor="let item of cartItems">
-      <td align="center">
-        <input
-          type="checkbox"
-          [(ngModel)]="item.selected"
-          (change)="calculateTotal()"
-        />
-      </td>
-      <td>{{ item.product.name }}</td>
-      <td>₹ {{ item.product.price }}</td>
-      <td>{{ item.quantity }}     <p
-      *ngIf="stockWarnings[item.product_id]"
-      style="color:red;font-size:12px;margin:4px 0 0;"
-    >
-      {{ stockWarnings[item.product_id] }}
-    </p>
-</td>
-      <td>₹ {{ item.product.price * item.quantity }}</td>
-      <td>
-        <button (click)="decrease(item)">−</button>
-        <button
-  (click)="increase(item)"
-  [disabled]="item.quantity >= item.product.totalStock"
->
-  +
-</button>
-<p
-  *ngIf="item.quantity >= item.product.totalStock"
-  style="color:red;font-size:12px;margin:4px 0 0;"
->
-  Max stock reached
-</p>
-        <button (click)="remove(item)" style="color:red">Remove</button>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-<br />
-
-<h3>Total Selected Amount: ₹ {{ selectedTotal }}</h3>
-
-<br />
-
-<button
-  (click)="checkout()"
-  style="background:black;color:white;padding:10px 20px;border-radius:6px;"
->
-  Checkout Selected Products
-</button> -->
-
-
-
-
-
-
 <div class="min-h-screen bg-slate-50 text-gray-900">
 
   <main class="max-w-6xl mx-auto px-4 py-6 space-y-6">
     <app-spinner [isLoading]="isLoading" [loaderSize]="100"></app-spinner>
 
 
-    
+
     <!-- ================= HEADER ================= -->
     <div class="flex items-center justify-between">
-      <h2 class="text-2xl font-black">
+      <h1 class="text-4xl font-serif-premium tracking-tight font-semibold">
         My Cart <span class="text-red-700">({{ cartItems.length }})</span>
-      </h2>
+      </h1>
 
-      <label *ngIf="cartItems.length > 0" class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg border shadow-sm">
+      <label *ngIf="cartItems.length > 0"
+        class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg border shadow-sm">
         <span class="text-xs font-bold text-gray-600 uppercase">
           Select All
         </span>
-        <input
-          type="checkbox"
-          [(ngModel)]="selectAll"
-          (change)="toggleSelectAll()"
-          class="w-4 h-4 accent-red-600"
-        />
+        <input type="checkbox" [(ngModel)]="selectAll" (change)="toggleSelectAll()" class="w-4 h-4 accent-red-600" />
       </label>
     </div>
 
     <!-- ================= EMPTY CART ================= -->
-    <p
-      *ngIf="cartItems.length === 0"
-      class="text-center text-gray-500 font-semibold py-14"
-    >
+    <p *ngIf="cartItems.length === 0" class="text-center text-gray-500 font-semibold py-14">
       Your cart is empty
     </p>
-    <p
-    
-    class="text-center text-red-500 font-semibold py-2">
+    <p class="text-center text-red-500 font-semibold py-2">
       {{checkoutError}}
     </p>
-    
+
 
     <!-- ================= CART ITEMS ================= -->
-    <div
-      *ngFor="let item of cartItems"
-      class="bg-white rounded-xl p-4 border shadow-sm flex flex-col md:flex-row gap-4 items-start"
-    >
+   <div *ngFor="let item of cartItems"
+  class="bg-white rounded-xl p-4 border shadow-sm flex flex-col md:flex-row md:items-center md:justify-between gap-4">
 
-      <!-- Checkbox -->
-      <input
-        type="checkbox"
-        [(ngModel)]="item.selected"
-        (change)="calculateTotal()"
-        class="w-5 h-5 accent-red-600 mt-1"
-      />
+  <!-- 🔹 ROW 1 (Mobile) / LEFT SECTION (Desktop) -->
+  <div class="flex items-center justify-between w-full md:w-auto md:gap-4">
 
-      <!-- Image -->
-      <div class="w-20 h-20 bg-gray-50 rounded-lg overflow-hidden border">
-        <img
-          [src]="item.product.image || 'https://picsum.photos/400/300'"
-          class="w-full h-full object-cover"
-        />
-      </div>
+    <!-- Checkbox -->
+    <input type="checkbox"
+      [(ngModel)]="item.selected"
+      (change)="calculateTotal()"
+      class="w-5 h-5 accent-red-600" />
 
-      <!-- Info -->
-      <div class="flex-1 space-y-1.5">
-        <h3 class="text-base font-bold">
+    <!-- Image -->
+    <div class="w-20 h-20 bg-gray-50 rounded-lg overflow-hidden border">
+      <img [src]="item.product.image || 'https://picsum.photos/400/300'"
+        class="w-full h-full object-cover" />
+    </div>
+
+  </div>
+
+  <!-- 🔹 INFO + WARNING -->
+  <div class="flex-1 flex flex-col gap-2">
+
+    <!-- Product Info -->
+    <div class="flex justify-between items-start md:block">
+      <div>
+        <h3 class="text-lg md:text-xl font-bold">
           {{ item.product.name }}
         </h3>
-
         <p class="text-sm text-gray-500 font-medium">
           ₹ {{ item.product.price }}
         </p>
-
-        <!-- ⚠️ WARNING BOX -->
-        <div
-          *ngIf="stockWarnings[item.product_id] || item.quantity >= item.product.totalStock"
-          class="mt-2 bg-red-50 border border-red-200 rounded-lg p-2 text-xs text-red-700 space-y-0.5"
-        >
-          <p *ngIf="stockWarnings[item.product_id]">
-            ❌ {{ stockWarnings[item.product_id] }}
-          </p>
-          <p *ngIf="item.quantity >= item.product.totalStock">
-            🚫 Max stock reached
-          </p>
-        </div>
       </div>
+    </div>
 
-      <!-- Quantity -->
-      <div class="flex flex-col items-center">
-        <div class="flex items-center bg-gray-50 rounded-full border px-2 py-0.5">
-          <button
-            (click)="decrease(item)"
-            class="text-red-700 px-2"
-          >
-            −
-          </button>
+    <!-- ⚠️ WARNING ROW (Mobile separate row) -->
+    <div *ngIf="stockWarnings[item.product_id] || item.quantity >= item.product.totalStock"
+      class="bg-red-50 border border-red-200 rounded-lg p-2 text-xs text-red-700 flex justify-between">
 
-          <span class="w-8 text-center font-bold text-sm">
-            {{ item.quantity }}
-          </span>
+      <p *ngIf="stockWarnings[item.product_id]">
+        ❌ {{ stockWarnings[item.product_id] }}
+      </p>
 
-          <button
-            (click)="increase(item)"
-            [disabled]="item.quantity >= item.product.totalStock"
-            class="text-red-700 px-2 disabled:opacity-40 disabled:cursor-not-allowed"
-          >
-            +
-          </button>
-        </div>
-      </div>
-
-      <!-- Price -->
-      <div class="text-right min-w-[100px]">
-        <p class="text-lg font-black">
-          ₹ {{ item.product.price * item.quantity }}
-        </p>
-
-        <button
-          (click)="remove(item)"
-          class="text-xs text-red-700 hover:bg-red-50 px-2 py-0.5 rounded-md mt-1"
-        >
-          Remove
-        </button>
-      </div>
+      <p *ngIf="item.quantity >= item.product.totalStock">
+        🚫 Max stock reached
+      </p>
 
     </div>
 
+  </div>
+
+  <!-- 🔹 ROW 3 (Mobile) / RIGHT SECTION (Desktop) -->
+  <div class="flex items-center justify-between w-full md:w-auto md:gap-6">
+
+    <!-- Quantity -->
+    <div class="flex items-center bg-gray-50 rounded-full border px-2 py-0.5">
+      <button (click)="decrease(item)" class="text-red-700 px-2">−</button>
+
+      <span class="w-8 text-center font-bold text-sm">
+        {{ item.quantity }}
+      </span>
+
+      <button (click)="increase(item)"
+        [disabled]="item.quantity >= item.product.totalStock"
+        class="text-red-700 px-2 disabled:opacity-40 disabled:cursor-not-allowed">
+        +
+      </button>
+    </div>
+
+    <!-- Price -->
+    <div class="text-right">
+      <p class="text-lg md:text-xl font-black">
+        ₹ {{ item.product.price * item.quantity }}
+      </p>
+
+      <button (click)="remove(item)"
+        class="text-xs text-red-700 hover:bg-red-50 px-2 py-0.5 rounded-md mt-1">
+        Remove
+      </button>
+    </div>
+
+  </div>
+
+</div>
+
     <!-- ================= ORDER SUMMARY ================= -->
-    <div *ngIf="cartItems.length !== 0" class="bg-white rounded-2xl p-5 shadow-lg border flex flex-col md:flex-row gap-5">
+    <div *ngIf="cartItems.length !== 0"
+      class="bg-white rounded-2xl p-5 shadow-lg border flex flex-col md:flex-row gap-5">
 
       <!-- Left -->
       <div class="flex-1 space-y-3">
@@ -236,10 +155,8 @@
           </p>
         </div>
 
-        <button
-          (click)="checkout()"
-          class="w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-lg font-black text-base shadow-lg"
-        >
+        <button (click)="checkout()"
+          class="w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-lg font-black text-base shadow-lg">
           Proceed to Checkout →
         </button>
       </div>
@@ -248,6 +165,3 @@
 
   </main>
 </div>
-
-
-
