@@ -64,7 +64,7 @@
           [ngClass]="{
             'border-red-200 bg-red-50 text-red-700': delivery.order_status === 'CANCELLED',
             'border-green-200 bg-green-50 text-green-700': delivery.order_status === 'DELIVERED',
-            'border-blue-200 bg-blue-50 text-blue-700': delivery.order_status === 'OUT FOR DELIVERY',
+            'border-blue-200 bg-blue-50 text-blue-700': delivery.order_status === 'OUT_FOR_DELIVERY',
             'border-yellow-200 bg-yellow-50 text-yellow-700': delivery.order_status === 'PENDING'
           }">
           {{ delivery.order_status }}
