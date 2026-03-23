@@ -13,7 +13,7 @@ import { Auth } from '../../../core/services/Auth/authservice/auth';
 import { Spinner } from '../../../shared/spinner/spinner';
 import Swal from 'sweetalert2';
 
-type LoginFormFields = 'email' | 'password';
+type LoginFormFields = 'email' | 'password' | 'remember';
 
 @Component({
   selector: 'app-login',
@@ -29,6 +29,7 @@ export class Login {
   formErrors: Record<LoginFormFields, string> = {
     email: '',
     password: '',
+     remember: '',
   };
   validationMessages: Record<LoginFormFields, any> = {
     email: {
@@ -39,6 +40,9 @@ export class Login {
       required: 'Enter password',
       minlength: 'Password must be at least 6 characters',
     },
+      remember: {
+    required: 'You must accept this option', 
+  },
   };
 
   constructor(
@@ -51,6 +55,7 @@ export class Login {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
+  remember: [false, Validators.requiredTrue],
     });
 
     
