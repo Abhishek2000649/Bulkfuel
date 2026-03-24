@@ -116,7 +116,7 @@ export const routes: Routes = [
     children: [
       
       { path: 'login', component: Login, canActivate: [guardGuard] },
-      { path: 'signUp', component: SignUp },
+      { path: 'signUp', component: SignUp, canActivate: [guardGuard] },
       { path: 'verify-otp', component: VerifyOtp, canActivate: [guardGuard] },
 
     ],
