@@ -7,41 +7,30 @@ import { CommonModule } from '@angular/common';
 import { finalize } from 'rxjs';
 import Swal from 'sweetalert2';
 
-type SignUpFormFields = 'name' | 'email' | 'terms';
+type ForgotFormFields = 'email';
 
 @Component({
-  selector: 'app-sign-up',
+  selector: 'app-forgot-password',
   standalone: true,
   imports: [ReactiveFormsModule, RouterModule, Spinner, CommonModule],
-  templateUrl: './sign-up.html',
-  styleUrl: './sign-up.css',
+  templateUrl: './forgot-password.html',
+  styleUrl: './forgot-password.css',
 })
-export class SignUp {
+export class ForgotPassword {
 
-  registerForm!: FormGroup;
+  forgotForm!: FormGroup;
   isLoading: boolean = false;
 
-  formErrors: Record<SignUpFormFields, string> = {
-    name: '',
+  formErrors: Record<ForgotFormFields, string> = {
     email: '',
-     terms: '',
   };
 
-  validationMessages: Record<SignUpFormFields, any> = {
-
-    name: {
-      required: 'Enter your name',
-    },
+  validationMessages: Record<ForgotFormFields, any> = {
 
     email: {
       required: 'Enter email',
       email: 'Enter a valid email address',
-    },
-     terms: {
-    required: 'You must accept Terms & Policy'
-  }
-
-
+    }
 
   };
 
@@ -52,13 +41,11 @@ export class SignUp {
     private cdr: ChangeDetectorRef
   ) {
 
-    this.registerForm = this.fb.group({
-      name: ['', Validators.required],
+    this.forgotForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      terms: [false, Validators.requiredTrue]
     });
 
-    this.registerForm.valueChanges.subscribe(() => {
+    this.forgotForm.valueChanges.subscribe(() => {
       this.updateFormErrors();
     });
   }
@@ -66,9 +53,9 @@ export class SignUp {
 
   updateFormErrors(): void {
 
-    (Object.keys(this.formErrors) as SignUpFormFields[]).forEach((field) => {
+    (Object.keys(this.formErrors) as ForgotFormFields[]).forEach((field) => {
 
-      const control = this.registerForm.get(field);
+      const control = this.forgotForm.get(field);
       this.formErrors[field] = '';
 
       if (control && control.invalid && (control.dirty || control.touched)) {
@@ -86,32 +73,27 @@ export class SignUp {
 
     });
 
-
-    // PASSWORD MATCH VALIDATION
-
-
-
   }
 
 
 
-  register() {
-    const userData = {
-      email: this.registerForm.value.email,
-      name: this.registerForm.value.name,
-       type: 'register'
+  submitEmail() {
+
+    const emailData = {
+      email: this.forgotForm.value.email,
+      type: 'forgot',
     };
 
     this.isLoading = true;
 
-    if (this.registerForm.invalid) {
-      this.registerForm.markAllAsTouched();
+    if (this.forgotForm.invalid) {
+      this.forgotForm.markAllAsTouched();
       this.updateFormErrors();
       this.isLoading = false;
       return;
     }
 
-    this.auth.register(this.registerForm.value)
+    this.auth.forgotPassword(this.forgotForm.value)
       .pipe(
         finalize(() => {
           this.isLoading = false;
@@ -124,11 +106,10 @@ export class SignUp {
 
           if (res.status) {
 
-
-            this.auth.setData(userData);
+            this.auth.setData(emailData);
 
             Swal.fire({
-              title: res.message || "OTP Send",
+              title: res.message || "Reset link sent",
               icon: 'success',
               confirmButtonText: 'OK',
               confirmButtonColor: '#d4af37',
@@ -137,7 +118,7 @@ export class SignUp {
               iconColor: '#22c55e',
             });
 
-            this.router.navigate(['/verify-otp']);
+            this.router.navigate(['/verify-otp']); // OR reset-password
           }
 
         },

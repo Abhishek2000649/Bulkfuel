@@ -35,6 +35,12 @@ export class Auth {
     })
   );
 }
+forgotPassword(data: any): Observable<any> {
+  return this.http.post<any>(`${this.apiUrl}/forgot-password`, data);
+}
+resetPassword(data: any): Observable<any> {
+  return this.http.post<any>(`${this.apiUrl}/reset-password`, data);
+}
 
 
   setUser(user: any) {
