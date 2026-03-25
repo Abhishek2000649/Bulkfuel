@@ -41,129 +41,166 @@
       <!-- ================= LEFT ================= -->
       <div class="bg-white p-6 rounded-xl shadow">
 
-        <form [formGroup]="checkoutForm" (ngSubmit)="placeOrder()" class="space-y-6">
+      <form [formGroup]="checkoutForm" (ngSubmit)="placeOrder()" class="space-y-6">
 
-          <!-- DELIVERY -->
-          <div>
-            <h3 class="text-sm font-semibold text-gray-500 mb-4">
-              DELIVERY DETAILS
-            </h3>
+  <!-- DELIVERY -->
+  <div>
+    <h3 class="text-sm font-semibold text-gray-500 mb-4">
+      DELIVERY DETAILS
+    </h3>
 
-            <textarea formControlName="address" placeholder="Full Address..."
-              class="w-full border rounded-lg focus:border-red-600 p-3 mb-3 border-gray-300 focus:outline-none focus:ring-1 focus:ring-red-500"></textarea>
+    <!-- ADDRESS -->
+    <div>
+      <label for="address" class="block text-sm font-medium text-gray-600 mb-1">
+        Full Address
+      </label>
+      <textarea id="address" formControlName="address"
+        placeholder="Enter your full address"
+        class="w-full border rounded-lg p-3 mb-2 border-gray-300 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-500">
+      </textarea>
+      <p *ngIf="formErrors.address" class="text-red-500 text-xs">
+        {{ formErrors.address }}
+      </p>
+    </div>
 
-            <div class="grid grid-cols-3 gap-3">
-              <input formControlName="city" class="border border-gray-300 p-3 rounded-lg 
-         focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-500 " />
-              <input formControlName="state" placeholder="State"
-                class="border p-3 border-gray-300 rounded-lg focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-500" />
-              <input formControlName="pincode" placeholder="Pincode"
-                class="border p-3 rounded-lg border-gray-300 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-500" />
+    <!-- PHONE -->
+    <div>
+      <label for="phone" class="block text-sm font-medium text-gray-600 mb-1">
+        Phone Number
+      </label>
+      <input id="phone" formControlName="phone" placeholder="Enter phone number"
+        class="w-full border p-3 mb-2 rounded-lg border-gray-300 focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-500" />
+      <p *ngIf="formErrors.phone" class="text-red-500 text-xs">
+        {{ formErrors.phone }}
+      </p>
+    </div>
+
+    <!-- CITY STATE PINCODE -->
+    <div class="grid grid-cols-3 gap-3">
+
+      <!-- CITY -->
+      <div>
+        <label for="city" class="block text-sm font-medium text-gray-600 mb-1">
+          City
+        </label>
+        <input id="city" formControlName="city"
+          placeholder="City"
+          class="w-full border border-gray-300 p-3 rounded-lg focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-500" />
+        <p *ngIf="formErrors.city" class="text-red-500 text-xs">
+          {{ formErrors.city }}
+        </p>
+      </div>
+
+      <!-- STATE -->
+      <div>
+        <label for="state" class="block text-sm font-medium text-gray-600 mb-1">
+          State
+        </label>
+        <input id="state" formControlName="state"
+          placeholder="State"
+          class="w-full border border-gray-300 p-3 rounded-lg focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-500" />
+        <p *ngIf="formErrors.state" class="text-red-500 text-xs">
+          {{ formErrors.state }}
+        </p>
+      </div>
+
+      <!-- PINCODE -->
+      <div>
+        <label for="pincode" class="block text-sm font-medium text-gray-600 mb-1">
+          Pincode
+        </label>
+        <input id="pincode" formControlName="pincode"
+          placeholder="Pincode"
+          class="w-full border border-gray-300 p-3 rounded-lg focus:border-red-600 focus:outline-none focus:ring-1 focus:ring-red-500" />
+        <p *ngIf="formErrors.pincode" class="text-red-500 text-xs">
+          {{ formErrors.pincode }}
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- PAYMENT -->
+  <div>
+    <h3 class="text-sm font-semibold text-gray-500 mb-4">
+      PAYMENT METHOD
+    </h3>
+
+    <div class="grid grid-cols-2 gap-4">
+
+      <!-- ONLINE -->
+      <label *ngIf="allowedPayment.includes('online')"
+        class="border-2 p-4 rounded-xl cursor-pointer flex items-center justify-between transition-all"
+        [class.border-red-600]="checkoutForm.get('payment_method')?.value === 'online'"
+        [class.bg-red-50]="checkoutForm.get('payment_method')?.value === 'online'">
+
+        <div class="flex items-center gap-3">
+          <input type="radio" value="online" formControlName="payment_method" class="hidden" />
+
+          <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center"
+            [class.border-red-600]="checkoutForm.get('payment_method')?.value === 'online'"
+            [class.border-gray-300]="checkoutForm.get('payment_method')?.value !== 'online'">
+
+            <div *ngIf="checkoutForm.get('payment_method')?.value === 'online'"
+              class="w-2.5 h-2.5 bg-red-600 rounded-full">
             </div>
           </div>
 
-          <!-- PAYMENT -->
           <div>
-            <h3 class="text-sm font-semibold text-gray-500 mb-4">
-              PAYMENT METHOD
-            </h3>
+            <p class="font-semibold">Online</p>
+            <p class="text-xs text-gray-400">UPI / Card</p>
+          </div>
+        </div>
+      </label>
 
-            <div class="grid grid-cols-2 gap-4">
+      <!-- CASH -->
+      <label *ngIf="allowedPayment.includes('cash')"
+        class="border-2 p-4 rounded-xl cursor-pointer flex items-center justify-between transition-all"
+        [class.border-red-600]="checkoutForm.get('payment_method')?.value === 'cash'"
+        [class.bg-red-50]="checkoutForm.get('payment_method')?.value === 'cash'">
 
-              <!-- ONLINE -->
-              <label *ngIf="allowedPayment.includes('online')"
-                class="border-2 p-4 rounded-xl cursor-pointer flex items-center justify-between transition-all"
-                [class.border-red-600]="checkoutForm.get('payment_method')?.value === 'online'"
-                [class.bg-red-50]="checkoutForm.get('payment_method')?.value === 'online'">
+        <div class="flex items-center gap-3">
+          <input type="radio" value="cash" formControlName="payment_method" class="hidden" />
 
-                <div class="flex items-center gap-3">
+          <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center"
+            [class.border-red-600]="checkoutForm.get('payment_method')?.value === 'cash'"
+            [class.border-gray-300]="checkoutForm.get('payment_method')?.value !== 'cash'">
 
-                  <!-- HIDDEN RADIO -->
-                  <input type="radio" value="online" formControlName="payment_method" class="hidden" />
-
-                  <!-- CUSTOM RADIO -->
-                  <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center"
-                    [class.border-red-600]="checkoutForm.get('payment_method')?.value === 'online'"
-                    [class.border-gray-300]="checkoutForm.get('payment_method')?.value !== 'online'">
-
-                    <div *ngIf="checkoutForm.get('payment_method')?.value === 'online'"
-                      class="w-2.5 h-2.5 bg-red-600 rounded-full">
-                    </div>
-                  </div>
-
-                  <!-- TEXT -->
-                  <div>
-                    <p class="font-semibold">Online</p>
-                    <p class="text-xs text-gray-400">UPI / Card</p>
-                  </div>
-
-                </div>
-
-                <!-- SVG -->
-                <svg class="w-5 h-5" [class.text-red-600]="checkoutForm.get('payment_method')?.value === 'online'"
-                  [class.text-gray-400]="checkoutForm.get('payment_method')?.value !== 'online'" fill="none"
-                  stroke="currentColor" viewBox="0 0 24 24">
-
-                  <rect x="2" y="5" width="20" height="14" rx="2" stroke-width="2" />
-                </svg>
-
-              </label>
-
-              <!-- CASH -->
-              <label *ngIf="allowedPayment.includes('cash')"
-                class="border-2 p-4 rounded-xl cursor-pointer flex items-center justify-between transition-all"
-                [class.border-red-600]="checkoutForm.get('payment_method')?.value === 'cash'"
-                [class.bg-red-50]="checkoutForm.get('payment_method')?.value === 'cash'">
-
-                <div class="flex items-center gap-3">
-
-                  <!-- HIDDEN RADIO -->
-                  <input type="radio" value="cash" formControlName="payment_method" class="hidden" />
-
-                  <!-- CUSTOM RADIO -->
-                  <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center"
-                    [class.border-red-600]="checkoutForm.get('payment_method')?.value === 'cash'"
-                    [class.border-gray-300]="checkoutForm.get('payment_method')?.value !== 'cash'">
-
-                    <div *ngIf="checkoutForm.get('payment_method')?.value === 'cash'"
-                      class="w-2.5 h-2.5 bg-red-600 rounded-full">
-                    </div>
-                  </div>
-
-                  <!-- TEXT -->
-                  <div>
-                    <p class="font-semibold">Cash</p>
-                    <p class="text-xs text-gray-400">Pay later</p>
-                  </div>
-
-                </div>
-
-                <!-- SVG -->
-                <svg class="w-5 h-5" [class.text-red-600]="checkoutForm.get('payment_method')?.value === 'cash'"
-                  [class.text-gray-400]="checkoutForm.get('payment_method')?.value !== 'cash'" fill="none"
-                  stroke="currentColor" viewBox="0 0 24 24">
-
-                  <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h5" />
-                </svg>
-
-              </label>
-
+            <div *ngIf="checkoutForm.get('payment_method')?.value === 'cash'"
+              class="w-2.5 h-2.5 bg-red-600 rounded-full">
             </div>
           </div>
 
-          <!-- BUTTON -->
-          <button type="submit"
-            class="w-full bg-red-700 hover:bg-red-800 text-white py-3 rounded-lg shadow flex items-center justify-center gap-2">
+          <div>
+            <p class="font-semibold">Cash</p>
+            <p class="text-xs text-gray-400">Pay later</p>
+          </div>
+        </div>
+      </label>
 
-            <!-- SVG -->
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-            </svg>
+    </div>
 
-            Place Order
-          </button>
+    <!-- PAYMENT ERROR -->
+    <p *ngIf="formErrors.payment_method" class="text-red-500 text-xs mt-2">
+      {{ formErrors.payment_method }}
+    </p>
 
-        </form>
+  </div>
+
+  <!-- BUTTON -->
+  <button type="submit"
+    class="w-full bg-red-700 hover:bg-red-800 text-white py-3 rounded-lg shadow flex items-center justify-center gap-2">
+
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+        d="M5 13l4 4L19 7" />
+    </svg>
+
+    Place Order
+  </button>
+
+</form>
 
       </div>
 

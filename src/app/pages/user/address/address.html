@@ -1,0 +1,102 @@
+<div class="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 p-6">
+
+  <div class="max-w-3xl mx-auto">
+
+    <!-- LOADER -->
+    <app-spinner [isLoading]="isLoading" [loaderSize]="100"></app-spinner>
+
+    <!-- HEADER -->
+    <div class="flex items-center gap-4 mb-8">
+      <div class="w-14 h-14 bg-gradient-to-r from-red-600 to-red-800 rounded-2xl flex items-center justify-center text-white shadow-lg">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            d="M12 2C8 2 5 5 5 9c0 5 7 13 7 13s7-8 7-13c0-4-3-7-7-7z" />
+        </svg>
+      </div>
+
+      <div>
+        <h1 class="text-3xl font-bold text-gray-800">Change Address</h1>
+        <p class="text-gray-500 text-sm">
+          Update your delivery details quickly & securely
+        </p>
+      </div>
+    </div>
+
+    <!-- FORM CARD -->
+    <div class="bg-white/90 backdrop-blur-md p-8 rounded-2xl shadow-xl border border-gray-200">
+
+      <form [formGroup]="addressForm" (ngSubmit)="updateAddress()" class="space-y-6">
+
+        <!-- ADDRESS -->
+        <div>
+          <label class="block text-sm font-semibold text-gray-600 mb-2">
+            Full Address
+          </label>
+
+          <textarea formControlName="address"
+            rows="3"
+            class="w-full border rounded-xl p-3 border-gray-300 focus:border-red-600 focus:ring-2 focus:ring-red-200 transition"
+            placeholder="Enter your full address"></textarea>
+
+          <p *ngIf="formErrors.address" class="text-red-500 text-xs mt-1">
+            {{ formErrors.address }}
+          </p>
+        </div>
+
+        <!-- GRID -->
+        <div class="grid md:grid-cols-3 gap-4">
+
+          <!-- CITY -->
+          <div>
+            <label class="text-sm font-semibold text-gray-600 mb-1 block">City</label>
+            <input formControlName="city"
+              class="w-full border p-3 rounded-xl border-gray-300 focus:border-red-600 focus:ring-2 focus:ring-red-200 transition"
+              placeholder="City" />
+            <p *ngIf="formErrors.city" class="text-red-500 text-xs mt-1">
+              {{ formErrors.city }}
+            </p>
+          </div>
+
+          <!-- STATE -->
+          <div>
+            <label class="text-sm font-semibold text-gray-600 mb-1 block">State</label>
+            <input formControlName="state"
+              class="w-full border p-3 rounded-xl border-gray-300 focus:border-red-600 focus:ring-2 focus:ring-red-200 transition"
+              placeholder="State" />
+            <p *ngIf="formErrors.state" class="text-red-500 text-xs mt-1">
+              {{ formErrors.state }}
+            </p>
+          </div>
+
+          <!-- PINCODE -->
+          <div>
+            <label class="text-sm font-semibold text-gray-600 mb-1 block">Pincode</label>
+            <input formControlName="pincode"
+              class="w-full border p-3 rounded-xl border-gray-300 focus:border-red-600 focus:ring-2 focus:ring-red-200 transition"
+              placeholder="Pincode" />
+            <p *ngIf="formErrors.pincode" class="text-red-500 text-xs mt-1">
+              {{ formErrors.pincode }}
+            </p>
+          </div>
+
+        </div>
+
+        <!-- BUTTON -->
+        <button type="submit"
+          class="w-full bg-gradient-to-r from-red-600 to-red-800 hover:scale-[1.02] hover:shadow-lg text-white py-3 rounded-xl transition-all flex items-center justify-center gap-2">
+
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+              d="M5 13l4 4L19 7" />
+          </svg>
+
+          Update Address
+        </button>
+
+      </form>
+
+    </div>
+
+  </div>
+
+</div>

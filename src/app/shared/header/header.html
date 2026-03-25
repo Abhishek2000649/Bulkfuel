@@ -19,9 +19,10 @@
       <div class="flex items-center gap-x-8 flex-1 max-w-2xl" *ngIf="auth.user$ | async as user">
 
         <!-- Address -->
-        <div *ngIf="user.role === 'USER'" class="hidden lg:flex items-center bg-white/10 backdrop-blur-xl
-                    border border-white/20 px-5 py-1 rounded-lg shadow">
+        <div *ngIf="user.role === 'USER'" class="relative group hidden lg:flex items-center bg-white/10 backdrop-blur-xl
+            border border-white/20 px-5 py-1 rounded-lg shadow cursor-pointer">
 
+          <!-- Icon -->
           <svg class="w-5 h-5 mr-3 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M12 11c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3z" />
@@ -29,18 +30,69 @@
               d="M12 22s8-4.5 8-11a8 8 0 10-16 0c0 6.5 8 11 8 11z" />
           </svg>
 
+          <!-- Short Address -->
           <div>
             <p class="text-[10px] uppercase text-amber-300 font-semibold">
               Delivering To
             </p>
             <p class="text-sm font-semibold">
-              {{
-              user.address?.city
-              ? user.address.city + ', ' + user.address.state
-              : 'No Address'
-              }}
+              {{ getShortAddress(user.address?.address) }}
             </p>
           </div>
+
+          <!-- 🔥 Full Address Popup -->
+          <div class="absolute left-0 top-full mt-2 w-80 p-4 bg-white text-gray-800 rounded-xl shadow-xl
+            opacity-0 invisible group-hover:opacity-100 group-hover:visible
+            transition duration-200 z-50 break-words">
+
+            <!-- Title -->
+            <p class="text-xs uppercase text-gray-400 mb-3">Delivery Details</p>
+
+            <!-- Phone -->
+            <div class="flex justify-between py-1 border-b">
+              <span class="font-medium text-gray-500">Phone</span>
+              <span class="font-semibold text-gray-800">
+                {{ user?.phone || '-' }}
+              </span>
+            </div>
+
+            <!-- Address -->
+            <div class="py-2 border-b">
+              <p class="font-medium text-gray-500 mb-1">Address</p>
+              <p class="font-semibold text-gray-800 text-sm break-words">
+                {{ user?.address?.address || '-' }}
+              </p>
+            </div>
+
+            <!-- City -->
+            <div class="flex justify-between py-1 border-b">
+              <span class="font-medium text-gray-500">City</span>
+              <span class="font-semibold text-gray-800">
+                {{ user?.address?.city || '-' }}
+              </span>
+            </div>
+
+            <!-- State -->
+            <div class="flex justify-between py-1 border-b">
+              <span class="font-medium text-gray-500">State</span>
+              <span class="font-semibold text-gray-800">
+                {{ user?.address?.state || '-' }}
+              </span>
+            </div>
+
+            <!-- Pincode -->
+            <div class="flex justify-between py-1">
+              <span class="font-medium text-gray-500">Pincode</span>
+              <span class="font-semibold text-gray-800">
+                {{ user?.address?.pincode || '-' }}
+              </span>
+            </div>
+
+            <!-- Arrow -->
+            <div class="absolute -top-2 left-6 w-3 h-3 bg-white rotate-45"></div>
+
+          </div>
+
         </div>
 
         <!-- Search -->
@@ -432,6 +484,74 @@
                 </span>
 
               </a>
+              <div>
+                <a *ngIf="user.role === 'USER'" routerLink="/user/address"
+                  class="flex items-center gap-2 px-4 py-3 hover:bg-red-500 hover:text-white transition">
+
+                  <!-- Icon -->
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                    stroke-linecap="round" stroke-linejoin="round">
+
+                    <!-- Location pin -->
+                    <path d="M12 21s7-5.5 7-10a7 7 0 1 0-14 0c0 4.5 7 10 7 10z"></path>
+                    <circle cx="12" cy="11" r="2.5"></circle>
+
+                  </svg>
+
+                  <!-- Text -->
+                  <span class="font-medium">
+                    Change Address
+                  </span>
+
+                </a>
+                <a routerLink="/about-us"
+                  class="flex items-center gap-2 px-4 py-3 hover:bg-red-500 hover:text-white transition">
+
+                  <!-- Icon -->
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                  </svg>
+
+                  <!-- Text -->
+                  <span class="font-medium">
+                    About Us
+                  </span>
+
+                </a>
+                <a routerLink="/contact-us"
+                  class="flex items-center gap-2 px-4 py-3 hover:bg-red-500 hover:text-white transition">
+
+                  <!-- Icon -->
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15a4 4 0 0 1-4 4H7l-4 4V5a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"></path>
+                  </svg>
+
+                  <!-- Text -->
+                  <span class="font-medium">
+                    Contact Us
+                  </span>
+
+                </a>
+                <a routerLink="/privacy-policy"
+                  class="flex items-center gap-2 px-4 py-3 hover:bg-red-500 hover:text-white transition">
+
+                  <!-- Icon -->
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                  </svg>
+
+                  <!-- Text -->
+                  <span class="font-medium">
+                    Privacy Policy
+                  </span>
+
+                </a>
+              </div>
 
               <!-- <button *ngIf="isSettingsOpen && user.role === 'ADMIN'" (click)="toggleSettings($event)"
                       class="w-full flex justify-between px-4 py-3 hover:bg-red-50">
@@ -562,9 +682,7 @@
           <img src="https://i.pravatar.cc/100" class="w-12 h-12 rounded-xl border-2 border-white/30" />
           <div>
             <p class="font-semibold text-lg">{{ user.name }}</p>
-            <p class="text-xs text-red-200 uppercase tracking-wider">
-              {{ user.role }}
-            </p>
+            
           </div>
         </div>
 
@@ -632,6 +750,73 @@
             <!-- Text -->
             <span class="font-medium">
               My Cart
+            </span>
+
+          </a>
+          <a routerLink="/user/address" (click)="isMobileMenuOpen=false" routerLinkActive="text-yellow-400"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="flex items-center gap-3 px-5 py-3 rounded-xl hover:bg-white/80 hover:text-red-600 transition">
+
+            <!-- SVG Icon -->
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 21s7-5.5 7-10a7 7 0 1 0-14 0c0 4.5 7 10 7 10z"></path>
+              <circle cx="12" cy="11" r="2.5"></circle>
+            </svg>
+
+            <!-- Text -->
+            <span class="font-medium">
+              Change Address
+            </span>
+
+          </a>
+          <a routerLink="/about-us" (click)="isMobileMenuOpen=false" routerLinkActive="text-yellow-400"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="flex items-center gap-3 px-5 py-3 rounded-xl hover:bg-white/80 hover:text-red-600 transition">
+
+            <!-- SVG Icon -->
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+              stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+
+            <!-- Text -->
+            <span class="font-medium">
+              About Us
+            </span>
+
+          </a>
+          <a routerLink="/contact-us" (click)="isMobileMenuOpen=false" routerLinkActive="text-yellow-400"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="flex items-center gap-3 px-5 py-3 rounded-xl hover:bg-white/80 hover:text-red-600 transition">
+
+            <!-- SVG Icon -->
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a4 4 0 0 1-4 4H7l-4 4V5a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"></path>
+            </svg>
+
+            <!-- Text -->
+            <span class="font-medium">
+              Contact Us
+            </span>
+
+          </a>
+          <a routerLink="/privacy-policy" (click)="isMobileMenuOpen=false" routerLinkActive="text-yellow-400"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="flex items-center gap-3 px-5 py-3 rounded-xl hover:bg-white/80 hover:text-red-600 transition">
+
+            <!-- SVG Icon -->
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+
+            <!-- Text -->
+            <span class="font-medium">
+              Privacy Policy
             </span>
 
           </a>

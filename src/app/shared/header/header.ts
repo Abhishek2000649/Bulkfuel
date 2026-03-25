@@ -172,5 +172,13 @@ this.isLoading= true;
 
   });
 }
+getShortAddress(address: string): string {
+  if (!address) return 'No Address';
+
+  const words = address.split(' ');
+  return words.length > 4
+    ? words.slice(0, 4).join(' ') + '...'
+    : address;
+}
 
 }

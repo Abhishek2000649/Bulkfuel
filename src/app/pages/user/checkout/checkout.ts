@@ -6,7 +6,7 @@ import { CartService } from '../../../core/services/user/cart/cart-service';
 import { CheckoutService } from '../../../core/services/user/checkoutService/checkout-service';
 import { Spinner } from '../../../shared/spinner/spinner';
 import Swal from 'sweetalert2';
-type checkoutFormFields = 'address' | 'city' | 'state' | 'pincode';
+type checkoutFormFields = 'address' | 'city' | 'state' | 'pincode' | 'phone' | 'payment_method';
 @Component({
   selector: 'app-checkout',
   standalone: true,
@@ -28,6 +28,8 @@ export class Checkout implements OnInit {
     city: '',
     state: '',
     pincode: '',
+    phone: '',
+    payment_method: '',
   };
   validationMessages: Record<checkoutFormFields, any> = {
     address: {
@@ -44,6 +46,13 @@ export class Checkout implements OnInit {
     pincode: {
       required: 'Enter pincode',
       pattern: 'Enter valid pincode'
+    },
+    phone: {
+      required: 'Enter phone number',
+      pattern: 'Enter valid 10 digit phone number'
+    },
+    payment_method: {
+      required: 'Select payment method'
     }
   };
   constructor(
@@ -58,7 +67,8 @@ export class Checkout implements OnInit {
       city: ['', [Validators.required, Validators.pattern(/^[A-Za-z\s]+$/)]],
       state: ['', [Validators.required, Validators.pattern(/^[A-Za-z\s]+$/)]],
       pincode: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]],
-      payment_method: ['cash', Validators.required],
+      payment_method: ['', Validators.required],
+      phone: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
     });
     this.checkoutForm.valueChanges.subscribe(() => {
       this.updateFormErrors();
@@ -107,10 +117,11 @@ export class Checkout implements OnInit {
         }
         if (this.user?.address) {
           this.checkoutForm.patchValue({
-            address: this.user.address.address,
-            city: this.user.address.city,
-            state: this.user.address.state,
-            pincode: this.user.address.pincode,
+            address: this.user.address?.address || '',
+            city: this.user.address?.city || '',
+            state: this.user.address?.state || '',
+            pincode: this.user.address?.pincode || '',
+            phone: this.user?.phone || '',
           });
         }
 

@@ -36,5 +36,11 @@ export class CheckoutService {
   placeOrder(data: any) {
     return this.http.post<any>(`${this.api}/place-order`, data);
   }
+  updateAddress(data: any) {
+  return this.http.put<any>(`${this.api}/update-address`, data);
+}
+getUserAddress() {
+  return this.http.get<any>(`${this.api}/get-address`);
+}
   
 }

@@ -34,6 +34,11 @@ import { Profile as ProfileUpdate } from './shared/profile/profile';
 import { Settlement } from './pages/admin/settlement/settlement/settlement';
 import { VerifyOtp } from './pages/auth/verify-otp/verify-otp';
 import { ForgotPassword } from './pages/auth/forgot-password/forgot-password';
+import { About } from './shared/about/about';
+import { Contact } from './shared/contact/contact';
+import { Privacy } from './shared/privacy/privacy';
+import { Address } from './pages/user/address/address';
+import { Terms } from './shared/terms/terms';
 
 export const routes: Routes = [
 
@@ -42,6 +47,11 @@ export const routes: Routes = [
     component: MainLayout,
     children: [
       { path: '', component: Profile },
+      { path: 'about-us', component: About },
+      { path: 'contact-us', component: Contact },
+      { path: 'privacy-policy', component: Privacy },
+      { path: 'terms', component: Terms},
+
       {
         path: 'profile-update',
         component: ProfileUpdate,
@@ -99,6 +109,8 @@ export const routes: Routes = [
         { path: 'cart', component: Cart },
         { path: 'checkout', component: Checkout },
         { path: 'orders', component: Orders },
+        { path: 'address', component: Address },
+
         ],
       },
       {
@@ -119,7 +131,7 @@ export const routes: Routes = [
       { path: 'login', component: Login, canActivate: [guardGuard] },
       { path: 'signUp', component: SignUp, canActivate: [guardGuard] },
       { path: 'verify-otp', component: VerifyOtp, canActivate: [guardGuard] },
-      { path: 'forgot-password', component: ForgotPassword , canActivate: [guardGuard]},
+      { path: 'forgot-password', component: ForgotPassword, canActivate: [guardGuard] },
 
 
     ],
