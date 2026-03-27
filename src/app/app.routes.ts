@@ -35,10 +35,12 @@ import { Settlement } from './pages/admin/settlement/settlement/settlement';
 import { VerifyOtp } from './pages/auth/verify-otp/verify-otp';
 import { ForgotPassword } from './pages/auth/forgot-password/forgot-password';
 import { About } from './shared/about/about';
-import { Contact } from './shared/contact/contact';
 import { Privacy } from './shared/privacy/privacy';
 import { Address } from './pages/user/address/address';
 import { Terms } from './shared/terms/terms';
+import { UserContact } from './pages/user/user-contact/user-contact';
+import { AdminContact } from './pages/admin/admin-contact/admin-contact';
+import { DeliveryContact } from './pages/delivery/delivery-contact/delivery-contact';
 
 export const routes: Routes = [
 
@@ -48,9 +50,8 @@ export const routes: Routes = [
     children: [
       { path: '', component: Profile },
       { path: 'about-us', component: About },
-      { path: 'contact-us', component: Contact },
       { path: 'privacy-policy', component: Privacy },
-      { path: 'terms', component: Terms},
+      { path: 'terms', component: Terms },
 
       {
         path: 'profile-update',
@@ -100,6 +101,8 @@ export const routes: Routes = [
           { path: 'order', component: HomeOrder },
           { path: 'order-history', component: OrderHistory },
           { path: 'settlement', component: Settlement },
+          { path: 'contact', component: AdminContact },
+
         ],
       },
       {
@@ -110,6 +113,8 @@ export const routes: Routes = [
         { path: 'checkout', component: Checkout },
         { path: 'orders', component: Orders },
         { path: 'address', component: Address },
+        { path: 'contact', component: UserContact },
+
 
         ],
       },
@@ -119,6 +124,8 @@ export const routes: Routes = [
         children: [{ path: '', component: DeliveryDashboard },
         { path: 'available', component: Available },
         { path: 'orders', component: DeliveryOrders },
+        { path: 'contact', component: DeliveryContact },
+
         ],
       },
     ],

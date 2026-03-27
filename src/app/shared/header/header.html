@@ -41,15 +41,34 @@
           </div>
 
           <!-- 🔥 Full Address Popup -->
-          <div class="absolute left-0 top-full mt-2 w-80 p-4 bg-white text-gray-800 rounded-xl shadow-xl
+          <div class="absolute left-0 top-full mt-0 w-80 p-4 bg-red-50 text-gray-800 rounded-xl shadow-xl
             opacity-0 invisible group-hover:opacity-100 group-hover:visible
             transition duration-200 z-50 break-words">
 
             <!-- Title -->
-            <p class="text-xs uppercase text-gray-400 mb-3">Delivery Details</p>
+            <div class="flex justify-between items-center">
+              <p class="text-xs uppercase text-gray-400 mb-3">Delivery Details</p>
+
+              <a *ngIf="user.role === 'USER'" routerLink="/user/address"
+                class="flex items-center gap-2 px-3 bg-red-100 shadow-xl py-2 hover:bg-red-500 hover:text-white transition rounded">
+
+                <!-- Location Icon -->
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 21s7-5.5 7-10a7 7 0 1 0-14 0c0 4.5 7 10 7 10z"></path>
+                  <circle cx="12" cy="11" r="2.5"></circle>
+                </svg>
+
+                <!-- Down Arrow Icon -->
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M6 9l6 6 6-6"></path>
+                </svg>
+              </a>
+            </div>
 
             <!-- Phone -->
-            <div class="flex justify-between py-1 border-b">
+            <div class="flex justify-between py-2 border-b">
               <span class="font-medium text-gray-500">Phone</span>
               <span class="font-semibold text-gray-800">
                 {{ user?.phone || '-' }}
@@ -500,7 +519,7 @@
 
                   <!-- Text -->
                   <span class="font-medium">
-                    Change Address
+                    Update Address
                   </span>
 
                 </a>
@@ -521,7 +540,37 @@
                   </span>
 
                 </a>
-                <a routerLink="/contact-us"
+                <a *ngIf="user.role === 'USER'" routerLink="user/contact"
+                  class="flex items-center gap-2 px-4 py-3 hover:bg-red-500 hover:text-white transition">
+
+                  <!-- Icon -->
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15a4 4 0 0 1-4 4H7l-4 4V5a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"></path>
+                  </svg>
+
+                  <!-- Text -->
+                  <span class="font-medium">
+                    Contact Us
+                  </span>
+
+                </a>
+                <a *ngIf="user.role === 'ADMIN'" routerLink="admin/contact"
+                  class="flex items-center gap-2 px-4 py-3 hover:bg-red-500 hover:text-white transition">
+
+                  <!-- Icon -->
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15a4 4 0 0 1-4 4H7l-4 4V5a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"></path>
+                  </svg>
+
+                  <!-- Text -->
+                  <span class="font-medium">
+                    Contact Us
+                  </span>
+
+                </a>
+                <a *ngIf="user.role === 'delivery_agent'" routerLink="delivery/contact"
                   class="flex items-center gap-2 px-4 py-3 hover:bg-red-500 hover:text-white transition">
 
                   <!-- Icon -->
@@ -682,7 +731,7 @@
           <img src="https://i.pravatar.cc/100" class="w-12 h-12 rounded-xl border-2 border-white/30" />
           <div>
             <p class="font-semibold text-lg">{{ user.name }}</p>
-            
+
           </div>
         </div>
 
@@ -766,7 +815,7 @@
 
             <!-- Text -->
             <span class="font-medium">
-              Change Address
+              Update Address
             </span>
 
           </a>

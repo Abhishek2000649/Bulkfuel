@@ -10,7 +10,13 @@ export class Auth {
   private apiUrl = environment.apiBaseUrl;
   private userSubject = new BehaviorSubject<any>(null);
   user$ = this.userSubject.asObservable();
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    const user = localStorage.getItem('user');
+  if (user) {
+    this.userSubject.next(JSON.parse(user));
+  }
+  }
+  
   login(data: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/login`, data);
   }
@@ -20,18 +26,19 @@ export class Auth {
   }
 
   logout(): Observable<any> {
-    return this.http.post(`${this.apiUrl}/logout`, {}).pipe(
-      tap(() => {
-        localStorage.removeItem('token');
-        this.userSubject.next(null);
-      })
-    );
-  }
+  return this.http.post(`${this.apiUrl}/logout`, {}).pipe(
+    tap(() => {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user'); // ✅ ADD THIS
+      this.userSubject.next(null);
+    })
+  );
+}
 
  me(): Observable<any> {
   return this.http.get<any>(`${this.apiUrl}/me`).pipe(
     tap((res) => {
-      this.userSubject.next(res.user); 
+      this.setUser(res.user); // ✅ use setUser
     })
   );
 }
@@ -44,8 +51,9 @@ resetPassword(data: any): Observable<any> {
 
 
   setUser(user: any) {
-    this.userSubject.next(user);
-  }
+  this.userSubject.next(user);
+  localStorage.setItem('user', JSON.stringify(user)); // ✅ persist
+}
 
   get currentUser() {
     return this.userSubject.value;
@@ -74,4 +82,11 @@ private data: any;
   clearData() {
     this.data = null;
   }
+  get userId(): number | null {
+  return this.user ? this.user.id : null;
+}
+get role(): string | null {
+  return this.user?.role || null;
+}
+
 }

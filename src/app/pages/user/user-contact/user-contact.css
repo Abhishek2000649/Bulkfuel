@@ -1,0 +1,14 @@
+/* Chrome, Edge, Safari */
+.chat-body::-webkit-scrollbar {
+  display: none;
+}
+
+/* Firefox */
+.chat-body {
+  scrollbar-width: none;
+}
+
+/* IE */
+.chat-body {
+  -ms-overflow-style: none;
+}

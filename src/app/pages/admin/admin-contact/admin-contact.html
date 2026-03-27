@@ -1,0 +1,124 @@
+<div class="flex h-[85vh] max-w-6xl mx-auto border rounded-xl shadow-lg overflow-hidden bg-gray-100">
+
+  <!-- ✅ SPINNER -->
+  <app-spinner [isLoading]="isLoading" [loaderSize]="80"></app-spinner>
+
+  <!-- ================= LEFT PANEL (USER LIST) ================= -->
+  <div class="w-1/3 bg-white border-r overflow-y-auto">
+
+    <div class="bg-red-500 text-white px-4 py-3 font-semibold">
+      Users
+    </div>
+
+    <div *ngIf="users.length === 0 && !isLoading" class="text-center text-gray-400 mt-6">
+      No users yet
+    </div>
+
+    <div *ngFor="let user of users" (click)="selectUser(user)" [class.bg-gray-100]="selectedUser?.id === user.id"
+      class="p-4 border-b cursor-pointer hover:bg-gray-50 transition">
+
+      <div class="flex justify-between items-center">
+        <p class="font-medium text-gray-800">{{ user.name }}</p>
+        <span class="text-xs text-gray-400">
+          {{ user.last_message_time | date:'shortTime' }}
+        </span>
+      </div>
+
+      <p class="text-sm text-gray-500 truncate mt-1">
+        {{ user.last_message }}
+      </p>
+    </div>
+
+  </div>
+
+  <!-- ================= RIGHT PANEL (CHAT) ================= -->
+  <div class="flex flex-col flex-1">
+
+    <!-- HEADER -->
+    <div class="bg-red-500 text-white px-6 py-4 flex justify-between items-center">
+      <h2 class="font-semibold">
+        {{ selectedUser?.name || 'Select User' }}
+      </h2>
+      <span class="text-sm opacity-80">Admin Panel</span>
+    </div>
+
+    <!-- CHAT BODY -->
+    <div class="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50 chat-body">
+
+      <div *ngIf="!selectedUser" class="text-center text-gray-400 mt-10">
+        Select a user to start chat 👈
+      </div>
+
+      <div *ngIf="selectedUser && messages.length === 0" class="text-center text-gray-400 mt-10">
+        No messages yet
+      </div>
+
+      <div *ngFor="let msg of messages">
+
+        <!-- 🔴 ADMIN MESSAGE -->
+        <div *ngIf="msg.sender_id === currentUserId" class="flex justify-end">
+          <div class="bg-red-500 text-white px-4 py-2 rounded-lg max-w-xs shadow">
+            <p class="text-sm break-words">{{ msg.message }}</p>
+            <span class="text-[10px] opacity-70 block text-right mt-1">
+              {{ msg.created_at | date:'shortTime' }}
+              <span class="ml-1">
+                <!-- ✅ SEEN (Green Double Tick) -->
+                <svg *ngIf="msg.is_seen" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                  fill="none" class="inline ml-1">
+
+                  <path d="M1 13L5 17L13 9" stroke="blue" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                  <path d="M8 13L12 17L20 9" stroke="blue" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+
+                </svg>
+
+                <svg *ngIf="!msg.is_seen" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                  fill="none" class="inline ml-1">
+
+                  <path d="M4 12L9 17L20 6" stroke="#ffffff" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </svg>
+              </span>
+            </span>
+          </div>
+        </div>
+
+        <!-- ⚪ USER MESSAGE -->
+        <div *ngIf="msg.sender_id !== currentUserId" class="flex justify-start">
+          <div class="bg-white text-gray-800 px-4 py-2 rounded-lg max-w-xs shadow border">
+            <p class="text-sm break-words">{{ msg.message }}</p>
+            <span class="text-[10px] text-gray-400 block mt-1">
+              {{ msg.created_at | date:'shortTime' }}
+            </span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- INPUT -->
+    <div class="bg-white border-t p-3" *ngIf="selectedUser">
+
+      <div class="flex items-center gap-2">
+        <input type="text" [(ngModel)]="newMessage" placeholder="Type your reply..."
+          class="flex-1 px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-red-400"
+          (keyup.enter)="sendMessage()" />
+
+        <button [disabled]="isLoading || !newMessage.trim()" (click)="sendMessage()" [disabled]="isLoading"
+          class="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-full transition disabled:opacity-50">
+          Send
+        </button>
+      </div>
+
+      <!-- VALIDATION -->
+      <p *ngIf="formErrors.message" class="text-red-500 text-xs mt-2 ml-2">
+        {{ formErrors.message }}
+      </p>
+
+    </div>
+
+  </div>
+
+</div>

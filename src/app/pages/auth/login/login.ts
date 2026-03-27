@@ -97,8 +97,9 @@ export class Login {
   .login(this.loginForm.value)
   .pipe(
     switchMap((res: any) => {
-      localStorage.setItem('token', res.data.token);
+      localStorage.setItem('token', res?.data?.token);
       localStorage.setItem('user', JSON.stringify(res.data.user));
+       localStorage.setItem('role', res?.data?.user?.role);
       return this.auth.me();
     }),
     finalize(() => {
