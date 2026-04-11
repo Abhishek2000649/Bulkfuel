@@ -1,11 +1,18 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  OnDestroy
+} from '@angular/core';
+
 import { ChatService } from '../../../core/services/contact/chat-service';
 import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Spinner } from '../../../shared/spinner/spinner';
-import { finalize, interval, Subscription } from 'rxjs';
+import { finalize, Subscription } from 'rxjs';
 import { Auth } from '../../../core/services/Auth/authservice/auth';
+import { EchoService } from '../../../core/services/echo.service';
 
 type chatFormFields = 'message';
 
@@ -14,15 +21,17 @@ type chatFormFields = 'message';
   standalone: true,
   imports: [CommonModule, FormsModule, Spinner],
   templateUrl: './admin-contact.html',
-  styleUrl: './admin-contact.css',
+  styleUrls: ['./admin-contact.css'],
 })
-export class AdminContact implements OnInit {
+export class AdminContact implements OnInit, OnDestroy {
 
   users: any[] = [];
   messages: any[] = [];
   currentUserId: number | null = null;
-  refreshSub!: Subscription;
-  authSub!: Subscription;
+
+  refreshSub?: Subscription;
+  authSub?: Subscription;
+
   selectedUser: any = null;
   conversationId: number | null = null;
 
@@ -31,6 +40,7 @@ export class AdminContact implements OnInit {
 
   isLoading: boolean = false;
 
+  // ✅ VALIDATION
   formErrors: Record<chatFormFields, string> = {
     message: '',
   };
@@ -38,31 +48,32 @@ export class AdminContact implements OnInit {
   validationMessages: Record<chatFormFields, any> = {
     message: {
       required: 'Message cannot be empty',
+      minlength: 'Message must be at least 1 character'
     }
   };
 
-  constructor(private chatService: ChatService, private cdr: ChangeDetectorRef, private auth: Auth) { }
+  constructor(
+    private chatService: ChatService,
+    private cdr: ChangeDetectorRef,
+    private auth: Auth,
+    private echoService: EchoService
+  ) { }
 
+  // ================= INIT =================
   ngOnInit(): void {
+    this.authSub = this.auth.user$.subscribe(user => {
 
-  this.authSub = this.auth.user$.subscribe(user => {
-
-    if (!user) {
-      if (this.refreshSub) {
-        this.refreshSub.unsubscribe();
+      if (!user) {
+        if (this.refreshSub) this.refreshSub.unsubscribe();
+        return;
       }
-      return;
-    }
 
-    this.currentUserId = user.id;
+      this.currentUserId = user.id;
+      this.loadUsers();
+    });
+  }
 
-    this.loadUsers();
-
-  });
-
-}
-
-
+  // ================= LOAD USERS =================
   loadUsers(): void {
     this.isLoading = true;
 
@@ -91,28 +102,47 @@ export class AdminContact implements OnInit {
       });
   }
 
-
+  // ================= SELECT USER =================
   selectUser(user: any): void {
     this.selectedUser = user;
     this.conversationId = user.conversation_id;
+    this.messages = [];
 
     this.loadMessages(true);
 
-    if (this.refreshSub) {
-      this.refreshSub.unsubscribe();
-    }
+    // 🔥 remove old listener
+this.echoService.echo.channel(`chat.${this.conversationId}`)
+    // 🔥 listen new channel
+    this.echoService.echo.channel(`chat.${this.conversationId}`)
+      .listen('.message.sent', (data: any) => {
 
-    this.refreshSub = interval(3000).subscribe(() => {
- if (document.visibilityState === 'visible') { // 🔥 ADD THIS
-      this.loadMessages(false);
-    }
-  });
+        if (data.message.conversation_id === this.conversationId) {
+
+          const exists = this.messages.find(m => m.id === data.message.id);
+
+          if (!exists) {
+            this.messages.push(data.message);
+            this.cdr.detectChanges();
+
+            // ✅ Smart scroll
+            if (this.isNearBottom()) {
+              this.scrollToBottom();
+            }
+          }
+
+          // ✅ Seen
+          if (data.message.sender_id !== this.currentUserId) {
+            this.markSeen();
+          }
+        }
+      });
   }
 
-
+  // ================= LOAD MESSAGES =================
   loadMessages(showLoader: boolean = false): void {
-    if (!this.conversationId) return;
-     if (!this.auth.userId) return;
+
+    if (!this.conversationId || !this.auth.userId) return;
+
     if (showLoader) this.isLoading = true;
 
     this.chatService.getMessages(this.conversationId, this.role)
@@ -126,22 +156,16 @@ export class AdminContact implements OnInit {
         next: (res: any) => {
           if (res.success) {
 
-            const oldMessages = this.messages;
             this.messages = res.messages;
-
-            // 👇 always update UI
             this.cdr.detectChanges();
 
-            const oldLastId = oldMessages[oldMessages.length - 1]?.id;
-            const newLastMsg = this.messages[this.messages.length - 1];
+            // ✅ Scroll after load
+            this.scrollToBottom();
 
-            // 👇 new message आया है
-            if (newLastMsg && newLastMsg.id !== oldLastId) {
-              this.scrollToBottom();
+            const lastMsg = this.messages[this.messages.length - 1];
 
-              if (newLastMsg.sender_id !== this.currentUserId) {
-                this.markSeen();
-              }
+            if (lastMsg && lastMsg.sender_id !== this.currentUserId) {
+              this.markSeen();
             }
           }
         },
@@ -159,7 +183,7 @@ export class AdminContact implements OnInit {
       });
   }
 
-
+  // ================= VALIDATION =================
   updateFormErrors(): void {
     this.formErrors.message = '';
 
@@ -168,19 +192,15 @@ export class AdminContact implements OnInit {
     }
   }
 
-
+  // ================= SEND MESSAGE =================
   sendMessage(): void {
 
     this.updateFormErrors();
-
-    if (this.formErrors.message) {
-      return;
-    }
+    if (this.formErrors.message) return;
 
     const payload = {
       message: this.newMessage,
       conversation_id: this.conversationId,
-      // receiver_id: this.selectedUser?.id
     };
 
     this.isLoading = true;
@@ -193,8 +213,13 @@ export class AdminContact implements OnInit {
       .subscribe({
         next: (res: any) => {
           if (res.success) {
+
             this.newMessage = '';
-            this.loadMessages(true);
+
+            // ✅ Force scroll
+            this.scrollToBottom();
+
+            this.loadMessages(false);
           }
         },
         error: (err: any) => {
@@ -210,26 +235,25 @@ export class AdminContact implements OnInit {
         }
       });
   }
+
+  // ================= SCROLL =================
   scrollToBottom(): void {
     setTimeout(() => {
       const el = document.querySelector('.chat-body') as HTMLElement;
       if (el) {
-        el.scrollTo({
-          top: el.scrollHeight,
-          behavior: 'smooth'
-        });
+        el.scrollTop = el.scrollHeight;
       }
-    }, 100);
-  }
-  ngOnDestroy(): void {
-  if (this.refreshSub) {
-    this.refreshSub.unsubscribe();
+    }, 50);
   }
 
-  if (this.authSub) {
-    this.authSub.unsubscribe();
+  isNearBottom(): boolean {
+    const el = document.querySelector('.chat-body') as HTMLElement;
+    if (!el) return true;
+
+    return el.scrollHeight - el.scrollTop - el.clientHeight < 100;
   }
-}
+
+  // ================= SEEN =================
   markSeen(): void {
     if (!this.conversationId) return;
 
@@ -238,5 +262,13 @@ export class AdminContact implements OnInit {
         next: () => { },
         error: () => { }
       });
+  }
+
+  // ================= DESTROY =================
+  ngOnDestroy(): void {
+    if (this.refreshSub) this.refreshSub.unsubscribe();
+    if (this.authSub) this.authSub.unsubscribe();
+
+    this.echoService.echo.leave('chat');
   }
 }

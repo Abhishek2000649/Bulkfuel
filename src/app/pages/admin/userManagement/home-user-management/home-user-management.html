@@ -1,4 +1,4 @@
-<div class="bg-white min-h-screen">
+ <div class="bg-white min-h-screen">
 
   <div class="p-6 md:p-10">
     <div class="max-w-[1650px] mx-auto">
@@ -28,7 +28,6 @@
         </div>
       </div>
 
-      <!-- TABLE -->
       <div class=" rounded-lg overflow-hidden shadow-sm">
         <table class=" hidden md:table w-full text-sm text-left border-collapse">
           <thead class="bg-red-500 text-white uppercase text-xs font-bold tracking-wider">
@@ -44,7 +43,6 @@
           </thead>
 
           <tbody id="userTable" class="divide-y divide-gray-200">
-            <!-- ROW -->
             <tr *ngFor="let user of users; trackBy: trackById" class="hover:bg-gray-50 ">
               <td class="px-6 py-4 font-mono text-gray-500">{{ user.id }}</td>
               <td class="px-6 py-4 font-semibold text-gray-900">{{ user.name }}</td>
@@ -76,7 +74,6 @@
               </td>
             </tr>
 
-            <!-- MORE ROWS CAN COME FROM BACKEND -->
           </tbody>
         </table>
         <div class="md:hidden  min-h-screen ">
@@ -84,7 +81,6 @@
           <div *ngFor="let user of users; trackBy: trackById"
             class="w-full bg-white rounded-xl border border-red-800 overflow-hidden mb-6">
 
-            <!-- HEADER -->
             <div class="bg-red-600 text-white px-4 py-2">
               <div class="flex items-center gap-6">
                 <div class="px-4 py-1 rounded-full bg-red-50 flex justify-center items-center">
@@ -97,11 +93,9 @@
               </div>
             </div>
 
-            <!-- ROLE DATE TIME SECTION -->
             <div class="p-4">
               <div class="grid md:grid-cols-3 grid-cols-1 gap-4">
 
-                <!-- ROLE -->
                 <div
                   class="flex justify-between px-2 border border-red-200 rounded-xl py-4 bg-red-50 text-center shadow-sm">
                   <div class="flex gap-4 items-center">
@@ -114,7 +108,6 @@
                   </span>
                 </div>
 
-                <!-- DATE -->
                 <div
                   class="flex justify-between px-2 border border-blue-200 rounded-xl py-4  bg-blue-50 text-center shadow-sm">
                   <div class="flex gap-4 items-center">
@@ -128,7 +121,6 @@
                   </p>
                 </div>
 
-                <!-- TIME -->
                 <div
                   class="flex justify-between px-2 border border-green-200 rounded-xl py-4 bg-green-50 text-center shadow-sm">
                   <div class="flex gap-4 items-center">
@@ -143,7 +135,6 @@
               </div>
             </div>
 
-            <!-- ACTION SECTION -->
             <div class="border-t p-4 flex items-center gap-10 text-lg">
 
               <a [routerLink]="['/admin/userManagement/edit', user.id]"
@@ -162,11 +153,150 @@
         </div>
       </div>
 
-      <!-- FOOTER -->
       <div class="mt-4 text-xs text-gray-400 text-right">
         Total Users: <span id="userCount">{{users.length}}</span>
       </div>
 
     </div>
   </div>
-</div>
+</div> 
+
+
+<!-- <div class="min-h-screen bg-gray-100 flex">
+
+  <div class="flex-1 p-6">
+
+    <div class="bg-white shadow rounded-lg p-4 mb-6">
+      <h1 class="text-xl font-semibold text-gray-700">Create User</h1>
+    </div>
+
+    <div class="bg-white shadow-lg rounded-xl p-6 max-w-3xl mx-auto">
+
+      <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="space-y-4">
+
+        <div>
+          <label class="block text-sm font-medium text-gray-600">Name</label>
+          <input type="text" formControlName="name"
+            class="w-full mt-1 p-2 border rounded focus:ring-2 focus:ring-green-600 outline-none">
+          <p class="text-red-500 text-sm"
+             *ngIf="userForm.get('name')?.touched && userForm.get('name')?.invalid">
+            Name is required
+          </p>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-600">Email</label>
+          <input type="email" formControlName="email"
+            class="w-full mt-1 p-2 border rounded focus:ring-2 focus:ring-green-600 outline-none">
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-600">Phone</label>
+          <input type="text" formControlName="phone"
+            class="w-full mt-1 p-2 border rounded focus:ring-2 focus:ring-green-600 outline-none">
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-600">Designation</label>
+          <input type="text" formControlName="designation"
+            class="w-full mt-1 p-2 border rounded focus:ring-2 focus:ring-green-600 outline-none">
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-600">Password</label>
+          <div class="flex gap-2">
+            <input [type]="passwordType" formControlName="password"
+              class="w-full mt-1 p-2 border rounded focus:ring-2 focus:ring-green-600 outline-none">
+            <button type="button" (click)="togglePassword()"
+              class="bg-gray-200 px-3 rounded hover:bg-gray-300">
+              👁
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-600">Confirm Password</label>
+          <input [type]="passwordType" formControlName="confirmPassword"
+            class="w-full mt-1 p-2 border rounded focus:ring-2 focus:ring-green-600 outline-none">
+
+          <p class="text-red-500 text-sm"
+             *ngIf="userForm.hasError('mismatch')">
+            Passwords do not match
+          </p>
+        </div>
+
+        <button type="button"
+          class="text-green-700 border border-green-700 px-3 py-1 rounded hover:bg-green-700 hover:text-white transition"
+          (click)="generatePassword()">
+          Generate Password
+        </button>
+
+        <div class="border-t pt-4 mt-4">
+          <h3 class="text-lg font-semibold text-green-700">Assign Dashboards</h3>
+        </div>
+
+        <div *ngFor="let item of dashboardRoleSelections; let i = index"
+             class="border p-4 rounded-lg mt-3 bg-gray-50 space-y-3">
+
+          <div>
+            <label class="block text-sm text-gray-600">Dashboard</label>
+            <select
+              class="w-full mt-1 p-2 border rounded"
+              [value]="item.selectedDashboard"
+              (change)="dashboardRoleSelections[i].selectedDashboard = $any($event.target).value; onDashboardChange(i)">
+
+              <option [value]="null">Select Dashboard</option>
+              <option *ngFor="let d of dashboards" [value]="d.id">
+                {{ d.name }}
+              </option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm text-gray-600">Role</label>
+            <select
+              class="w-full mt-1 p-2 border rounded"
+              [value]="item.selectedRole"
+              (change)="dashboardRoleSelections[i].selectedRole = $any($event.target).value">
+
+              <option [value]="null">Select Role</option>
+              <option *ngFor="let r of item.roles" [value]="r.role_id">
+                {{ r.role_name }}
+              </option>
+            </select>
+          </div>
+
+          <div class="text-right">
+            <button type="button"
+              class="text-red-500 hover:underline"
+              (click)="removeRow(i)">
+              Remove
+            </button>
+          </div>
+
+        </div>
+
+        <button type="button"
+          class="mt-3 text-gray-600 font-medium hover:text-black"
+          (click)="addRow()">
+          + Add More Dashboard
+        </button>
+
+        <div class="flex gap-3 mt-6">
+          <button type="submit"
+            class="bg-green-700 text-white px-5 py-2 rounded hover:bg-green-800">
+            Submit
+          </button>
+
+          <button type="button"
+            class="bg-gray-300 px-5 py-2 rounded hover:bg-gray-400">
+            Cancel
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+
+  </div>
+</div> -->

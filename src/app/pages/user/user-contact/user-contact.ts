@@ -1,12 +1,19 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  OnDestroy
+} from '@angular/core';
+
 import { ChatService } from '../../../core/services/contact/chat-service';
 import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Spinner } from '../../../shared/spinner/spinner';
 import { FormsModule } from '@angular/forms';
-import { finalize, interval, Subscription } from 'rxjs';
+import { finalize, Subscription } from 'rxjs';
 import { Auth } from '../../../core/services/Auth/authservice/auth';
+import { EchoService } from '../../../core/services/echo.service';
 
 type chatFormFields = 'message';
 
@@ -17,21 +24,20 @@ type chatFormFields = 'message';
   templateUrl: './user-contact.html',
   styleUrl: './user-contact.css',
 })
-export class UserContact implements OnInit {
+export class UserContact implements OnInit, OnDestroy {
 
   messages: any[] = [];
   newMessage: string = '';
+
   currentUserId: number | null = null;
   conversationId: number | null = null;
+
   role: string = 'USER';
-  lastMessageId: number | null = null;
-  refreshSub!: Subscription;
+
   authSub!: Subscription;
   isLoading: boolean = false;
 
-  // =========================
-  // ✅ VALIDATION (LIKE CHECKOUT)
-  // =========================
+  // ✅ VALIDATION (UNCHANGED)
   formErrors: Record<chatFormFields, string> = {
     message: '',
   };
@@ -43,43 +49,60 @@ export class UserContact implements OnInit {
     }
   };
 
-  constructor(private chatService: ChatService, private cdr: ChangeDetectorRef, private auth: Auth) { }
+  constructor(
+    private chatService: ChatService,
+    private cdr: ChangeDetectorRef,
+    private auth: Auth,
+    private echoService: EchoService
+  ) {}
 
+  // ================= INIT =================
   ngOnInit(): void {
-      this.authSub = this.auth.user$.subscribe(user => {
+    this.authSub = this.auth.user$.subscribe(user => {
 
-    if (!user) {
-      // 🔥 USER LOGOUT → STOP EVERYTHING
-      if (this.refreshSub) {
-        this.refreshSub.unsubscribe();
-      }
-      return;
-    }
-    this.currentUserId = this.auth.userId;
-    this.loadMessages(true);
+      if (!user) return;
 
-    this.refreshSub = interval(3000).subscribe(() => {
-      if (document.visibilityState === 'visible') {
+      this.currentUserId = user.id;
+
+      this.loadMessages(true);
+    });
+  }
+
+  // ================= REALTIME =================
+  listenToChat(): void {
+
+    if (!this.conversationId) return;
+
+    // 🧹 remove old channel
+    this.echoService.echo.leave(`chat.${this.conversationId}`);
+
+    const channel = this.echoService.echo.channel(`chat.${this.conversationId}`);
+
+    channel.listen('.message.sent', (data: any) => {
+
+      console.log('🔥 USER REALTIME:', data);
+
+      const exists = this.messages.find(m => m.id === data.message.id);
+
+      if (!exists) {
+        // ✅ FULL reload (admin जैसा)
         this.loadMessages(false);
       }
+
+      // ✅ seen update
+      if (data.message.sender_id !== this.currentUserId) {
+        this.markSeen();
+      }
     });
-      });
-
   }
 
-
-  updateFormErrors(): void {
-    this.formErrors.message = '';
-
-    if (!this.newMessage || this.newMessage.trim().length === 0) {
-      this.formErrors.message = this.validationMessages.message.required;
-    }
-  }
-
-
+  // ================= LOAD =================
   loadMessages(showLoader: boolean = false): void {
+
+    if (!this.auth.userId) return;
+
     if (showLoader) this.isLoading = true;
-      if (!this.auth.userId) return; 
+
     this.chatService.getMessages(this.conversationId || 0, this.role)
       .pipe(finalize(() => {
         if (showLoader) {
@@ -89,47 +112,24 @@ export class UserContact implements OnInit {
       }))
       .subscribe({
         next: (res: any) => {
+
           if (res.success) {
 
             this.conversationId = res.conversation_id;
 
-            const newMessages = res.messages;
+            // ✅ LISTEN AFTER conversationId
+            this.listenToChat();
 
-            // 🔥 Last message ID
-            const newLastMessageId = newMessages.length
-              ? newMessages[newMessages.length - 1].id
-              : null;
-
-            // 🔥 Check new message
-            const isNewMessage = this.lastMessageId !== newLastMessageId;
-
-            // 🔥 Update messages
-            this.messages = newMessages;
+            this.messages = res.messages;
             this.cdr.detectChanges();
 
-            // 🔥 Get last message
-            const lastMsg = newMessages.length
-              ? newMessages[newMessages.length - 1]
-              : null;
+            this.scrollToBottom();
 
-            // ✅ SINGLE CLEAN LOGIC (no duplicate calls)
+            const lastMsg = this.messages[this.messages.length - 1];
+
             if (lastMsg && lastMsg.sender_id !== this.currentUserId) {
-
-              const shouldScroll = showLoader || (isNewMessage && this.isNearBottom());
-
-              // ✅ Scroll only when needed
-              if (shouldScroll) {
-                this.scrollToBottom();
-              }
-
-              // ✅ Seen ALWAYS when new message from other user
-              if (showLoader || isNewMessage) {
-                this.markSeen();
-              }
+              this.markSeen();
             }
-
-            // 🔥 Update last message id
-            this.lastMessageId = newLastMessageId;
           }
         },
         error: (err: any) => {
@@ -146,15 +146,21 @@ export class UserContact implements OnInit {
       });
   }
 
+  // ================= VALIDATION =================
+  updateFormErrors(): void {
+    this.formErrors.message = '';
 
+    if (!this.newMessage || this.newMessage.trim().length === 0) {
+      this.formErrors.message = this.validationMessages.message.required;
+    }
+  }
+
+  // ================= SEND =================
   sendMessage(): void {
 
     this.updateFormErrors();
 
-    if (this.formErrors.message) {
-
-      return;
-    }
+    if (this.formErrors.message) return;
 
     const payload = {
       message: this.newMessage,
@@ -170,13 +176,12 @@ export class UserContact implements OnInit {
       }))
       .subscribe({
         next: (res: any) => {
+
           if (res.success) {
 
             this.newMessage = '';
 
-            // 🔥 FORCE scroll (important)
-            this.scrollToBottom();
-
+            // ✅ reload (admin जैसा)
             this.loadMessages(false);
           }
         },
@@ -197,20 +202,19 @@ export class UserContact implements OnInit {
       });
   }
 
-
+  // ================= SEEN =================
   markSeen(): void {
+
     if (!this.conversationId) return;
 
     this.chatService.markSeen(this.conversationId, this.role)
       .subscribe({
-        next: () => {
-          // optional: console.log('Seen updated');
-        },
-        error: (err: any) => {
-          console.error('Seen error', err);
-        }
+        next: () => {},
+        error: () => {}
       });
   }
+
+  // ================= SCROLL =================
   scrollToBottom(): void {
     setTimeout(() => {
       const el = document.querySelector('.chat-body') as HTMLElement;
@@ -219,20 +223,20 @@ export class UserContact implements OnInit {
       }
     }, 50);
   }
-  ngOnDestroy(): void {
-  if (this.refreshSub) {
-    this.refreshSub.unsubscribe();
-  }
 
-  if (this.authSub) {
-    this.authSub.unsubscribe();
-  }
-}
   isNearBottom(): boolean {
     const el = document.querySelector('.chat-body') as HTMLElement;
     if (!el) return true;
 
     return el.scrollHeight - el.scrollTop - el.clientHeight < 100;
   }
-}
 
+  // ================= DESTROY =================
+  ngOnDestroy(): void {
+    if (this.authSub) this.authSub.unsubscribe();
+
+    if (this.conversationId) {
+      this.echoService.echo.leave(`chat.${this.conversationId}`);
+    }
+  }
+}

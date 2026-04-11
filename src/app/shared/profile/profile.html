@@ -1,218 +1,242 @@
-
-
-
-
-
 <div class="min-h-screen pb-20 bg-gray-100 font-sans">
-<app-spinner [isLoading]="isLoading" [loaderSize]="100"></app-spinner>
-<!-- ================= MAIN ================= -->
-<main class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 pt-12">
+  <app-spinner [isLoading]="isLoading" [loaderSize]="100"></app-spinner>
+  <!-- ================= MAIN ================= -->
+  <main class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 pt-12">
 
-  <!-- Heading -->
-  <div class="mb-10 border-l-4 border-red-600 pl-6 py-2">
-    <h1 class="text-4xl font-black text-gray-900 uppercase italic">Profile</h1>
-    <p class="text-gray-500 mt-2 text-lg font-medium">
-      Manage your personal information and preferences.
-    </p>
-  </div>
+    <!-- Heading -->
+    <div class="mb-10 border-l-4 border-red-600 pl-6 py-2">
+      <h1 class="text-4xl font-black text-gray-900 uppercase italic">Profile</h1>
+      <p class="text-gray-500 mt-2 text-lg font-medium">
+        Manage your personal information and preferences.
+      </p>
+    </div>
 
-  <div class="flex flex-col lg:flex-row gap-8">
+    <div class="flex flex-col lg:flex-row gap-8">
 
-    <!-- Sidebar -->
-    <nav class="space-y-2">
-  <div
-    (click)="openBasic()"
-    [ngClass]="showBasic
+      <!-- Sidebar -->
+      <nav class="space-y-2">
+        <div (click)="openBasic()" [ngClass]="showBasic
       ? 'bg-red-50 text-red-700'
       : 'text-gray-500 hover:bg-gray-50'"
-    class="px-5 py-3 rounded-xl font-bold uppercase text-xs tracking-widest cursor-pointer">
-    Basic Info
-  </div>
-
-  <div
-    (click)="openAddress()"
-    [ngClass]="showAddress
-      ? 'bg-red-50 text-red-700'
-      : 'text-gray-500 hover:bg-gray-50'"
-    class="px-5 py-3 rounded-xl font-bold uppercase text-xs tracking-widest cursor-pointer">
-    Address
-  </div>
-
-  <div
-    (click)="openPassword()"
-    [ngClass]="showPassword
-      ? 'bg-red-50 text-red-700'
-      : 'text-gray-500 hover:bg-gray-50'"
-    class="px-5 py-3 rounded-xl font-bold uppercase text-xs tracking-widest cursor-pointer">
-    Password
-  </div>
-</nav>
-
-
-    <!-- Content -->
-    <section class="lg:w-3/4 space-y-12">
-
-      <!-- ================= BASIC INFO ================= -->
-      <div *ngIf="showBasic" class="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden">
-        <div class="px-10 py-8 border-b border-gray-50">
-          <h2 class="text-2xl font-black uppercase italic">Basic Info</h2>
-          <p class="text-sm text-gray-500 mt-2 font-medium">
-            Update your name, contact info, and bio.
-          </p>
+          class="px-5 py-3 rounded-xl font-bold uppercase text-xs tracking-widest cursor-pointer">
+          Basic Info
         </div>
 
-        <div class="p-10 space-y-10">
-          <!-- Avatar -->
-          <div class="flex items-center space-x-6">
-            <div class="w-28 h-28 rounded-2xl overflow-hidden border border-gray-200">
-              <img src="https://picsum.photos/seed/user123/200/200" class="w-full h-full object-cover">
-            </div>
-            <button class="px-6 py-3 bg-gray-100 border border-gray-300 rounded-xl font-bold text-sm">
-              Change Photo
-            </button>
+        <div (click)="openAddress()" [ngClass]="showAddress
+      ? 'bg-red-50 text-red-700'
+      : 'text-gray-500 hover:bg-gray-50'"
+          class="px-5 py-3 rounded-xl font-bold uppercase text-xs tracking-widest cursor-pointer">
+          Address
+        </div>
+
+        <div (click)="openPassword()" [ngClass]="showPassword
+      ? 'bg-red-50 text-red-700'
+      : 'text-gray-500 hover:bg-gray-50'"
+          class="px-5 py-3 rounded-xl font-bold uppercase text-xs tracking-widest cursor-pointer">
+          Password
+        </div>
+      </nav>
+
+
+      <!-- Content -->
+      <section class="lg:w-3/4 space-y-12">
+
+        <!-- ================= BASIC INFO ================= -->
+        <div *ngIf="showBasic" class="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden">
+          <div class="px-10 py-8 border-b border-gray-50">
+            <h2 class="text-2xl font-black uppercase italic">Basic Info</h2>
+            <p class="text-sm text-gray-500 mt-2 font-medium">
+              Update your name, contact info, and bio.
+            </p>
           </div>
+
+          <div class="p-10 space-y-10">
+            <!-- Avatar -->
+            <div class="flex items-center space-x-6">
+
+              <!-- Profile Image -->
+              <div class="w-28 h-28 rounded-full overflow-hidden border border-gray-300 cursor-pointer"
+                (click)="openFilePicker()">
+                <img [src]="previewImage ? previewImage : (user?.profile_image_url || 'https://picsum.photos/200')"
+                  class="w-full h-full object-cover" />
+              </div>
+
+              <!-- Hidden Input -->
+              <input type="file" #fileInput class="hidden" accept="image/*" (change)="onFileChange($event)">
+
+              <!-- Button -->
+              <button (click)="openFilePicker()"
+                class="px-6 py-3 bg-gray-100 border border-gray-300 rounded-xl font-bold text-sm">
+                Change Photo
+              </button>
+
+            </div>
             <form [formGroup]="basicForm" (ngSubmit)="updateBasic()" class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div class="sm:col-span-2 group">
-              <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1 group-focus-within:text-red-700">Full Name</label>
-              <input formControlName="name" name="name" class="w-full px-4 py-3 rounded-xl border border-gray-300  focus:border-red-700 focus:border-2  focus:outline-none focus:ring-0" >
-              <p *ngIf="formBasicErrors.name" class="mt-1 text-xs text-red-600 font-semibold ml-1">
-            {{ formBasicErrors.name }}
-          </p>
-            </div>
+              <div class="sm:col-span-2 group">
+                <label
+                  class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1 group-focus-within:text-red-700">Full
+                  Name</label>
+                <input formControlName="name" name="name"
+                  class="w-full px-4 py-3 rounded-xl border border-gray-300  focus:border-red-700 focus:border-2  focus:outline-none focus:ring-0">
+                <p *ngIf="formBasicErrors.name" class="mt-1 text-xs text-red-600 font-semibold ml-1">
+                  {{ formBasicErrors.name }}
+                </p>
+              </div>
 
-            <div class="group">
-              <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1 group-focus-within:text-red-700">Email</label>
-              <input formControlName="email" name="email"  class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-red-700 focus:border-2  focus:outline-none focus:ring-0" >
-              <p *ngIf="formBasicErrors.email" class="mt-1 text-xs text-red-600 font-semibold ml-1">
-            {{ formBasicErrors.email }}
-          </p>
-            </div>
+              <div class="group">
+                <label
+                  class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1 group-focus-within:text-red-700">Email</label>
+                <input formControlName="email" name="email"
+                  class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-red-700 focus:border-2  focus:outline-none focus:ring-0">
+                <p *ngIf="formBasicErrors.email" class="mt-1 text-xs text-red-600 font-semibold ml-1">
+                  {{ formBasicErrors.email }}
+                </p>
+              </div>
 
-            <div class="group">
-              <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1 group-focus-within:text-red-700">Phone</label>
-              <input formControlName="phone" name="phone"  class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-red-700 focus:border-2  focus:outline-none focus:ring-0" >
-              <p *ngIf="formBasicErrors.phone" class="mt-1 text-xs text-red-600 font-semibold ml-1">
-            {{ formBasicErrors.phone }}
-          </p>
-            </div>
+              <div class="group">
+                <label
+                  class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1 group-focus-within:text-red-700">Phone</label>
+                <input formControlName="phone" name="phone"
+                  class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-red-700 focus:border-2  focus:outline-none focus:ring-0">
+                <p *ngIf="formBasicErrors.phone" class="mt-1 text-xs text-red-600 font-semibold ml-1">
+                  {{ formBasicErrors.phone }}
+                </p>
+              </div>
 
-            <div class="sm:col-span-2 group">
-              <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1 group-focus-within:text-red-700">Bio</label>
-              <textarea rows="4" class="w-full px-4 py-3 rounded-xl border border-gray-300 resize-none focus:border-red-700 focus:border-2  focus:outline-none focus:ring-0">
-                  
+              <div class="sm:col-span-2 group">
+                <label
+                  class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1 group-focus-within:text-red-700">Bio</label>
+                <textarea rows="4"
+                  class="w-full px-4 py-3 rounded-xl border border-gray-300 resize-none focus:border-red-700 focus:border-2  focus:outline-none focus:ring-0">
+
               </textarea>
-            </div>
+              </div>
 
-            <div class="sm:col-span-2">
+              <div class="sm:col-span-2">
+                <button type="submit" class="px-10 py-4 bg-red-600 text-white font-bold rounded-xl">
+                  Save Profile
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- ================= ADDRESS ================= -->
+        <div *ngIf="showAddress" class="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden">
+          <div class="px-10 py-8 border-b border-gray-50">
+            <h2 class="text-2xl font-black uppercase italic">Address</h2>
+            <p class="text-sm text-gray-500 mt-2 font-medium">
+              Set your primary mailing coordinates.
+            </p>
+          </div>
+
+          <div class="p-10">
+            <form [formGroup]="addressForm" (ngSubmit)="updateAddress()" class="grid grid-cols-1 sm:grid-cols-6 gap-6">
+              <div class="sm:col-span-6 group">
+                <label
+                  class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1 group-focus-within:text-red-800">Street</label>
+                <textarea formControlName="address" name="address"
+                  class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-red-800 focus:border-2  focus:outline-none focus:ring-0"
+                  value="123 Innovation Drive, Suite 400"></textarea>
+                <p *ngIf="formAddressErrors.address" class="mt-1 text-xs text-red-600 font-semibold ml-1">
+                  {{ formAddressErrors.address }}
+                </p>
+
+              </div>
+
+              <div class="sm:col-span-2 group">
+                <label
+                  class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1 group-focus-within:text-red-800">City</label>
+                <input formControlName="city" name="city"
+                  class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-red-800 focus:border-2  focus:outline-none focus:ring-0">
+                <p *ngIf="formAddressErrors.city" class="mt-1 text-xs text-red-600 font-semibold ml-1">
+                  {{ formAddressErrors.city }}
+                </p>
+              </div>
+
+              <div class="sm:col-span-2 group">
+                <label
+                  class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1 group-focus-within:text-red-800">State</label>
+                <input formControlName="state" name="state"
+                  class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-red-800 focus:border-2  focus:outline-none focus:ring-0">
+                <p *ngIf="formAddressErrors.state" class="mt-1 text-xs text-red-600 font-semibold ml-1">
+                  {{ formAddressErrors.state }}
+                </p>
+              </div>
+
+              <div class="sm:col-span-2 group">
+                <label
+                  class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1 group-focus-within:text-red-800">ZIP</label>
+                <input formControlName="pincode" name="pincode"
+                  class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-red-800 focus:border-2  focus:outline-none focus:ring-0">
+                <p *ngIf="formAddressErrors.pincode" class="mt-1 text-xs text-red-600 font-semibold ml-1">
+                  {{ formAddressErrors.pincode }}
+                </p>
+              </div>
+
+              <div class="sm:col-span-6">
+                <button type="submit" class="px-10 py-4 bg-red-600 text-white font-bold rounded-xl">
+                  Save Address
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- ================= PASSWORD ================= -->
+        <div *ngIf="showPassword" class="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden">
+          <div class="px-10 py-8 border-b border-gray-50">
+            <h2 class="text-2xl font-black uppercase italic">Password</h2>
+            <p class="text-sm text-gray-500 mt-2 font-medium">
+              Change your login credentials.
+            </p>
+          </div>
+
+          <div class="p-10 max-w-xl">
+            <form [formGroup]="passwordForm" (ngSubmit)="updatePassword()" class="space-y-6">
+              <div class="group">
+                <label
+                  class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1 group-focus-within:text-red-800">Current
+                  Password</label>
+                <input formControlName="current_password" name="current_password" type="password"
+                  class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-red-800 focus:border-2  focus:outline-none focus:ring-0">
+                <p *ngIf="formPasswordErrors.current_password" class="mt-1 text-xs text-red-600 font-semibold ml-1">
+                  {{ formPasswordErrors.current_password }}
+                </p>
+              </div>
+
+              <div class="group">
+                <label
+                  class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1 group-focus-within:text-red-800">New
+                  Password</label>
+                <input formControlName="password" name="password" type="password"
+                  class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-red-800 focus:border-2  focus:outline-none focus:ring-0">
+                <p *ngIf="formPasswordErrors.password" class="mt-1 text-xs text-red-600 font-semibold ml-1">
+                  {{ formPasswordErrors.password }}
+                </p>
+              </div>
+
+              <div class="group">
+                <label
+                  class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1 group-focus-within:text-red-800">Confirm
+                  Password</label>
+                <input formControlName="password_confirmation" name="password_confirmation" type="password"
+                  class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-red-800 focus:border-2  focus:outline-none focus:ring-0">
+                <p *ngIf="formPasswordErrors.password_confirmation"
+                  class="mt-1 text-xs text-red-600 font-semibold ml-1">
+                  {{ formPasswordErrors.password_confirmation }}
+                </p>
+              </div>
+
               <button type="submit" class="px-10 py-4 bg-red-600 text-white font-bold rounded-xl">
-                Save Profile
+                Change Password
               </button>
-            </div>
-          </form>
-        </div>
-      </div>
-
-      <!-- ================= ADDRESS ================= -->
-      <div *ngIf="showAddress" class="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden">
-        <div class="px-10 py-8 border-b border-gray-50">
-          <h2 class="text-2xl font-black uppercase italic">Address</h2>
-          <p class="text-sm text-gray-500 mt-2 font-medium">
-            Set your primary mailing coordinates.
-          </p>
+            </form>
+          </div>
         </div>
 
-        <div class="p-10">
-          <form [formGroup]="addressForm" (ngSubmit)="updateAddress()" class="grid grid-cols-1 sm:grid-cols-6 gap-6">
-            <div class="sm:col-span-6 group">
-              <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1 group-focus-within:text-red-800">Street</label>
-              <textarea formControlName="address" name="address" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-red-800 focus:border-2  focus:outline-none focus:ring-0"
-                     value="123 Innovation Drive, Suite 400"></textarea>
-                     <p *ngIf="formAddressErrors.address" class="mt-1 text-xs text-red-600 font-semibold ml-1">
-            {{ formAddressErrors.address }}
-          </p>
-
-            </div>
-
-            <div class="sm:col-span-2 group">
-              <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1 group-focus-within:text-red-800">City</label>
-              <input formControlName="city" name="city"  class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-red-800 focus:border-2  focus:outline-none focus:ring-0" >
-              <p *ngIf="formAddressErrors.city" class="mt-1 text-xs text-red-600 font-semibold ml-1">
-            {{ formAddressErrors.city }}
-          </p>
-            </div>
-
-            <div class="sm:col-span-2 group">
-              <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1 group-focus-within:text-red-800">State</label>
-              <input formControlName="state" name="state" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-red-800 focus:border-2  focus:outline-none focus:ring-0" >
-              <p *ngIf="formAddressErrors.state" class="mt-1 text-xs text-red-600 font-semibold ml-1">
-            {{ formAddressErrors.state }}
-          </p>
-            </div>
-
-            <div class="sm:col-span-2 group">
-              <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1 group-focus-within:text-red-800">ZIP</label>
-              <input formControlName="pincode" name="pincode" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-red-800 focus:border-2  focus:outline-none focus:ring-0" >
-              <p *ngIf="formAddressErrors.pincode" class="mt-1 text-xs text-red-600 font-semibold ml-1">
-            {{ formAddressErrors.pincode }}
-          </p>
-            </div>
-
-            <div class="sm:col-span-6">
-              <button type="submit" class="px-10 py-4 bg-red-600 text-white font-bold rounded-xl">
-                Save Address
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-
-      <!-- ================= PASSWORD ================= -->
-      <div *ngIf="showPassword" class="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden">
-        <div class="px-10 py-8 border-b border-gray-50">
-          <h2 class="text-2xl font-black uppercase italic">Password</h2>
-          <p class="text-sm text-gray-500 mt-2 font-medium">
-            Change your login credentials.
-          </p>
-        </div>
-
-        <div class="p-10 max-w-xl">
-          <form [formGroup]="passwordForm" (ngSubmit)="updatePassword()" class="space-y-6">
-            <div class="group">
-              <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1 group-focus-within:text-red-800">Current Password</label>
-              <input formControlName="current_password"
-           name="current_password"  type="password" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-red-800 focus:border-2  focus:outline-none focus:ring-0">
-           <p *ngIf="formPasswordErrors.current_password" class="mt-1 text-xs text-red-600 font-semibold ml-1">
-            {{ formPasswordErrors.current_password }}
-          </p>
-            </div>
-
-            <div class="group">
-              <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1 group-focus-within:text-red-800">New Password</label>
-              <input formControlName="password"
-           name="password" type="password" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-red-800 focus:border-2  focus:outline-none focus:ring-0">
-           <p *ngIf="formPasswordErrors.password" class="mt-1 text-xs text-red-600 font-semibold ml-1">
-            {{ formPasswordErrors.password }}
-          </p>
-            </div>
-
-            <div class="group">
-              <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 mb-2 ml-1 group-focus-within:text-red-800">Confirm Password</label>
-              <input formControlName="password_confirmation"
-           name="password_confirmation" type="password" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-red-800 focus:border-2  focus:outline-none focus:ring-0">
-           <p *ngIf="formPasswordErrors.password_confirmation" class="mt-1 text-xs text-red-600 font-semibold ml-1">
-            {{ formPasswordErrors.password_confirmation }}
-          </p>
-            </div>
-
-            <button type="submit" class="px-10 py-4 bg-red-600 text-white font-bold rounded-xl">
-              Change Password
-            </button>
-          </form>
-        </div>
-      </div>
-
-    </section>
-  </div>
-</main>
+      </section>
+    </div>
+  </main>
 
 </div>

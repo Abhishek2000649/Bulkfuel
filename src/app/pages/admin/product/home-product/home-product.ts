@@ -45,6 +45,16 @@ clickOutside(event: Event): void {
   ngOnInit(): void {
     this.loadProducts();
   }
+  onImageError(event: any) {
+  event.target.src = this.defaultImage;
+}
+getImageSize(img: HTMLImageElement) {
+  console.log('Width:', img.clientWidth);   // displayed width
+  console.log('Height:', img.clientHeight); // displayed height
+
+  console.log('Natural Width:', img.naturalWidth);   // original image
+  console.log('Natural Height:', img.naturalHeight);
+}
 
   loadProducts() {
   this.isLoading = true;

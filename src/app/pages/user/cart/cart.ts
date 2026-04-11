@@ -36,7 +36,6 @@ export class Cart implements OnInit {
     this.loadCart();
   }
 
-  // ================= LOAD CART =================
  loadCart() {
   this.isLoading = true;
 
@@ -53,7 +52,7 @@ export class Cart implements OnInit {
           ...item,
           selected: false
         }));
-
+        console.log("carditem"+JSON.stringify(this.cartItems));
         this.updateStockWarnings();
         this.calculateTotal();
       },

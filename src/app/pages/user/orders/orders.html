@@ -4,7 +4,6 @@
 <div class="max-w-[1400px] mx-auto py-6 font-sans">
   <app-spinner [isLoading]="isLoading" [loaderSize]="100"></app-spinner>
 
-  <!-- ================= HEADER ================= -->
   <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
     <div>
       <a [routerLink]="['/user']"
@@ -187,8 +186,9 @@
                 <!-- PRODUCT -->
                 <td class="px-4 py-3 flex items-center gap-2">
                   <div class="w-8 h-8 bg-gray-100 rounded-md flex items-center justify-center">
-                    <img [src]="'https://picsum.photos/seed/' + item?.products?.id + '/400/300'"
-                      class="rounded-lg w-full h-full object-cover">
+                    
+                      <img  [src]="item?.product?.image_url || 'https://picsum.photos/seed/' + item?.product?.id + '/400/300'"
+                          class="rounded-lg w-full h-full object-cover">
                   </div>
                 </td>
 

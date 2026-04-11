@@ -1,11 +1,8 @@
-
-<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#dcd6e6] via-[#e7d6d9] to-[#f1d6d9] py-16">
+ <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#dcd6e6] via-[#e7d6d9] to-[#f1d6d9] py-16">
  <app-spinner [isLoading]="isLoading" [loaderSize]="100"></app-spinner>
-<!-- MAIN CARD -->
 <div class="md:min-w-[620px] min-w-full rounded-[30px] border-[8px] border-white shadow-2xl 
 bg-gradient-to-br from-[#e8e5f3] via-[#f1e5e8] to-[#f7e3e6] md:p-8 p-2">
 
-<!-- HEADER -->
 <div class="flex items-center gap-4 mb-6">
   <div class="w-14 h-14 rounded-full bg-white flex items-center justify-center shadow">
     <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -21,10 +18,8 @@ bg-gradient-to-br from-[#e8e5f3] via-[#f1e5e8] to-[#f7e3e6] md:p-8 p-2">
 </div>
 
 
-<!-- FORM -->
 <div class="bg-white/60 backdrop-blur-md rounded-2xl p-6 shadow-inner space-y-4">
 <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="space-y-4">
-<!-- FULL NAME -->
 <div>
 <label class="text-gray-700 text-sm">Full Name</label>
 <div class="mt-1 flex items-center border-2 border-blue-300 rounded-xl px-3 py-2 bg-white shadow-sm">
@@ -43,7 +38,6 @@ class="w-full outline-none text-gray-700"/>
 </div>
 
 
-<!-- EMAIL -->
 <div>
 <label class="text-gray-700 text-sm">Email Address</label>
 <div class="mt-1 flex items-center border-2 border-orange-300 rounded-xl px-3 py-2 bg-white shadow-sm">
@@ -60,7 +54,6 @@ class="w-full outline-none"/>
 </div>
 
 
-<!-- ROLE -->
 
 
 <div>
@@ -71,7 +64,6 @@ class="w-full outline-none"/>
 
   <div class="relative w-full" #dropdownWrapper>
 
-    <!-- Header -->
     <div 
          class="w-full  flex justify-between items-center">
 
@@ -90,7 +82,6 @@ class="w-full outline-none"/>
 
     </div>
 
-    <!-- Dropdown -->
     <div *ngIf="isDropdownOpen"
          class="absolute  w-full mt-2 bg-white border-2 border-red-600 rounded-xl shadow-lg overflow-hidden z-50">
         <div class="px-4 py-3  bg-red-500 text-white cursor-pointer transition"> Select role</div>
@@ -115,7 +106,6 @@ class="w-full outline-none"/>
 
 
 
-<!-- PHONE -->
 <div>
 <label class="text-gray-700 text-sm">Phone Number</label>
 
@@ -131,7 +121,6 @@ class="w-full outline-none"/>
 </div>
 
 
-<!-- PASSWORD -->
 
 
 
@@ -140,7 +129,6 @@ class="w-full outline-none"/>
 
 <div class="relative border-2 border-pink-300 mt-1 rounded-xl px-4 py-2 bg-white shadow-sm">
 
-  <!-- Input -->
   <div class="flex items-center pr-10">
     <span class="text-gray-500">🔒</span>
     <input
@@ -151,7 +139,6 @@ class="w-full outline-none"/>
     />
   </div>
 
-  <!-- Icon -->
   <button
     type="button"
     (click)="showPassword = !showPassword"
@@ -172,7 +159,6 @@ class="w-full outline-none"/>
         -4.477 0-8.268-2.943-9.542-7z"/>
     </svg>
 
-    <!-- Eye Slash -->
     <svg *ngIf="showPassword"
          xmlns="http://www.w3.org/2000/svg"
          class="w-6 h-6"
@@ -190,7 +176,6 @@ class="w-full outline-none"/>
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
         d="M3 3l18 18"/>
     </svg>
-    <!-- svg -->
   </button>
 
 </div>
@@ -205,19 +190,15 @@ class="w-full outline-none"/>
 
 
 
-<!-- CONFIRM PASSWORD -->
 <div>
 <label class="text-gray-700 text-sm">Confirm Password</label>
 
  <div class="relative flex items-center mt-1 border-2 border-orange-300 focus-within:border-orange-500 transition rounded-xl px-4 py-2 bg-white shadow-sm">
 
-    <!-- Left Section -->
     <div class="flex items-center pr-10">
       
-      <!-- Lock Icon -->
       <span class="text-gray-500 text-lg">🔒</span>
 
-      <!-- Input -->
       <input
         formControlName="confirmPassword"
         [type]="showConfirmPassword ? 'text' : 'password'"
@@ -226,13 +207,11 @@ class="w-full outline-none"/>
       />
     </div>
 
-    <!-- Toggle Button -->
     <button
       type="button"
       (click)="showConfirmPassword = !showConfirmPassword"
       class="absolute right-3 top-1/2 -translate-y-1/2 ml-2 text-red-700 flex-shrink-0 p-2 rounded-md hover:bg-gray-100 transition"
     >
-      <!-- Eye -->
       <svg *ngIf="!showConfirmPassword"
            xmlns="http://www.w3.org/2000/svg"
            class="w-6 h-6"
@@ -248,7 +227,6 @@ class="w-full outline-none"/>
           -4.477 0-8.268-2.943-9.542-7z"/>
       </svg>
 
-      <!-- Eye Slash -->
       <svg *ngIf="showConfirmPassword"
            xmlns="http://www.w3.org/2000/svg"
            class="w-6 h-6"
@@ -277,7 +255,6 @@ class="w-full outline-none"/>
 </div>
 
 
-<!-- BUTTON -->
 <div class="pt-2">
 <button type="submit" class="w-full py-4 rounded-xl text-white text-lg font-semibold
 bg-gradient-to-r from-[#d91e3a] to-[#f05555] shadow-lg hover:opacity-90">
@@ -286,7 +263,6 @@ bg-gradient-to-r from-[#d91e3a] to-[#f05555] shadow-lg hover:opacity-90">
 </div>
 
 
-<!-- CANCEL -->
 <div class="text-center pt-2">
 <a routerLink="/admin/userManagement" class="text-red-700 underline cursor-pointer">Cancel & Return</a>
 </div>
@@ -296,5 +272,8 @@ bg-gradient-to-r from-[#d91e3a] to-[#f05555] shadow-lg hover:opacity-90">
 
 </div>
 
-</div>
+</div> 
+
+
+
 

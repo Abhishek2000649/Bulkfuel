@@ -1,157 +1,150 @@
-
-
 <div class="bg-gray-100 min-h-screen p-10">
-     
-
-<div class="max-w-7xl mx-auto">
-<app-spinner [isLoading]="isLoading" [loaderSize]="100"></app-spinner>
-
-<!-- Header -->
-<div class="flex flex-col md:flex-row space-y-6 md:space-y-0 md:items-center md:justify-between mb-10">
-
-<div class="flex items-center gap-4">
-<div class="bg-orange-500 text-white p-3 rounded-xl text-xl">👜</div>
-
-<div>
-<h1 class="text-3xl font-bold">
-Product <span class="text-red-500">Catalog</span>
-</h1>
-
-<p class="hidden md:flex text-gray-500 text-sm">
-Manage your global inventory efficiently and showcase your products attractively.
-</p>
-</div>
-</div>
-
-<a routerLink="/admin/product/add" class="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-xl shadow-lg flex items-center gap-2 flex justify-center items-center">
-<span class="text-xl">+</span> Add New Product
-</a>
-
-</div>
 
 
-<!-- Search Section -->
+     <div class="max-w-7xl mx-auto">
+          <app-spinner [isLoading]="isLoading" [loaderSize]="100"></app-spinner>
 
-<div class="flex flex-col md:flex-row md:items-end gap-4 mb-10">
+          <!-- Header -->
+          <div class="flex flex-col md:flex-row space-y-6 md:space-y-0 md:items-center md:justify-between mb-10">
 
-<!-- SEARCH -->
-<div class="flex items-center bg-white rounded-xl shadow-md px-5 h-[52px] w-full">
+               <div class="flex items-center gap-4">
+                    <div class="bg-orange-500 text-white p-3 rounded-xl text-xl">👜</div>
 
-<span class="text-gray-400 mr-3">🔍</span>
+                    <div>
+                         <h1 class="text-3xl font-bold">
+                              Product <span class="text-red-500">Catalog</span>
+                         </h1>
 
-<input 
-type="text"
-placeholder="Search product name..."
-class="w-full outline-none"
-[(ngModel)]="searchText"
-(input)="applyFilters()">
+                         <p class="hidden md:flex text-gray-500 text-sm">
+                              Manage your global inventory efficiently and showcase your products attractively.
+                         </p>
+                    </div>
+               </div>
 
-</div>
+               <a routerLink="/admin/product/add"
+                    class="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-xl shadow-lg flex items-center gap-2 flex justify-center items-center">
+                    <span class="text-xl">+</span> Add New Product
+               </a>
 
-
-<!-- CATEGORY DROPDOWN -->
-<div class="relative w-full md:w-64" #dropdownWrapper>
-
-<label class="text-xs font-semibold text-gray-500 uppercase">
-Category
-</label>
-
-<!-- Selected -->
-<div
-(click)="isDropdownOpen = !isDropdownOpen"
-class="w-full mt-2 bg-white shadow-md border rounded-xl h-[52px] px-4 flex items-center justify-between cursor-pointer hover:border-red-600 transition">
-
-<span class="text-gray-700">
-{{ selectedCategoryName || '-- Select Category --' }}
-</span>
-
-<svg class="w-4 h-4 text-gray-400 transition"
-     [class.rotate-180]="isDropdownOpen"
-     fill="none"
-     stroke="currentColor"
-     viewBox="0 0 24 24">
-<path stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-d="M19 9l-7 7-7-7"/>
-</svg>
-
-</div>
+          </div>
 
 
-<!-- DROPDOWN -->
-<div *ngIf="isDropdownOpen" 
-class="absolute left-0 w-full mt-2 bg-white border border-gray-200 rounded-xl shadow-xl overflow-hidden z-50">
+          <!-- Search Section -->
 
-<div class="px-4 py-3 bg-gray-50 text-gray-500 font-semibold border-b">
-All Categories
-</div>
+          <div class="flex flex-col md:flex-row md:items-end gap-4 mb-10">
 
-<div
-(click)="selectCategory(null)"
-class="px-4 py-3 text-gray-700 hover:bg-red-600 hover:text-white cursor-pointer transition">
-All
-</div>
+               <!-- SEARCH -->
+               <div class="flex items-center bg-white rounded-xl shadow-md px-5 h-[52px] w-full">
 
-<div *ngFor="let c of categories"
-(click)="selectCategory(c)"
-class="px-4 py-3 text-gray-700 hover:bg-red-600 hover:text-white cursor-pointer transition">
+                    <span class="text-gray-400 mr-3">🔍</span>
 
-{{ c.name }}
+                    <input type="text" placeholder="Search product name..." class="w-full outline-none"
+                         [(ngModel)]="searchText" (input)="applyFilters()">
 
-</div>
-
-</div>
-
-</div>
-
-</div>
+               </div>
 
 
-<!-- Product Cards -->
+               <!-- CATEGORY DROPDOWN -->
+               <div class="relative w-full md:w-64" #dropdownWrapper>
 
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                    <label class="text-xs font-semibold text-gray-500 uppercase">
+                         Category
+                    </label>
 
-<!-- CARD -->
-<div  *ngFor="let p of filteredProducts; trackBy: trackById" class="bg-white rounded-2xl shadow p-5">
+                    <!-- Selected -->
+                    <div (click)="isDropdownOpen = !isDropdownOpen"
+                         class="w-full mt-2 bg-white shadow-md border rounded-xl h-[52px] px-4 flex items-center justify-between cursor-pointer hover:border-red-600 transition">
 
-<img [src]="'https://picsum.photos/seed/' + p.id + '/400/300'"
-class="rounded-lg w-full h-40 object-cover mb-4">
+                         <span class="text-gray-700">
+                              {{ selectedCategoryName || '-- Select Category --' }}
+                         </span>
 
-<div class="flex justify-between items-center">
-<h3 class="text-xl font-semibold"> {{ p.name }}</h3>
-<span class="bg-orange-100 text-orange-700 text-xs px-3 py-1 rounded-full">{{ p.category?.name }}</span>
-</div>
+                         <svg class="w-4 h-4 text-gray-400 transition" [class.rotate-180]="isDropdownOpen" fill="none"
+                              stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                   d="M19 9l-7 7-7-7" />
+                         </svg>
 
-<p class="text-gray-600 mt-2"> {{ p.stock }} Units</p>
+                    </div>
 
-<div class="w-full h-2 bg-gray-200 rounded mt-2">
-<div class=" h-2 bg-green-500 rounded" [style.width.%]="p.stock > 100 ? 100 : p.stock"></div>
-</div>
 
-<div class="flex justify-between items-center mt-3">
-<span class="text-gray-500 text-sm"> {{ p.created_at | date:'dd MMM yyyy' }}</span>
-<span class="text-red-800 font-bold text-xl">₹{{ p.price | number }}</span>
-</div>
+                    <!-- DROPDOWN -->
+                    <div *ngIf="isDropdownOpen"
+                         class="absolute left-0 w-full mt-2 bg-white border border-gray-200 rounded-xl shadow-xl overflow-hidden z-50">
 
-<div class="flex justify-between mt-5">
+                         <div class="px-4 py-3 bg-gray-50 text-gray-500 font-semibold border-b">
+                              All Categories
+                         </div>
 
-<a [routerLink]="['/admin/product/edit', p.id]" class="border px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-gray-100">
-✏️ Edit
-</a>
+                         <div (click)="selectCategory(null)"
+                              class="px-4 py-3 text-gray-700 hover:bg-red-600 hover:text-white cursor-pointer transition">
+                              All
+                         </div>
 
-<button  (click)="deleteProduct(p.id)" class="border px-4 py-2 rounded-lg text-red-700 hover:bg-red-50">
-Delete
-</button>
+                         <div *ngFor="let c of categories" (click)="selectCategory(c)"
+                              class="px-4 py-3 text-gray-700 hover:bg-red-600 hover:text-white cursor-pointer transition">
 
-</div>
+                              {{ c.name }}
 
-</div>
+                         </div>
+
+                    </div>
+
+               </div>
+
+          </div>
+
+
+          <!-- Product Cards -->
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+
+               <!-- CARD -->
+               <div *ngFor="let p of filteredProducts; trackBy: trackById" class="bg-white rounded-2xl shadow p-5">
+
+                    <!-- <img [src]="'https://picsum.photos/seed/' + p.id + '/400/300'"
+                              class="rounded-lg w-full h-40 object-cover mb-4"> -->
+                    <img #imgRef [src]="p.image_url || 'https://picsum.photos/seed/' + p.id + '/400/300'"
+                          class="rounded-lg w-full h-40 object-cover mb-4">
+
+                    <div class="flex justify-between items-center">
+                         <h3 class="text-xl font-semibold"> {{ p.name }}</h3>
+                         <span class="bg-orange-100 text-orange-700 text-xs px-3 py-1 rounded-full">{{ p.category?.name
+                              }}</span>
+                    </div>
+
+                    <p class="text-gray-600 mt-2"> {{ p.stock }} Units</p>
+
+                    <div class="w-full h-2 bg-gray-200 rounded mt-2">
+                         <div class=" h-2 bg-green-500 rounded" [style.width.%]="p.stock > 100 ? 100 : p.stock"></div>
+                    </div>
+
+                    <div class="flex justify-between items-center mt-3">
+                         <span class="text-gray-500 text-sm"> {{ p.created_at | date:'dd MMM yyyy' }}</span>
+                         <span class="text-red-800 font-bold text-xl">₹{{ p.price | number }}</span>
+                    </div>
+
+                    <div class="flex justify-between mt-5">
+
+                         <a [routerLink]="['/admin/product/edit', p.id]"
+                              class="border px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-gray-100">
+                              ✏️ Edit
+                         </a>
+
+                         <button (click)="deleteProduct(p.id)"
+                              class="border px-4 py-2 rounded-lg text-red-700 hover:bg-red-50">
+                              Delete
+                         </button>
+
+                    </div>
+
+               </div>
 
 
 
 
-</div>
+          </div>
+
+     </div>
 
 </div>
-
-</div>
-

@@ -129,7 +129,6 @@ export class AddUserManagement {
     )
     .subscribe({
 
-      // ✅ SUCCESS
       next: (res: any) => {
 
         Swal.fire({
@@ -146,7 +145,6 @@ export class AddUserManagement {
 
       },
 
-      // ❌ ERROR
       error: (err: any) => {
 
         Swal.fire({
@@ -172,7 +170,6 @@ roles = ['ADMIN','USER','delivery_agent'];
 selectedRole: string | null = null;
 
 
-// Toggle dropdown
 toggleDropdown(event: Event): void {
 
   event.stopPropagation();
@@ -182,7 +179,6 @@ toggleDropdown(event: Event): void {
 }
 
 
-// Select role
 selectRole(role: string, event: Event): void {
 
   event.stopPropagation();
@@ -199,7 +195,6 @@ selectRole(role: string, event: Event): void {
 }
 
 
-// Close dropdown when clicking outside
 @HostListener('document:click', ['$event'])
 clickOutside(event: Event): void {
 
@@ -214,3 +209,6 @@ clickOutside(event: Event): void {
 }
 
 }
+
+
+

@@ -139,3 +139,120 @@ export class HomeUserManagement {
 }
 
 }
+
+
+// import { CommonModule } from '@angular/common';
+// import { Component } from '@angular/core';
+// import { Spinner } from '../../../../shared/spinner/spinner';
+// import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+// import { RouterModule } from '@angular/router';
+
+// @Component({
+//   selector: 'app-home-user-management',
+//    imports: [CommonModule, ReactiveFormsModule, RouterModule, ],
+//   templateUrl: './home-user-management.html',
+// })
+// export class HomeUserManagement {
+
+//   userForm!: FormGroup;
+
+//   dashboards = [
+//     { id: 1, name: 'Admin Dashboard' },
+//     { id: 2, name: 'Bank Dashboard' },
+//     { id: 3, name: 'Vendor Dashboard' }
+//   ];
+
+//   allRoles = [
+//     { role_id: 1, dashboard_id: 1, role_name: 'Admin' },
+//     { role_id: 2, dashboard_id: 2, role_name: 'Bank User' },
+//     { role_id: 3, dashboard_id: 3, role_name: 'Vendor User' }
+//   ];
+
+//   dashboardRoleSelections: any[] = [];
+
+//   passwordType = 'password';
+
+//   constructor(private fb: FormBuilder) {
+
+//     this.userForm = this.fb.group({
+//       name: ['', Validators.required],
+//       email: ['', [Validators.required, Validators.email]],
+//       phone: ['', Validators.required],
+//       designation: ['', Validators.required],
+//       password: ['', Validators.required],
+//       confirmPassword: ['', Validators.required],
+//     }, { validators: this.passwordMatchValidator });
+
+//     this.addRow();
+//   }
+
+//   passwordMatchValidator(form: FormGroup) {
+//     const pass = form.get('password')?.value;
+//     const confirm = form.get('confirmPassword')?.value;
+//     return pass === confirm ? null : { mismatch: true };
+//   }
+
+//   addRow() {
+//     this.dashboardRoleSelections.push({
+//       selectedDashboard: null,
+//       selectedRole: null,
+//       roles: []
+//     });
+//   }
+
+//   onDashboardChange(index: number) {
+//     const dashboardId = this.dashboardRoleSelections[index].selectedDashboard;
+
+//     this.dashboardRoleSelections[index].roles =
+//       this.allRoles.filter(r => r.dashboard_id == dashboardId);
+
+//     this.dashboardRoleSelections[index].selectedRole = null;
+//   }
+
+//   removeRow(index: number) {
+//     this.dashboardRoleSelections.splice(index, 1);
+//   }
+
+//   onSubmit() {
+//     if (this.userForm.invalid) {
+//       alert('Please fill all fields correctly');
+//       return;
+//     }
+
+//     const dashboards = this.dashboardRoleSelections.map(item => ({
+//       dashboard_id: item.selectedDashboard,
+//       role_id: item.selectedRole
+//     }));
+
+//     const finalData = {
+//       ...this.userForm.value,
+//       dashboards
+//     };
+
+//     console.log('Submitted Data:', finalData);
+//     alert('Form Submitted Successfully ✅');
+
+//     this.userForm.reset();
+//     this.dashboardRoleSelections = [];
+//     this.addRow();
+//   }
+
+//   togglePassword() {
+//     this.passwordType =
+//       this.passwordType === 'password' ? 'text' : 'password';
+//   }
+
+//   generatePassword() {
+//     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$';
+//     let password = '';
+
+//     for (let i = 0; i < 8; i++) {
+//       password += chars[Math.floor(Math.random() * chars.length)];
+//     }
+
+//     this.userForm.patchValue({
+//       password,
+//       confirmPassword: password
+//     });
+//   }
+// }

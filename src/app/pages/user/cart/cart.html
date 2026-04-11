@@ -30,90 +30,87 @@
 
 
     <!-- ================= CART ITEMS ================= -->
-   <div *ngFor="let item of cartItems"
-  class="bg-white rounded-xl p-4 border shadow-sm flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <div *ngFor="let item of cartItems"
+      class="bg-white rounded-xl p-4 border shadow-sm flex flex-col md:flex-row md:items-center md:justify-between gap-4">
 
-  <!-- 🔹 ROW 1 (Mobile) / LEFT SECTION (Desktop) -->
-  <div class="flex items-center justify-between w-full md:w-auto md:gap-4">
+      <!-- 🔹 ROW 1 (Mobile) / LEFT SECTION (Desktop) -->
+      <div class="flex items-center justify-between w-full md:w-auto md:gap-4">
 
-    <!-- Checkbox -->
-    <input type="checkbox"
-      [(ngModel)]="item.selected"
-      (change)="calculateTotal()"
-      class="w-5 h-5 accent-red-600" />
+        <!-- Checkbox -->
+        <input type="checkbox" [(ngModel)]="item.selected" (change)="calculateTotal()" class="w-5 h-5 accent-red-600" />
 
-    <!-- Image -->
-    <div class="w-20 h-20 bg-gray-50 rounded-lg overflow-hidden border">
-      <img [src]="item.product.image || 'https://picsum.photos/400/300'"
-        class="w-full h-full object-cover" />
-    </div>
+        <!-- Image -->
+        <div class="w-20 h-20 bg-gray-50 rounded-lg overflow-hidden border">
+          <!-- <img [src]="item.product.image || 'https://picsum.photos/400/300'"
+        class="w-full h-full object-cover" /> -->
+          <img [src]="item.image_url || 'https://picsum.photos/seed/' + item.id + '/400/300'"
+            class="rounded-lg w-full h-40 object-cover mb-4">
+        </div>
 
-  </div>
-
-  <!-- 🔹 INFO + WARNING -->
-  <div class="flex-1 flex flex-col gap-2">
-
-    <!-- Product Info -->
-    <div class="flex justify-between items-start md:block">
-      <div>
-        <h3 class="text-lg md:text-xl font-bold">
-          {{ item.product.name }}
-        </h3>
-        <p class="text-sm text-gray-500 font-medium">
-          ₹ {{ item.product.price }}
-        </p>
       </div>
+
+      <!-- 🔹 INFO + WARNING -->
+      <div class="flex-1 flex flex-col gap-2">
+
+        <!-- Product Info -->
+        <div class="flex justify-between items-start md:block">
+          <div>
+            <h3 class="text-lg md:text-xl font-bold">
+              {{ item.product.name }}
+            </h3>
+            <p class="text-sm text-gray-500 font-medium">
+              ₹ {{ item.product.price }}
+            </p>
+          </div>
+        </div>
+
+        <!-- ⚠️ WARNING ROW (Mobile separate row) -->
+        <div *ngIf="stockWarnings[item.product_id] || item.quantity >= item.product.totalStock"
+          class="bg-red-50 border border-red-200 rounded-lg p-2 text-xs text-red-700 flex justify-between">
+
+          <p *ngIf="stockWarnings[item.product_id]">
+            ❌ {{ stockWarnings[item.product_id] }}
+          </p>
+
+          <p *ngIf="item.quantity >= item.product.totalStock">
+            🚫 Max stock reached
+          </p>
+
+        </div>
+
+      </div>
+
+      <!-- 🔹 ROW 3 (Mobile) / RIGHT SECTION (Desktop) -->
+      <div class="flex items-center justify-between w-full md:w-auto md:gap-6">
+
+        <!-- Quantity -->
+        <div class="flex items-center bg-gray-50 rounded-full border px-2 py-0.5">
+          <button (click)="decrease(item)" class="text-red-700 px-2">−</button>
+
+          <span class="w-8 text-center font-bold text-sm">
+            {{ item.quantity }}
+          </span>
+
+          <button (click)="increase(item)" [disabled]="item.quantity >= item.product.totalStock"
+            class="text-red-700 px-2 disabled:opacity-40 disabled:cursor-not-allowed">
+            +
+          </button>
+        </div>
+
+        <!-- Price -->
+        <div class="text-right">
+          <p class="text-lg md:text-xl font-black">
+            ₹ {{ item.product.price * item.quantity }}
+          </p>
+
+          <button (click)="remove(item)" class="text-xs text-red-700 hover:bg-red-50 px-2 py-0.5 rounded-md mt-1">
+            Remove
+          </button>
+        </div>
+
+      </div>
+
     </div>
-
-    <!-- ⚠️ WARNING ROW (Mobile separate row) -->
-    <div *ngIf="stockWarnings[item.product_id] || item.quantity >= item.product.totalStock"
-      class="bg-red-50 border border-red-200 rounded-lg p-2 text-xs text-red-700 flex justify-between">
-
-      <p *ngIf="stockWarnings[item.product_id]">
-        ❌ {{ stockWarnings[item.product_id] }}
-      </p>
-
-      <p *ngIf="item.quantity >= item.product.totalStock">
-        🚫 Max stock reached
-      </p>
-
-    </div>
-
-  </div>
-
-  <!-- 🔹 ROW 3 (Mobile) / RIGHT SECTION (Desktop) -->
-  <div class="flex items-center justify-between w-full md:w-auto md:gap-6">
-
-    <!-- Quantity -->
-    <div class="flex items-center bg-gray-50 rounded-full border px-2 py-0.5">
-      <button (click)="decrease(item)" class="text-red-700 px-2">−</button>
-
-      <span class="w-8 text-center font-bold text-sm">
-        {{ item.quantity }}
-      </span>
-
-      <button (click)="increase(item)"
-        [disabled]="item.quantity >= item.product.totalStock"
-        class="text-red-700 px-2 disabled:opacity-40 disabled:cursor-not-allowed">
-        +
-      </button>
-    </div>
-
-    <!-- Price -->
-    <div class="text-right">
-      <p class="text-lg md:text-xl font-black">
-        ₹ {{ item.product.price * item.quantity }}
-      </p>
-
-      <button (click)="remove(item)"
-        class="text-xs text-red-700 hover:bg-red-50 px-2 py-0.5 rounded-md mt-1">
-        Remove
-      </button>
-    </div>
-
-  </div>
-
-</div>
 
     <!-- ================= ORDER SUMMARY ================= -->
     <div *ngIf="cartItems.length !== 0"

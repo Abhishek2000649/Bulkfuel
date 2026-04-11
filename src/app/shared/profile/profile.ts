@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ProfileService } from '../../core/services/Auth/profile/profile-service';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -6,6 +6,7 @@ import { Spinner } from '../spinner/spinner';
 import { finalize } from 'rxjs';
 import { pattern, required } from '@angular/forms/signals';
 import Swal from 'sweetalert2';
+
 type ProfileBasicFormFields = 'name' | 'email' | 'phone';
 type ProfileAddressFormFields = 'address' | 'city' | 'state' | 'pincode';
 type ProfilePasswordFormFields = 'current_password' | 'password' | 'password_confirmation';
@@ -17,6 +18,10 @@ type ProfilePasswordFormFields = 'current_password' | 'password' | 'password_con
   styleUrl: './profile.css',
 })
 export class Profile implements OnInit {
+  @ViewChild('fileInput') fileInput!: ElementRef;
+
+  previewImage: string | ArrayBuffer | null = null;
+  selectedFile!: File;
   basicForm!: FormGroup;
   addressForm!: FormGroup;
   passwordForm!: FormGroup;
@@ -41,6 +46,7 @@ export class Profile implements OnInit {
     },
 
   };
+
 
   formAddressErrors: Record<ProfileAddressFormFields, string> = {
     address: '',
@@ -88,6 +94,29 @@ export class Profile implements OnInit {
     }
 
   };
+  onFileChange(event: any) {
+    const file = event.target.files[0];
+
+    if (file) {
+      this.selectedFile = file;
+
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        this.previewImage = reader.result as string;
+
+        this.user.profile_image_url = null;
+
+        this.cdr.detectChanges();
+      };
+
+      reader.readAsDataURL(file);
+    }
+  }
+  openFilePicker() {
+    this.fileInput.nativeElement.click();
+  }
+
   user: any = {};
   address: any = {};
   isLoading: boolean = false;
@@ -207,10 +236,11 @@ export class Profile implements OnInit {
 
     this.profileService.getProfile().subscribe({
       next: (res) => {
+        this.user = res.user;
         this.basicForm.patchValue({
           name: res.user.name,
           email: res.user.email,
-          phone:res.user.phone,
+          phone: res.user.phone,
         });
 
         if (res.user.address) {
@@ -282,7 +312,18 @@ export class Profile implements OnInit {
 
     this.isLoading = true;
 
-    this.profileService.updateBasic(this.basicForm.value).pipe(
+    const formData = new FormData();
+
+    formData.append('name', this.basicForm.value.name);
+    formData.append('email', this.basicForm.value.email);
+    formData.append('phone', this.basicForm.value.phone);
+
+    // ✅ Image add karo agar select ki hai
+    if (this.selectedFile) {
+      formData.append('image', this.selectedFile);
+    }
+
+    this.profileService.updateBasic(formData).pipe(
       finalize(() => {
         this.isLoading = false;
         this.cdr.detectChanges();
@@ -290,32 +331,22 @@ export class Profile implements OnInit {
     )
       .subscribe({
         next: (res) => {
-          this.message = res.message;
-
-          // ✅ Success Swal (Dark Red Theme)
           Swal.fire({
-            title: res.message || 'Updated successfully',
+            title: res.message || 'Profile updated successfully',
             icon: 'success',
-            confirmButtonText: 'OK',
             confirmButtonColor: '#d4af37',
             background: 'linear-gradient(135deg, #3b0000, #1a0000)',
-            color: '#ffffff',
-            iconColor: '#22c55e'
+            color: '#ffffff'
           });
         },
 
         error: (err) => {
-          this.error = err.error?.message || 'Update failed';
-
-          // ❌ Error Swal (Dark Red Theme)
           Swal.fire({
-            title: this.error,
+            title: err.error?.message || 'Update failed',
             icon: 'error',
-            confirmButtonText: 'OK',
             confirmButtonColor: '#d4af37',
             background: 'linear-gradient(135deg, #3b0000, #1a0000)',
-            color: '#ffffff',
-            iconColor: '#ef4444'
+            color: '#ffffff'
           });
         }
       });

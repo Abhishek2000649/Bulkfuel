@@ -5,7 +5,7 @@ import { Product } from '../../../../core/services/admin/product/product';
 import { Router, RouterLink, RouterModule } from '@angular/router';
 import { Spinner } from '../../../../shared/spinner/spinner';
 import Swal from 'sweetalert2';
-type ProductFormFields = 'name' | 'price' | 'stock' | 'category_id' | 'description' | 'payment_type';
+type ProductFormFields = 'name' | 'price' | 'stock' | 'category_id' | 'description' | 'payment_type' | 'image';
 @Component({
   selector: 'app-add-product',
   standalone: true,
@@ -17,7 +17,35 @@ export class AddProduct implements OnInit {
   // Payment dropdown state
 isPaymentDropdownOpen = false;
 selectedPaymentType: string = '';
+previewImage: string | ArrayBuffer | null = null;
+selectedFile!: File;
 
+ onFileChange(event: any) {
+  const file = event.target.files[0];
+
+  if (file) {
+
+    this.selectedFile = file;
+
+    this.productForm.patchValue({
+      image: file
+    });
+
+    this.productForm.get('image')?.updateValueAndValidity();
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      this.previewImage = reader.result as string;
+
+      // ✅ IMPORTANT: yahi lagana hai
+      this.cdr.detectChanges();
+
+    };
+
+    reader.readAsDataURL(file);
+  }
+}
 // Payment options (dynamic)
 paymentTypes = [
   { label: 'Cash (COD)', value: 'cash' },
@@ -66,6 +94,7 @@ selectPaymentType(p: any) {
     category_id: '',
     description: '',
     payment_type: '',
+    image: '',
   };
   validationMessages: Record<ProductFormFields, any> = {
     name: {
@@ -87,6 +116,8 @@ selectPaymentType(p: any) {
     },
     payment_type: {
       required: 'Select payment type'
+    },
+    image: {
     }
   };
   constructor(
@@ -117,6 +148,7 @@ selectPaymentType(p: any) {
       category_id: ['', Validators.required],
       description: ['', Validators.required],
       payment_type: ['both', Validators.required],
+      image: [null],
     });
   }
 
@@ -173,7 +205,7 @@ selectPaymentType(p: any) {
   // 🔹 Submit Product
   onSubmit() {
     this.isLoading = true;
-
+    
     if (this.productForm.invalid) {
       this.productForm.markAllAsTouched();
       this.updateFormErrors();
@@ -182,9 +214,23 @@ selectPaymentType(p: any) {
     }
 
     this.errors = [];
-    const payload = this.productForm.value;
+    // const payload = this.productForm.value;
+    console.log(this.selectedFile);
+    const formData = new FormData();
 
-    this.adminService.addProduct(payload).subscribe({
+formData.append('name', this.productForm.value.name);
+formData.append('price', this.productForm.value.price);
+formData.append('stock', this.productForm.value.stock);
+formData.append('category_id', this.productForm.value.category_id);
+formData.append('description', this.productForm.value.description);
+formData.append('payment_type', this.productForm.value.payment_type);
+
+if (this.selectedFile) {
+  formData.append('image', this.selectedFile);
+}
+console.log('Selected File:', this.selectedFile);
+console.log('FormData Image:', formData.get('image'));
+    this.adminService.addProduct(formData).subscribe({
       next: (res: any) => {
         this.isLoading = false;
 
