@@ -11,14 +11,16 @@ export class EchoService {
   public echo: Echo<any>;
 
   constructor() {
-    this.echo = new Echo({
-      broadcaster: 'reverb',
-      key: 'local-key',
-      wsHost: '127.0.0.1',
-       cluster: 'mt1', 
-      wsPort: 8080,
-      forceTLS: false,
-      disableStats: true,
-    });
+   this.echo = new Echo({
+  broadcaster: 'reverb',
+  key: 'local-key',
+
+  wsHost: 'reverb-server-production-a67c.up.railway.app',
+  wsPort: 443,
+  wssPort: 443,
+
+  forceTLS: true,
+  enabledTransports: ['ws', 'wss'],
+});
   }
 }
