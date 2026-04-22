@@ -29,9 +29,10 @@ export class DeliveryContact implements OnInit, OnDestroy {
   messages: any[] = [];
   newMessage: string = '';
 
-  private visibilityHandler: any;
-  private isMarkingSeen = false;
+  private channel: any = null;
   private currentChannelName: string | null = null;
+  private isMarkingSeen = false;
+  private visibilityHandler: any;
 
   currentUserId: number | null = null;
   conversationId: number | null = null;
@@ -47,7 +48,8 @@ export class DeliveryContact implements OnInit, OnDestroy {
 
   validationMessages: Record<chatFormFields, any> = {
     message: {
-      required: 'Message cannot be empty'
+      required: 'Message cannot be empty',
+      minlength: 'Message must be at least 1 character'
     }
   };
 
@@ -73,162 +75,165 @@ export class DeliveryContact implements OnInit, OnDestroy {
       if (!user) return;
 
       this.currentUserId = user.id;
-      this.loadMessages(true);
+      this.loadMessages(true); // 🔥 initial loader
     });
   }
 
   // ================= REALTIME =================
- listenToChat(): void {
+  listenToChat(): void {
 
-  if (!this.conversationId) return;
+    if (!this.conversationId) return;
 
-  const newChannel = `chat.${this.conversationId}`;
+    const newChannelName = `chat.${this.conversationId}`;
 
-  // ✅ SAME CHANNEL? then skip
-  if (this.currentChannelName === newChannel) return;
-
-  // ✅ leave old channel
-  if (this.currentChannelName) {
-    this.echoService.echo.leave(this.currentChannelName);
-  }
-
-  this.currentChannelName = newChannel;
-
-  const channel = this.echoService.echo.channel(newChannel);
-
-  // MESSAGE
-  channel.listen('.message.sent', (data: any) => {
-
-    const exists = this.messages.find(m => m.id === data.message.id);
-
-    if (!exists) {
-      this.messages.push(data.message);
-      this.cdr.detectChanges();
-      this.scrollToBottom();
-
-      setTimeout(() => {
-        if (
-          data.message.sender_id !== this.currentUserId &&
-          document.visibilityState === 'visible'
-        ) {
-          this.triggerSeen();
-        }
-      }, 150);
+    // ✅ leave old channel
+    if (this.currentChannelName) {
+      this.echoService.echo.leave(this.currentChannelName);
     }
-  });
 
-  // SEEN
-  channel.listen('.message.seen', (data: any) => {
+    this.currentChannelName = newChannelName;
 
-    if (Number(data.conversationId) !== Number(this.conversationId)) return;
+    this.channel = this.echoService.echo.channel(newChannelName);
 
-    this.messages = this.messages.map(msg => {
-      if (msg.sender_id === this.currentUserId) {
-        msg.is_seen = true;
+    // MESSAGE
+    this.channel.listen('.message.sent', (data: any) => {
+
+      const exists = this.messages.find(m => m.id === data.message.id);
+
+      if (!exists) {
+        this.messages.push(data.message);
+        this.cdr.detectChanges();
+
+        this.scrollToBottom();
+
+        setTimeout(() => {
+          if (
+            data.message.sender_id !== this.currentUserId &&
+            document.visibilityState === 'visible'
+          ) {
+            this.triggerSeen();
+          }
+        }, 150);
       }
-      return msg;
     });
 
-    this.cdr.detectChanges();
-  });
-}
+    // SEEN
+    this.channel.listen('.message.seen', (data: any) => {
+
+      if (Number(data.conversationId) !== Number(this.conversationId)) return;
+
+      this.messages = this.messages.map(msg => {
+        if (msg.sender_id === this.currentUserId) {
+          msg.is_seen = true;
+        }
+        return msg;
+      });
+
+      this.cdr.detectChanges();
+    });
+  }
 
   // ================= LOAD =================
   loadMessages(showLoader: boolean = false): void {
 
     if (!this.auth.userId) return;
 
-    if (showLoader) 
-      {
-        this.isLoading = true;
-         this.cdr.detectChanges(); 
-      }
+    if (showLoader) {
+      this.isLoading = true;
+      this.cdr.detectChanges();
+    }
 
     this.chatService.getMessages(this.conversationId || 0, this.role)
       .pipe(finalize(() => {
         if (showLoader) {
-          this.isLoading = false;
-          this.cdr.detectChanges();
+          setTimeout(() => {
+            this.isLoading = false;
+            this.cdr.detectChanges();
+          }, 300); // smooth loader
         }
       }))
       .subscribe({
         next: (res: any) => {
 
-          if (res.success) {
+          if (!res.success) return;
 
-            this.conversationId = res.conversation_id;
-              this.listenToChat();
-            
+          const newConversationId = res.conversation_id;
 
-            this.messages = res.messages;
-            this.cdr.detectChanges();
-
-            this.scrollToBottom();
-
-            const hasUnread = this.messages.some(
-              msg => msg.sender_id !== this.currentUserId && !msg.is_seen
-            );
-
-            setTimeout(() => {
-              if (hasUnread && document.visibilityState === 'visible') {
-                this.triggerSeen();
-              }
-            }, 200);
+          // 🔥 only setup once
+          if (!this.conversationId) {
+            this.conversationId = newConversationId;
+            this.listenToChat();
           }
+
+          this.messages = res.messages;
+          this.cdr.detectChanges();
+
+          this.scrollToBottom();
+
+          const hasUnread = this.messages.some(
+            msg => msg.sender_id !== this.currentUserId && !msg.is_seen
+          );
+
+          setTimeout(() => {
+            if (hasUnread && document.visibilityState === 'visible') {
+              this.triggerSeen();
+            }
+          }, 200);
         },
-        error: () => {
-          Swal.fire('Error loading messages');
+        error: (err: any) => {
+          Swal.fire({
+            title: err.error?.message || 'Failed to load messages',
+            icon: 'error'
+          });
         }
       });
   }
 
   // ================= SEND =================
-sendMessage(): void {
+  sendMessage(): void {
 
-  this.updateFormErrors();
-  if (this.formErrors.message) return;
+    this.updateFormErrors();
+    if (this.formErrors.message) return;
 
-  const tempMessage = {
-    id: Date.now(),
-    message: this.newMessage,
-    sender_id: this.currentUserId,
-    is_seen: false
-  };
+    const payload = {
+      message: this.newMessage,
+      conversation_id: this.conversationId
+    };
 
-  // ✅ instant UI
-  this.messages.push(tempMessage);
-  this.scrollToBottom();
+    this.isLoading = true;
 
-  this.chatService.sendMessage({
-    message: this.newMessage,
-    conversation_id: this.conversationId
-  }, this.role).subscribe((res: any) => {
+    this.chatService.sendMessage(payload, this.role)
+      .pipe(finalize(() => {
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      }))
+      .subscribe({
+        next: (res: any) => {
 
-    if (res.success) {
+          if (!res.success) return;
 
-      this.newMessage = '';
+          this.newMessage = '';
 
-      this.conversationId = res.conversation_id;
+          // 🔥 reload messages (same as user)
+          this.loadMessages(false);
 
-      // 🔥 IMPORTANT FIX
-      this.listenToChat();
-
-      // replace temp message
-      this.messages = this.messages.map(m =>
-        m.id === tempMessage.id ? res.message : m
-      );
-
-      this.cdr.detectChanges();
-    }
-  });
-}
+          this.scrollToBottom();
+        },
+        error: (err: any) => {
+          Swal.fire({
+            title: err.error?.message || 'Failed to send message',
+            icon: 'error'
+          });
+        }
+      });
+  }
 
   // ================= VALIDATION =================
   updateFormErrors(): void {
     this.formErrors.message = '';
 
-    if (!this.newMessage?.trim()) {
-      this.formErrors.message = 'Message required';
+    if (!this.newMessage || this.newMessage.trim().length === 0) {
+      this.formErrors.message = this.validationMessages.message.required;
     }
   }
 
