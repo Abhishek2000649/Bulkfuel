@@ -231,9 +231,7 @@ export class EditProduct {
           payment_type: product.payment_type,
 
         });
-        this.previewImage = product.image
-          ? 'http://127.0.0.1:8000/' + product.image
-          : null;
+        this.previewImage = product.image || null;
 
         // ✅ Category set
         const category = this.categories.find(c => c.id == product.category_id);
