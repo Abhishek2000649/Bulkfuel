@@ -155,10 +155,7 @@ export class UserContact implements OnInit, OnDestroy {
 
             this.conversationId = newConversationId;
 
-            // ✅ rebind only if needed
-            if (this.currentChannelName !== `chat.${this.conversationId}`) {
-              this.listenToChat();
-            }
+            this.listenToChat(); 
 
             this.messages = res.messages;
             this.cdr.detectChanges();
@@ -215,6 +212,7 @@ export class UserContact implements OnInit, OnDestroy {
         next: (res: any) => {
           if (res.success) {
             this.newMessage = '';
+             this.loadMessages(false);
             this.scrollToBottom();
           }
         },

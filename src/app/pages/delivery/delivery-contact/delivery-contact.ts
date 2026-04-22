@@ -150,10 +150,8 @@ export class DeliveryContact implements OnInit, OnDestroy {
           if (res.success) {
 
             this.conversationId = res.conversation_id;
-
-            if (this.currentChannelName !== `chat.${this.conversationId}`) {
               this.listenToChat();
-            }
+            
 
             this.messages = res.messages;
             this.cdr.detectChanges();
@@ -178,19 +176,27 @@ export class DeliveryContact implements OnInit, OnDestroy {
   }
 
   // ================= SEND =================
-  sendMessage(): void {
+ sendMessage(): void {
 
-    this.updateFormErrors();
-    if (this.formErrors.message) return;
+  this.updateFormErrors();
+  if (this.formErrors.message) return;
 
-    this.chatService.sendMessage({
-      message: this.newMessage,
-      conversation_id: this.conversationId
-    }, this.role).subscribe(() => {
+  this.chatService.sendMessage({
+    message: this.newMessage,
+    conversation_id: this.conversationId
+  }, this.role).subscribe((res: any) => {
+
+    if (res.success) {
+
       this.newMessage = '';
+
+      // 🔥 IMPORTANT FIX
+      this.loadMessages(false);   // reload + get conversationId + bind channel
+
       this.scrollToBottom();
-    });
-  }
+    }
+  });
+}
 
   // ================= VALIDATION =================
   updateFormErrors(): void {
