@@ -37,8 +37,9 @@ getProductById(id: number) {
 
 // UPDATE PRODUCT
 updateProduct(id: number, data: any) {
-  // backend uses PUT
-  return this.http.put(`${this.apiUrl}/products/update/${id}`, data);
+  data.append('_method', 'PUT');   // 👈 spoofing
+
+  return this.http.post(`${this.apiUrl}/products/update/${id}`, data);
 }
 
 
