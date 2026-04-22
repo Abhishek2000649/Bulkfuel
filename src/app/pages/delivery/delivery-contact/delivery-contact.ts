@@ -84,6 +84,10 @@ export class DeliveryContact implements OnInit, OnDestroy {
 
     const newChannel = `chat.${this.conversationId}`;
 
+    // ✅ SAME CHANNEL? then skip
+    if (this.currentChannelName === newChannel) return;
+
+    // ✅ leave old channel
     if (this.currentChannelName) {
       this.echoService.echo.leave(this.currentChannelName);
     }
@@ -100,7 +104,6 @@ export class DeliveryContact implements OnInit, OnDestroy {
       if (!exists) {
         this.messages.push(data.message);
         this.cdr.detectChanges();
-
         this.scrollToBottom();
 
         setTimeout(() => {
@@ -150,8 +153,8 @@ export class DeliveryContact implements OnInit, OnDestroy {
           if (res.success) {
 
             this.conversationId = res.conversation_id;
-              this.listenToChat();
-            
+            this.listenToChat();
+
 
             this.messages = res.messages;
             this.cdr.detectChanges();
@@ -176,27 +179,51 @@ export class DeliveryContact implements OnInit, OnDestroy {
   }
 
   // ================= SEND =================
- sendMessage(): void {
+  sendMessage(): void {
 
-  this.updateFormErrors();
-  if (this.formErrors.message) return;
+    this.updateFormErrors();
+    if (this.formErrors.message) return;
 
-  this.chatService.sendMessage({
-    message: this.newMessage,
-    conversation_id: this.conversationId
-  }, this.role).subscribe((res: any) => {
+    const tempMessage = {
+      id: Date.now(),
+      message: this.newMessage,
+      sender_id: this.currentUserId,
+      is_seen: false
+    };
 
-    if (res.success) {
+    // ✅ UI update
+    this.messages.push(tempMessage);
+    this.scrollToBottom();
 
-      this.newMessage = '';
+    // 🔥 ADD THIS
+    this.isLoading = true;
 
-      // 🔥 IMPORTANT FIX
-      this.loadMessages(false);   // reload + get conversationId + bind channel
+    this.chatService.sendMessage({
+      message: this.newMessage,
+      conversation_id: this.conversationId
+    }, this.role)
+      .pipe(finalize(() => {
+        // 🔥 STOP loader
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      }))
+      .subscribe((res: any) => {
 
-      this.scrollToBottom();
-    }
-  });
-}
+        if (res.success) {
+
+          this.newMessage = '';
+          this.conversationId = res.conversation_id;
+
+          this.listenToChat();
+
+          this.messages = this.messages.map(m =>
+            m.id === tempMessage.id ? res.message : m
+          );
+
+          this.cdr.detectChanges();
+        }
+      });
+  }
 
   // ================= VALIDATION =================
   updateFormErrors(): void {
