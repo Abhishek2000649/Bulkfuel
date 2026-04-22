@@ -21,7 +21,7 @@ export class Profile implements OnInit {
   @ViewChild('fileInput') fileInput!: ElementRef;
 
   previewImage: string | ArrayBuffer | null = null;
-  selectedFile!: File;
+selectedFile: File | null = null;
   basicForm!: FormGroup;
   addressForm!: FormGroup;
   passwordForm!: FormGroup;
@@ -95,24 +95,25 @@ export class Profile implements OnInit {
 
   };
   onFileChange(event: any) {
-    const file = event.target.files[0];
+  const file = event.target.files[0];
 
-    if (file) {
-      this.selectedFile = file;
+  console.log('FILE:', file); // 🔥 DEBUG
 
-      const reader = new FileReader();
+  if (file && file instanceof File) {
+    this.selectedFile = file;
 
-      reader.onload = () => {
-        this.previewImage = reader.result as string;
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.previewImage = reader.result as string;
+      this.user.profile_image_url = null;
+      this.cdr.detectChanges();
+    };
 
-        this.user.profile_image_url = null;
-
-        this.cdr.detectChanges();
-      };
-
-      reader.readAsDataURL(file);
-    }
+    reader.readAsDataURL(file);
+  } else {
+    this.selectedFile = null;
   }
+}
   openFilePicker() {
     this.fileInput.nativeElement.click();
   }
@@ -304,24 +305,21 @@ export class Profile implements OnInit {
      UPDATE BASIC
   ========================= */
   updateBasic() {
-    if (this.basicForm.invalid) {
-      this.basicForm.markAllAsTouched();
-      this.updateBasicFormErrors();
-      return;
-    }
+    if (this.basicForm.invalid) return;
 
-    this.isLoading = true;
+  const formData = new FormData();
 
-    const formData = new FormData();
+  formData.append('name', this.basicForm.value.name);
+  formData.append('email', this.basicForm.value.email);
+  formData.append('phone', this.basicForm.value.phone);
 
-    formData.append('name', this.basicForm.value.name);
-    formData.append('email', this.basicForm.value.email);
-    formData.append('phone', this.basicForm.value.phone);
+  if (this.selectedFile instanceof File) {
+    formData.append('image', this.selectedFile, this.selectedFile.name);
+  }
 
-    // ✅ Image add karo agar select ki hai
-    if (this.selectedFile) {
-      formData.append('image', this.selectedFile);
-    }
+  for (let pair of (formData as any).entries()) {
+    console.log(pair[0], pair[1]);
+  }
 
     this.profileService.updateBasic(formData).pipe(
       finalize(() => {

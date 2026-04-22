@@ -1,96 +1,142 @@
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  OnDestroy
+} from '@angular/core';
 
-
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ChatService } from '../../../core/services/contact/chat-service';
 import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Spinner } from '../../../shared/spinner/spinner';
 import { FormsModule } from '@angular/forms';
-import { finalize, interval, Subscription } from 'rxjs';
+import { finalize, Subscription } from 'rxjs';
 import { Auth } from '../../../core/services/Auth/authservice/auth';
+import { EchoService } from '../../../core/services/echo.service';
 
 type chatFormFields = 'message';
 
 @Component({
- selector: 'app-delivery-contact',
-   standalone: true,
+  selector: 'app-delivery-contact',
+  standalone: true,
   imports: [CommonModule, RouterModule, Spinner, FormsModule],
- templateUrl: './delivery-contact.html',
+  templateUrl: './delivery-contact.html',
   styleUrl: './delivery-contact.css',
 })
-export class DeliveryContact implements OnInit {
+export class DeliveryContact implements OnInit, OnDestroy {
 
   messages: any[] = [];
   newMessage: string = '';
+
+  private visibilityHandler: any;
+  private isMarkingSeen = false;
+  private currentChannelName: string | null = null;
+
   currentUserId: number | null = null;
   conversationId: number | null = null;
+
   role: string = 'delivery_agent';
-  lastMessageId: number | null = null;
-  refreshSub!: Subscription;
+
   authSub!: Subscription;
   isLoading: boolean = false;
 
-  // =========================
-  // ✅ VALIDATION (LIKE CHECKOUT)
-  // =========================
   formErrors: Record<chatFormFields, string> = {
     message: '',
   };
 
   validationMessages: Record<chatFormFields, any> = {
     message: {
-      required: 'Message cannot be empty',
-      minlength: 'Message must be at least 1 character'
+      required: 'Message cannot be empty'
     }
   };
 
-  constructor(private chatService: ChatService, private cdr: ChangeDetectorRef, private auth: Auth) { }
+  constructor(
+    private chatService: ChatService,
+    private cdr: ChangeDetectorRef,
+    private auth: Auth,
+    private echoService: EchoService
+  ) { }
 
- ngOnInit(): void {
+  // ================= INIT =================
+  ngOnInit(): void {
 
-  this.authSub = this.auth.user$.subscribe(user => {
-
-    if (!user) {
-      // 🔥 LOGOUT → STOP API CALLS
-      if (this.refreshSub) {
-        this.refreshSub.unsubscribe();
-      }
-      return;
-    }
-
-    // 🔥 Prevent duplicate interval
-    if (this.refreshSub) {
-      this.refreshSub.unsubscribe();
-    }
-
-    this.currentUserId = user.id;
-
-    this.loadMessages(true);
-
-    this.refreshSub = interval(3000).subscribe(() => {
+    this.visibilityHandler = () => {
       if (document.visibilityState === 'visible') {
-        this.loadMessages(false);
+        this.triggerSeen();
+      }
+    };
+
+    document.addEventListener('visibilitychange', this.visibilityHandler);
+
+    this.authSub = this.auth.user$.subscribe(user => {
+      if (!user) return;
+
+      this.currentUserId = user.id;
+      this.loadMessages(true);
+    });
+  }
+
+  // ================= REALTIME =================
+  listenToChat(): void {
+
+    if (!this.conversationId) return;
+
+    const newChannel = `chat.${this.conversationId}`;
+
+    if (this.currentChannelName) {
+      this.echoService.echo.leave(this.currentChannelName);
+    }
+
+    this.currentChannelName = newChannel;
+
+    const channel = this.echoService.echo.channel(newChannel);
+
+    // MESSAGE
+    channel.listen('.message.sent', (data: any) => {
+
+      const exists = this.messages.find(m => m.id === data.message.id);
+
+      if (!exists) {
+        this.messages.push(data.message);
+        this.cdr.detectChanges();
+
+        this.scrollToBottom();
+
+        setTimeout(() => {
+          if (
+            data.message.sender_id !== this.currentUserId &&
+            document.visibilityState === 'visible'
+          ) {
+            this.triggerSeen();
+          }
+        }, 150);
       }
     });
 
-  });
+    // SEEN
+    channel.listen('.message.seen', (data: any) => {
 
-}
+      if (Number(data.conversationId) !== Number(this.conversationId)) return;
 
+      this.messages = this.messages.map(msg => {
+        if (msg.sender_id === this.currentUserId) {
+          msg.is_seen = true;
+        }
+        return msg;
+      });
 
-  updateFormErrors(): void {
-    this.formErrors.message = '';
-
-    if (!this.newMessage || this.newMessage.trim().length === 0) {
-      this.formErrors.message = this.validationMessages.message.required;
-    }
+      this.cdr.detectChanges();
+    });
   }
 
-
+  // ================= LOAD =================
   loadMessages(showLoader: boolean = false): void {
+
+    if (!this.auth.userId) return;
+
     if (showLoader) this.isLoading = true;
-      if (!this.auth.userId) return;
+
     this.chatService.getMessages(this.conversationId || 0, this.role)
       .pipe(finalize(() => {
         if (showLoader) {
@@ -100,150 +146,106 @@ export class DeliveryContact implements OnInit {
       }))
       .subscribe({
         next: (res: any) => {
+
           if (res.success) {
 
             this.conversationId = res.conversation_id;
 
-            const newMessages = res.messages;
-
-            // 🔥 Last message ID
-            const newLastMessageId = newMessages.length
-              ? newMessages[newMessages.length - 1].id
-              : null;
-
-            // 🔥 Check new message
-            const isNewMessage = this.lastMessageId !== newLastMessageId;
-
-            // 🔥 Update messages
-            this.messages = newMessages;
-            this.cdr.detectChanges();
-
-            // 🔥 Get last message
-            const lastMsg = newMessages.length
-              ? newMessages[newMessages.length - 1]
-              : null;
-
-            // ✅ SINGLE CLEAN LOGIC (no duplicate calls)
-            if (lastMsg && lastMsg.sender_id !== this.currentUserId) {
-
-              const shouldScroll = showLoader || (isNewMessage && this.isNearBottom());
-
-              // ✅ Scroll only when needed
-              if (shouldScroll) {
-                this.scrollToBottom();
-              }
-
-              // ✅ Seen ALWAYS when new message from other user
-              if (showLoader || isNewMessage) {
-                this.markSeen();
-              }
+            if (this.currentChannelName !== `chat.${this.conversationId}`) {
+              this.listenToChat();
             }
 
-            // 🔥 Update last message id
-            this.lastMessageId = newLastMessageId;
+            this.messages = res.messages;
+            this.cdr.detectChanges();
+
+            this.scrollToBottom();
+
+            const hasUnread = this.messages.some(
+              msg => msg.sender_id !== this.currentUserId && !msg.is_seen
+            );
+
+            setTimeout(() => {
+              if (hasUnread && document.visibilityState === 'visible') {
+                this.triggerSeen();
+              }
+            }, 200);
           }
         },
-        error: (err: any) => {
-          Swal.fire({
-            title: err.error?.message || 'Failed to load messages',
-            icon: 'error',
-            confirmButtonText: 'OK',
-            confirmButtonColor: '#d4af37',
-            background: 'linear-gradient(135deg, #3b0000, #1a0000)',
-            color: '#ffffff',
-            iconColor: '#ef4444'
-          });
+        error: () => {
+          Swal.fire('Error loading messages');
         }
       });
   }
 
-
+  // ================= SEND =================
   sendMessage(): void {
 
     this.updateFormErrors();
+    if (this.formErrors.message) return;
 
-    if (this.formErrors.message) {
-
-      return;
-    }
-
-    const payload = {
+    this.chatService.sendMessage({
       message: this.newMessage,
       conversation_id: this.conversationId
-    };
-
-    this.isLoading = true;
-
-    this.chatService.sendMessage(payload, this.role)
-      .pipe(finalize(() => {
-        this.isLoading = false;
-        this.cdr.detectChanges();
-      }))
-      .subscribe({
-        next: (res: any) => {
-          if (res.success) {
-
-            this.newMessage = '';
-
-            // 🔥 FORCE scroll (important)
-            this.scrollToBottom();
-
-            this.loadMessages(false);
-          }
-        },
-        error: (err: any) => {
-
-          Swal.fire({
-            title: err.error?.message || 'Failed to send message',
-            icon: 'error',
-            confirmButtonText: 'OK',
-            confirmButtonColor: '#d4af37',
-            background: 'linear-gradient(135deg, #3b0000, #1a0000)',
-            color: '#ffffff',
-            iconColor: '#ef4444'
-          });
-
-          console.error('Send error', err);
-        }
-      });
+    }, this.role).subscribe(() => {
+      this.newMessage = '';
+      this.scrollToBottom();
+    });
   }
 
+  // ================= VALIDATION =================
+  updateFormErrors(): void {
+    this.formErrors.message = '';
 
+    if (!this.newMessage?.trim()) {
+      this.formErrors.message = 'Message required';
+    }
+  }
+
+  // ================= SEEN =================
   markSeen(): void {
-    if (!this.conversationId) return;
+
+    if (!this.conversationId || this.isMarkingSeen) return;
+
+    const hasUnread = this.messages.some(
+      msg => msg.sender_id !== this.currentUserId && !msg.is_seen
+    );
+
+    if (!hasUnread) return;
+
+    this.isMarkingSeen = true;
 
     this.chatService.markSeen(this.conversationId, this.role)
       .subscribe({
-        next: () => {
-          // optional: console.log('Seen updated');
-        },
-        error: (err: any) => {
-          console.error('Seen error', err);
-        }
+        next: () => this.isMarkingSeen = false,
+        error: () => this.isMarkingSeen = false
       });
   }
+
+  triggerSeen(): void {
+
+    if (this.isMarkingSeen) return;
+    if (document.visibilityState !== 'visible') return;
+
+    setTimeout(() => this.markSeen(), 150);
+  }
+
+  // ================= SCROLL =================
   scrollToBottom(): void {
     setTimeout(() => {
       const el = document.querySelector('.chat-body') as HTMLElement;
-      if (el) {
-        el.scrollTop = el.scrollHeight;
-      }
+      if (el) el.scrollTop = el.scrollHeight;
     }, 50);
   }
+
+  // ================= DESTROY =================
   ngOnDestroy(): void {
-  if (this.refreshSub) {
-    this.refreshSub.unsubscribe();
-  }
 
-  if (this.authSub) {
-    this.authSub.unsubscribe();
-  }
-}
-  isNearBottom(): boolean {
-    const el = document.querySelector('.chat-body') as HTMLElement;
-    if (!el) return true;
+    if (this.authSub) this.authSub.unsubscribe();
 
-    return el.scrollHeight - el.scrollTop - el.clientHeight < 100;
+    if (this.currentChannelName) {
+      this.echoService.echo.leave(this.currentChannelName);
+    }
+
+    document.removeEventListener('visibilitychange', this.visibilityHandler);
   }
 }
-

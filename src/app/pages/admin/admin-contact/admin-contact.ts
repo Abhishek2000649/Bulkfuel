@@ -28,6 +28,9 @@ export class AdminContact implements OnInit, OnDestroy {
   users: any[] = [];
   messages: any[] = [];
   currentUserId: number | null = null;
+  private visibilityHandler: any;
+  private isListening = false;
+  private isMarkingSeen = false;
 
   refreshSub?: Subscription;
   authSub?: Subscription;
@@ -61,12 +64,18 @@ export class AdminContact implements OnInit, OnDestroy {
 
   // ================= INIT =================
   ngOnInit(): void {
+
+    this.visibilityHandler = () => {
+      if (document.visibilityState === 'visible') {
+        this.triggerSeen();
+      }
+    };
+
+    document.addEventListener('visibilitychange', this.visibilityHandler);
+
     this.authSub = this.auth.user$.subscribe(user => {
 
-      if (!user) {
-        if (this.refreshSub) this.refreshSub.unsubscribe();
-        return;
-      }
+      if (!user) return;
 
       this.currentUserId = user.id;
       this.loadUsers();
@@ -104,38 +113,64 @@ export class AdminContact implements OnInit, OnDestroy {
 
   // ================= SELECT USER =================
   selectUser(user: any): void {
+
+    if (this.conversationId) {
+      this.echoService.echo.leave(`chat.${this.conversationId}`);
+    }
+
     this.selectedUser = user;
     this.conversationId = user.conversation_id;
     this.messages = [];
 
+    this.isListening = false; // 🔥 RESET
+
     this.loadMessages(true);
+  }
 
-    // 🔥 remove old listener
-this.echoService.echo.channel(`chat.${this.conversationId}`)
-    // 🔥 listen new channel
-    this.echoService.echo.channel(`chat.${this.conversationId}`)
-      .listen('.message.sent', (data: any) => {
+  listenToChat(): void {
 
-        if (data.message.conversation_id === this.conversationId) {
+    if (!this.conversationId) return;
 
-          const exists = this.messages.find(m => m.id === data.message.id);
+    const channel = this.echoService.echo.channel(`chat.${this.conversationId}`);
 
-          if (!exists) {
-            this.messages.push(data.message);
-            this.cdr.detectChanges();
+    // MESSAGE
+    channel.listen('.message.sent', (data: any) => {
 
-            // ✅ Smart scroll
-            if (this.isNearBottom()) {
-              this.scrollToBottom();
-            }
+      if (data.message.conversation_id !== this.conversationId) return;
+
+      const exists = this.messages.find(m => m.id === data.message.id);
+
+      if (!exists) {
+        this.messages.push(data.message);
+        this.cdr.detectChanges();
+
+        this.scrollToBottom();
+
+        setTimeout(() => {
+          if (
+            data.message.sender_id !== this.currentUserId &&
+            document.visibilityState === 'visible'
+          ) {
+            this.triggerSeen();
           }
+        }, 200);
+      }
+    });
 
-          // ✅ Seen
-          if (data.message.sender_id !== this.currentUserId) {
-            this.markSeen();
-          }
+    // SEEN
+    channel.listen('.message.seen', (data: any) => {
+
+      if (Number(data.conversationId) !== Number(this.conversationId)) return;
+
+      this.messages = this.messages.map(msg => {
+        if (msg.sender_id === this.currentUserId) {
+          msg.is_seen = true;
         }
+        return msg;
       });
+
+      this.cdr.detectChanges();
+    });
   }
 
   // ================= LOAD MESSAGES =================
@@ -159,13 +194,23 @@ this.echoService.echo.channel(`chat.${this.conversationId}`)
             this.messages = res.messages;
             this.cdr.detectChanges();
 
-            // ✅ Scroll after load
-            this.scrollToBottom();
+            this.scrollToBottom(); // ✅ only once
 
-            const lastMsg = this.messages[this.messages.length - 1];
+            const hasUnread = this.messages.some(
+              msg => msg.sender_id !== this.currentUserId && !msg.is_seen
+            );
 
-            if (lastMsg && lastMsg.sender_id !== this.currentUserId) {
-              this.markSeen();
+            setTimeout(() => {
+              if (
+                hasUnread &&
+                document.visibilityState === 'visible'
+              ) {
+                this.triggerSeen();
+              }
+            }, 200);
+            if (!this.isListening) {
+              this.listenToChat();
+              this.isListening = true;
             }
           }
         },
@@ -218,8 +263,6 @@ this.echoService.echo.channel(`chat.${this.conversationId}`)
 
             // ✅ Force scroll
             this.scrollToBottom();
-
-            this.loadMessages(false);
           }
         },
         error: (err: any) => {
@@ -252,23 +295,46 @@ this.echoService.echo.channel(`chat.${this.conversationId}`)
 
     return el.scrollHeight - el.scrollTop - el.clientHeight < 100;
   }
-
-  // ================= SEEN =================
   markSeen(): void {
-    if (!this.conversationId) return;
+
+    if (!this.conversationId || this.isMarkingSeen) return;
+
+    const hasUnread = this.messages.some(
+      msg => msg.sender_id !== this.currentUserId && !msg.is_seen
+    );
+
+    if (!hasUnread) return;
+
+    this.isMarkingSeen = true;
 
     this.chatService.markSeen(this.conversationId, this.role)
       .subscribe({
-        next: () => { },
-        error: () => { }
+        next: () => this.isMarkingSeen = false,
+        error: () => this.isMarkingSeen = false
       });
+  }
+
+  triggerSeen(): void {
+
+    if (this.isMarkingSeen) return; // ✅ avoid overlap
+
+    setTimeout(() => {
+      if (document.visibilityState === 'visible') {
+        this.markSeen();
+      }
+    }, 200);
   }
 
   // ================= DESTROY =================
   ngOnDestroy(): void {
+
     if (this.refreshSub) this.refreshSub.unsubscribe();
     if (this.authSub) this.authSub.unsubscribe();
 
-    this.echoService.echo.leave('chat');
+    if (this.conversationId) {
+      this.echoService.echo.leave(`chat.${this.conversationId}`);
+    }
+
+    document.removeEventListener('visibilitychange', this.visibilityHandler);
   }
 }

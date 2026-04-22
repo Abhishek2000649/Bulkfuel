@@ -28,16 +28,19 @@ export class UserContact implements OnInit, OnDestroy {
 
   messages: any[] = [];
   newMessage: string = '';
+  private channel: any = null;
+  private isMarkingSeen = false;
+  private visibilityHandler: any;
 
   currentUserId: number | null = null;
   conversationId: number | null = null;
+  private currentChannelName: string | null = null;
 
   role: string = 'USER';
 
   authSub!: Subscription;
   isLoading: boolean = false;
 
-  // ✅ VALIDATION (UNCHANGED)
   formErrors: Record<chatFormFields, string> = {
     message: '',
   };
@@ -54,16 +57,23 @@ export class UserContact implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     private auth: Auth,
     private echoService: EchoService
-  ) {}
+  ) { }
 
   // ================= INIT =================
   ngOnInit(): void {
-    this.authSub = this.auth.user$.subscribe(user => {
 
+    this.visibilityHandler = () => {
+      if (document.visibilityState === 'visible') {
+        this.triggerSeen();
+      }
+    };
+
+    document.addEventListener('visibilitychange', this.visibilityHandler);
+
+    this.authSub = this.auth.user$.subscribe(user => {
       if (!user) return;
 
       this.currentUserId = user.id;
-
       this.loadMessages(true);
     });
   }
@@ -73,26 +83,52 @@ export class UserContact implements OnInit, OnDestroy {
 
     if (!this.conversationId) return;
 
-    // 🧹 remove old channel
-    this.echoService.echo.leave(`chat.${this.conversationId}`);
+    const newChannelName = `chat.${this.conversationId}`;
 
-    const channel = this.echoService.echo.channel(`chat.${this.conversationId}`);
+    // ✅ leave OLD channel properly
+    if (this.currentChannelName) {
+      this.echoService.echo.leave(this.currentChannelName);
+    }
 
-    channel.listen('.message.sent', (data: any) => {
+    this.currentChannelName = newChannelName;
 
-      console.log('🔥 USER REALTIME:', data);
+    this.channel = this.echoService.echo.channel(newChannelName);
+
+    // MESSAGE
+    this.channel.listen('.message.sent', (data: any) => {
 
       const exists = this.messages.find(m => m.id === data.message.id);
 
       if (!exists) {
-        // ✅ FULL reload (admin जैसा)
-        this.loadMessages(false);
-      }
+        this.messages.push(data.message);
+        this.cdr.detectChanges();
 
-      // ✅ seen update
-      if (data.message.sender_id !== this.currentUserId) {
-        this.markSeen();
+        this.scrollToBottom();
+
+        setTimeout(() => {
+          if (
+            data.message.sender_id !== this.currentUserId &&
+            document.visibilityState === 'visible'
+          ) {
+            this.triggerSeen();
+          }
+        }, 150);
       }
+    });
+
+    // SEEN
+    this.channel.listen('.message.seen', (data: any) => {
+
+      if (Number(data.conversationId) !== Number(this.conversationId)) return;
+
+      this.messages = this.messages.map(msg => {
+        if (msg.sender_id === this.currentUserId) {
+          msg.is_seen = true;
+        }
+        return msg;
+      });
+
+      this.cdr.detectChanges();
     });
   }
 
@@ -114,22 +150,33 @@ export class UserContact implements OnInit, OnDestroy {
         next: (res: any) => {
 
           if (res.success) {
+            const newConversationId = res.conversation_id;
 
-            this.conversationId = res.conversation_id;
 
-            // ✅ LISTEN AFTER conversationId
-            this.listenToChat();
+            this.conversationId = newConversationId;
+
+            // ✅ rebind only if needed
+            if (this.currentChannelName !== `chat.${this.conversationId}`) {
+              this.listenToChat();
+            }
 
             this.messages = res.messages;
             this.cdr.detectChanges();
 
             this.scrollToBottom();
 
-            const lastMsg = this.messages[this.messages.length - 1];
+            const hasUnread = this.messages.some(
+              msg => msg.sender_id !== this.currentUserId && !msg.is_seen
+            );
 
-            if (lastMsg && lastMsg.sender_id !== this.currentUserId) {
-              this.markSeen();
-            }
+            setTimeout(() => {
+              if (
+                hasUnread &&
+                document.visibilityState === 'visible'
+              ) {
+                this.triggerSeen();
+              }
+            }, 200);
           }
         },
         error: (err: any) => {
@@ -146,20 +193,10 @@ export class UserContact implements OnInit, OnDestroy {
       });
   }
 
-  // ================= VALIDATION =================
-  updateFormErrors(): void {
-    this.formErrors.message = '';
-
-    if (!this.newMessage || this.newMessage.trim().length === 0) {
-      this.formErrors.message = this.validationMessages.message.required;
-    }
-  }
-
   // ================= SEND =================
   sendMessage(): void {
 
     this.updateFormErrors();
-
     if (this.formErrors.message) return;
 
     const payload = {
@@ -176,42 +213,58 @@ export class UserContact implements OnInit, OnDestroy {
       }))
       .subscribe({
         next: (res: any) => {
-
           if (res.success) {
-
             this.newMessage = '';
-
-            // ✅ reload (admin जैसा)
-            this.loadMessages(false);
+            this.scrollToBottom();
           }
         },
         error: (err: any) => {
-
           Swal.fire({
             title: err.error?.message || 'Failed to send message',
-            icon: 'error',
-            confirmButtonText: 'OK',
-            confirmButtonColor: '#d4af37',
-            background: 'linear-gradient(135deg, #3b0000, #1a0000)',
-            color: '#ffffff',
-            iconColor: '#ef4444'
+            icon: 'error'
           });
-
-          console.error('Send error', err);
         }
       });
+  }
+
+  // ================= VALIDATION =================
+  updateFormErrors(): void {
+    this.formErrors.message = '';
+
+    if (!this.newMessage || this.newMessage.trim().length === 0) {
+      this.formErrors.message = this.validationMessages.message.required;
+    }
   }
 
   // ================= SEEN =================
   markSeen(): void {
 
-    if (!this.conversationId) return;
+    if (!this.conversationId || this.isMarkingSeen) return;
+
+    const hasUnread = this.messages.some(
+      msg => msg.sender_id !== this.currentUserId && !msg.is_seen
+    );
+
+    if (!hasUnread) return;
+
+    this.isMarkingSeen = true;
 
     this.chatService.markSeen(this.conversationId, this.role)
       .subscribe({
-        next: () => {},
-        error: () => {}
+        next: () => this.isMarkingSeen = false,
+        error: () => this.isMarkingSeen = false
       });
+  }
+
+  triggerSeen(): void {
+
+    if (this.isMarkingSeen) return;
+
+    if (document.visibilityState !== 'visible') return;
+
+    setTimeout(() => {
+      this.markSeen();
+    }, 150);
   }
 
   // ================= SCROLL =================
@@ -224,19 +277,15 @@ export class UserContact implements OnInit, OnDestroy {
     }, 50);
   }
 
-  isNearBottom(): boolean {
-    const el = document.querySelector('.chat-body') as HTMLElement;
-    if (!el) return true;
-
-    return el.scrollHeight - el.scrollTop - el.clientHeight < 100;
-  }
-
   // ================= DESTROY =================
   ngOnDestroy(): void {
+
     if (this.authSub) this.authSub.unsubscribe();
 
-    if (this.conversationId) {
-      this.echoService.echo.leave(`chat.${this.conversationId}`);
+    if (this.currentChannelName) {
+      this.echoService.echo.leave(this.currentChannelName);
     }
+
+    document.removeEventListener('visibilitychange', this.visibilityHandler);
   }
 }
