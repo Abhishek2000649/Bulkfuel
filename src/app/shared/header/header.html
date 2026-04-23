@@ -475,7 +475,7 @@
         <!-- PROFILE -->
         <ng-container *ngIf="auth.user$ | async as user">
           <div class="hidden lg:flex relative cursor-pointer" (click)="toggleProfile($event)">
-            <img [src]="user?.profile_image_url || 'https://i.pravatar.cc/100'"
+            <img [src]="user?.profile_image || 'https://i.pravatar.cc/100'"
               class="w-10 h-10 rounded-xl border-2 border-white/30 object-cover" />
             <!-- Dropdown -->
             <div *ngIf="isProfileOpen" class="absolute right-0 mt-12 w-56 bg-white text-gray-800
@@ -728,7 +728,7 @@
       <!-- USER INFO -->
       <ng-container *ngIf="auth.user$ | async as user">
         <div routerLink="/profile-update" class="flex items-center gap-4 pb-4 border-b border-white/20">
-          <img [src]="user?.profile_image_url || 'https://i.pravatar.cc/100'"
+          <img [src]="user?.profile_image || 'https://i.pravatar.cc/100'"
             class="w-12 h-12 rounded-xl border-2 border-white/30 object-cover" />
           <div>
             <p class="font-semibold text-lg">{{ user.name }}</p>

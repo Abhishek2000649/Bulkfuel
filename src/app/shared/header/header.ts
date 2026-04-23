@@ -6,6 +6,7 @@ import { Auth } from '../../core/services/Auth/authservice/auth';
 import Swal from 'sweetalert2';
 import { Spinner } from '../spinner/spinner';
 import { AdminOrder } from '../../core/services/admin/AdminOrder/admin-order';
+import { ProfileService } from '../../core/services/Auth/profile/profile-service';
 
 @Component({
   selector: 'app-header',
@@ -23,11 +24,13 @@ export class Header {
   isSettingsOpen = false;
   orderCount: number = 0;
   isLoading = false;
+  user: any = null;
   constructor(
     public auth: Auth,
     private router: Router,
     private adminService: AdminOrder,
-    private cdr:ChangeDetectorRef
+    private cdr:ChangeDetectorRef,
+    private profileService: ProfileService,
   ) {}
   ngOnInit(): void {
   this.loadOrderCount();

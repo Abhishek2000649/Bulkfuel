@@ -6,6 +6,7 @@ import { Spinner } from '../spinner/spinner';
 import { finalize } from 'rxjs';
 import { pattern, required } from '@angular/forms/signals';
 import Swal from 'sweetalert2';
+import { Auth } from '../../core/services/Auth/authservice/auth';
 
 type ProfileBasicFormFields = 'name' | 'email' | 'phone';
 type ProfileAddressFormFields = 'address' | 'city' | 'state' | 'pincode';
@@ -21,7 +22,7 @@ export class Profile implements OnInit {
   @ViewChild('fileInput') fileInput!: ElementRef;
 
   previewImage: string | ArrayBuffer | null = null;
-selectedFile: File | null = null;
+  selectedFile: File | null = null;
   basicForm!: FormGroup;
   addressForm!: FormGroup;
   passwordForm!: FormGroup;
@@ -95,25 +96,25 @@ selectedFile: File | null = null;
 
   };
   onFileChange(event: any) {
-  const file = event.target.files[0];
+    const file = event.target.files[0];
 
-  console.log('FILE:', file); // 🔥 DEBUG
+    console.log('FILE:', file); // 🔥 DEBUG
 
-  if (file && file instanceof File) {
-    this.selectedFile = file;
+    if (file && file instanceof File) {
+      this.selectedFile = file;
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.previewImage = reader.result as string;
-      this.user.profile_image_url = null;
-      this.cdr.detectChanges();
-    };
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.previewImage = reader.result as string;
+        this.user.profile_image = null;
+        this.cdr.detectChanges();
+      };
 
-    reader.readAsDataURL(file);
-  } else {
-    this.selectedFile = null;
+      reader.readAsDataURL(file);
+    } else {
+      this.selectedFile = null;
+    }
   }
-}
   openFilePicker() {
     this.fileInput.nativeElement.click();
   }
@@ -138,7 +139,8 @@ selectedFile: File | null = null;
   constructor(
     private fb: FormBuilder,
     private profileService: ProfileService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private auth: Auth,
   ) {
     this.basicForm = this.fb.group({
       name: ['', [Validators.required, Validators.pattern(/^[A-Za-z\s]+$/)]],
@@ -243,7 +245,7 @@ selectedFile: File | null = null;
           email: res.user.email,
           phone: res.user.phone,
         });
-          this.previewImage = res.user.profile_image || null;
+        this.previewImage = res.user.profile_image || null;
 
         if (res.user.address) {
           this.addressForm.patchValue({
@@ -306,22 +308,27 @@ selectedFile: File | null = null;
      UPDATE BASIC
   ========================= */
   updateBasic() {
+
+    if (this.basicForm.invalid) {
+      this.basicForm.markAllAsTouched();
+      this.updateBasicFormErrors();
+      return;
+    }
     this.isLoading = true;
-    if (this.basicForm.invalid) return;
 
-  const formData = new FormData();
+    const formData = new FormData();
 
-  formData.append('name', this.basicForm.value.name);
-  formData.append('email', this.basicForm.value.email);
-  formData.append('phone', this.basicForm.value.phone);
+    formData.append('name', this.basicForm.value.name);
+    formData.append('email', this.basicForm.value.email);
+    formData.append('phone', this.basicForm.value.phone);
 
-  if (this.selectedFile instanceof File) {
-    formData.append('image', this.selectedFile, this.selectedFile.name);
-  }
+    if (this.selectedFile instanceof File) {
+      formData.append('image', this.selectedFile, this.selectedFile.name);
+    }
 
-  for (let pair of (formData as any).entries()) {
-    console.log(pair[0], pair[1]);
-  }
+    for (let pair of (formData as any).entries()) {
+      console.log(pair[0], pair[1]);
+    }
 
     this.profileService.updateBasic(formData).pipe(
       finalize(() => {
@@ -331,6 +338,9 @@ selectedFile: File | null = null;
     )
       .subscribe({
         next: (res) => {
+          this.auth.setUser(res.data);
+          this.user = res.data;
+          this.previewImage = res.data.profile_image;
           Swal.fire({
             title: res.message || 'Profile updated successfully',
             icon: 'success',
@@ -338,6 +348,7 @@ selectedFile: File | null = null;
             background: 'linear-gradient(135deg, #3b0000, #1a0000)',
             color: '#ffffff'
           });
+          this.cdr.detectChanges();
         },
 
         error: (err) => {
@@ -376,7 +387,6 @@ selectedFile: File | null = null;
           this.message = res.message;
           this.isLoading = false;
 
-          // ✅ Success Swal (Dark Red Theme)
           Swal.fire({
             title: res.message || 'Address updated successfully',
             icon: 'success',

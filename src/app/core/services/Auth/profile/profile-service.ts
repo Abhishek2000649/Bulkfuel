@@ -8,7 +8,12 @@ import {environment} from '../../../environments/environment';
 export class ProfileService {
   //  private apiUrl = 'http://127.0.0.1:8000/api';
   private apiUrl = environment.apiBaseUrl;
+
+
   constructor(private http: HttpClient) {}
+
+
+  
 
   // 🔹 get profile
   getProfile(): Observable<any> {
