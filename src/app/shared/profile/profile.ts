@@ -243,6 +243,7 @@ selectedFile: File | null = null;
           email: res.user.email,
           phone: res.user.phone,
         });
+          this.previewImage = res.user.profile_image || null;
 
         if (res.user.address) {
           this.addressForm.patchValue({
@@ -305,6 +306,7 @@ selectedFile: File | null = null;
      UPDATE BASIC
   ========================= */
   updateBasic() {
+    this.isLoading = true;
     if (this.basicForm.invalid) return;
 
   const formData = new FormData();

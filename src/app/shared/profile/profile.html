@@ -57,7 +57,7 @@
               <!-- Profile Image -->
               <div class="w-28 h-28 rounded-full overflow-hidden border border-gray-300 cursor-pointer"
                 (click)="openFilePicker()">
-                <img [src]="previewImage ? previewImage : (user?.profile_image_url || 'https://picsum.photos/200')"
+                <img [src]="previewImage ? previewImage : (user?.profile_image || 'https://picsum.photos/200')"
                   class="w-full h-full object-cover" />
               </div>
 

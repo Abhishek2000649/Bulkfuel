@@ -9,8 +9,7 @@
 
       <div class="absolute w-full h-full bg-black/55"></div>
 
-      <div
-        class="absolute top-[40%]  left-1/2 -translate-x-1/2 -translate-y-1/2 text-center w-full">
+      <div class="absolute top-[40%]  left-1/2 -translate-x-1/2 -translate-y-1/2 text-center w-full">
         <h1 class="lg:text-[60px] text-[40px] font-semibold mb-5">
           Build Serious Muscle Mass Faster
         </h1>
@@ -601,8 +600,8 @@
               class="min-w-[280px] max-w-[280px] bg-white rounded-2xl shadow p-5 flex-shrink-0">
 
               <!-- IMAGE -->
-               <img #imgRef [src]="p.image_url || 'https://picsum.photos/seed/' + p.id + '/400/300'" 
-                      class="rounded-lg w-full h-40 object-cover mb-4">
+              <img [src]="p.image ? p.image : 'https://picsum.photos/seed/' + p.id + '/400/300'"
+                (error)="onImageError($event)" class="rounded-lg w-full h-40 object-cover mb-4">
               <div class="flex flex-col justify-between h-48">
                 <!-- NAME + CATEGORY -->
                 <div class="flex justify-between items-center">

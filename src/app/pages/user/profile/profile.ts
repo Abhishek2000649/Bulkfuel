@@ -149,6 +149,9 @@ ngAfterViewInit() {
     }
   });
 }
+onImageError(event: any) {
+  event.target.src = 'https://picsum.photos/400/300';
+}
 
  decrease(p: any) {
   this.isLoading = true;
