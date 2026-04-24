@@ -7,6 +7,7 @@ import { finalize } from 'rxjs';
 import { pattern, required } from '@angular/forms/signals';
 import Swal from 'sweetalert2';
 import { Auth } from '../../core/services/Auth/authservice/auth';
+import { Address } from '../../pages/user/address/address';
 
 type ProfileBasicFormFields = 'name' | 'email' | 'phone';
 type ProfileAddressFormFields = 'address' | 'city' | 'state' | 'pincode';
@@ -14,7 +15,7 @@ type ProfilePasswordFormFields = 'current_password' | 'password' | 'password_con
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, Spinner],
+  imports: [CommonModule, ReactiveFormsModule, Spinner, Address],
   templateUrl: './profile.html',
   styleUrl: './profile.css',
 })

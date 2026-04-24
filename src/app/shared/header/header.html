@@ -19,8 +19,10 @@
       <div class="flex items-center gap-x-8 flex-1 max-w-2xl" *ngIf="auth.user$ | async as user">
 
         <!-- Address -->
-        <div *ngIf="user.role === 'USER'" class="relative group hidden lg:flex items-center bg-white/10 backdrop-blur-xl
-            border border-white/20 px-5 py-1 rounded-lg shadow cursor-pointer">
+        <div *ngIf="user.role === 'USER'" class="relative  hidden lg:flex items-center bg-white/10 backdrop-blur-xl
+            border border-white/20 px-5 py-1 rounded-lg shadow cursor-pointer"
+             (mouseenter)="isDropdownOpen = true"
+     (mouseleave)="isDropdownOpen = false">
 
           <!-- Icon -->
           <svg class="w-5 h-5 mr-3 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -36,20 +38,19 @@
               Delivering To
             </p>
             <p class="text-sm font-semibold">
-              {{ getShortAddress(user.address?.address) }}
+                {{ getShortAddress(user?.address?.address) }}
             </p>
           </div>
 
-          <!-- 🔥 Full Address Popup -->
-          <div class="absolute left-0 top-full mt-0 w-80 p-4 bg-red-50 text-gray-800 rounded-xl shadow-xl
-            opacity-0 invisible group-hover:opacity-100 group-hover:visible
-            transition duration-200 z-50 break-words">
+          <div *ngIf="isDropdownOpen" class="absolute left-0 top-full mt-0 w-80 p-4 bg-red-50 text-gray-800 rounded-xl shadow-xl
+           
+            transition duration-200 z-50 break-words cursor-default">
 
             <!-- Title -->
             <div class="flex justify-between items-center">
               <p class="text-xs uppercase text-gray-400 mb-3">Delivery Details</p>
 
-              <a *ngIf="user.role === 'USER'" routerLink="/user/address"
+              <a *ngIf="user.role === 'USER'" routerLink="/user/address" (click)="isDropdownOpen = false"
                 class="flex items-center gap-2 px-3 bg-red-100 shadow-xl py-2 hover:bg-red-500 hover:text-white transition rounded">
 
                 <!-- Location Icon -->
@@ -70,16 +71,20 @@
             <!-- Phone -->
             <div class="flex justify-between py-2 border-b">
               <span class="font-medium text-gray-500">Phone</span>
+              <a (click)="isDropdownOpen = false" *ngIf="user.role === 'USER'" routerLink="/user/address" class="cursor-pointer hover:text-red-500 hover:underline">
               <span class="font-semibold text-gray-800">
                 {{ user?.phone || '-' }}
               </span>
+              </a>
             </div>
 
             <!-- Address -->
             <div class="py-2 border-b">
               <p class="font-medium text-gray-500 mb-1">Address</p>
               <p class="font-semibold text-gray-800 text-sm break-words">
+                <a (click)="isDropdownOpen = false" *ngIf="user.role === 'USER'" routerLink="/user/address" class="cursor-pointer hover:text-red-500 hover:underline">
                 {{ user?.address?.address || '-' }}
+                </a>
               </p>
             </div>
 
@@ -87,7 +92,9 @@
             <div class="flex justify-between py-1 border-b">
               <span class="font-medium text-gray-500">City</span>
               <span class="font-semibold text-gray-800">
+                <a  (click)="isDropdownOpen = false" *ngIf="user.role === 'USER'" routerLink="/user/address" class="cursor-pointer hover:text-red-500 hover:underline">
                 {{ user?.address?.city || '-' }}
+                </a>
               </span>
             </div>
 
@@ -95,7 +102,9 @@
             <div class="flex justify-between py-1 border-b">
               <span class="font-medium text-gray-500">State</span>
               <span class="font-semibold text-gray-800">
+                <a (click)="isDropdownOpen = false" *ngIf="user.role === 'USER'" routerLink="/user/address" class="cursor-pointer hover:text-red-500 hover:underline">
                 {{ user?.address?.state || '-' }}
+                </a>
               </span>
             </div>
 
@@ -103,7 +112,9 @@
             <div class="flex justify-between py-1">
               <span class="font-medium text-gray-500">Pincode</span>
               <span class="font-semibold text-gray-800">
+                <a (click)="isDropdownOpen = false" *ngIf="user.role === 'USER'" routerLink="/user/address" class="cursor-pointer hover:text-red-500 hover:underline">
                 {{ user?.address?.pincode || '-' }}
+                </a>
               </span>
             </div>
 

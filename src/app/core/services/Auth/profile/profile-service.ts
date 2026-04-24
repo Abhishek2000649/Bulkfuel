@@ -34,4 +34,14 @@ export class ProfileService {
   updatePassword(data: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/profile/password`, data);
   }
+  getAddresses() {
+  return this.http.get(`${this.apiUrl}/profile/addresses`);
+}
+setCurrentAddress(id: number) {
+  return this.http.post(`${this.apiUrl}/profile/address/set-current/${id}`, {});
+}
+
+deleteAddress(id: number) {
+  return this.http.delete(`${this.apiUrl}/profile/address/${id}`);
+}
 }

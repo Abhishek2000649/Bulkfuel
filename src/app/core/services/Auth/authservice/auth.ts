@@ -52,7 +52,7 @@ resetPassword(data: any): Observable<any> {
 
   setUser(user: any) {
   this.userSubject.next(user);
-  localStorage.setItem('user', JSON.stringify(user)); // ✅ persist
+  localStorage.setItem('user', JSON.stringify(user)); 
 }
 
   get currentUser() {

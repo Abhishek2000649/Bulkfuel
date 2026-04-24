@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import { Spinner } from '../spinner/spinner';
 import { AdminOrder } from '../../core/services/admin/AdminOrder/admin-order';
 import { ProfileService } from '../../core/services/Auth/profile/profile-service';
+import { Location } from '../../core/services/location/location';
 
 @Component({
   selector: 'app-header',
@@ -25,15 +26,21 @@ export class Header {
   orderCount: number = 0;
   isLoading = false;
   user: any = null;
+  isDropdownOpen = false;
+  currentAddress:any;
   constructor(
     public auth: Auth,
     private router: Router,
     private adminService: AdminOrder,
     private cdr:ChangeDetectorRef,
     private profileService: ProfileService,
+    private locationService: Location,
   ) {}
   ngOnInit(): void {
   this.loadOrderCount();
+   this.locationService.currentAddress$.subscribe((data: any) => {
+    this.currentAddress = data;
+  });
 
   // 🔄 auto refresh (optional but recommended)
   setInterval(() => {

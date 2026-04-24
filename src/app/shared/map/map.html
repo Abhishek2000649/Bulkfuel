@@ -1,0 +1,25 @@
+<div class="relative w-full h-[500px] rounded-xl overflow-hidden border border-gray-200 shadow-sm">
+
+  <!-- 🗺️ MAP -->
+  <google-map
+    height="100%"
+    width="100%"
+    [center]="center"
+    [zoom]="zoom"
+     [options]="mapOptions"
+    (mapClick)="onMapClick($event)">
+  </google-map>
+
+  <!-- 🔍 SEARCH BOX OVERLAY -->
+  <div class="absolute top-4 left-1/2 transform -translate-x-1/2 w-[60%] md:w-[40%] z-10">
+    
+    <input
+      #searchBox
+      type="text"
+      placeholder="Search location..."
+      class="w-full p-2 rounded-lg shadow-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-400 bg-white"
+    />
+
+  </div>
+
+</div>
