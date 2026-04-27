@@ -6,11 +6,13 @@ import { CartService } from '../../../core/services/user/cart/cart-service';
 import { CheckoutService } from '../../../core/services/user/checkoutService/checkout-service';
 import { Spinner } from '../../../shared/spinner/spinner';
 import Swal from 'sweetalert2';
-type checkoutFormFields = 'address' | 'city' | 'state' | 'pincode' | 'phone' | 'payment_method';
+import { ProfileService } from '../../../core/services/Auth/profile/profile-service';
+import { Auth } from '../../../core/services/Auth/authservice/auth';
+type checkoutFormFields = 'address_id' | 'payment_method';
 @Component({
   selector: 'app-checkout',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, Spinner],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, Spinner],
   templateUrl: './checkout.html',
   styleUrl: './checkout.css',
 })
@@ -18,38 +20,19 @@ export class Checkout implements OnInit {
   allowedPayment: string[] = [];
   cartItems: any[] = [];
   cartIds: number[] = [];
+  addresses: any[] = [];
   totalAmount = 0;
   user: any = null;
   isLoading: boolean = false;
   checkoutForm!: FormGroup;
   formErrors: Record<checkoutFormFields, string> = {
 
-    address: '',
-    city: '',
-    state: '',
-    pincode: '',
-    phone: '',
+    address_id: '',
     payment_method: '',
   };
   validationMessages: Record<checkoutFormFields, any> = {
-    address: {
-      required: 'Enter address',
-    },
-    city: {
-      required: 'Enter City',
-      pattern: 'Enter valid city name'
-    },
-    state: {
-      required: 'Enter state',
-      pattern: 'Enter valid state name'
-    },
-    pincode: {
-      required: 'Enter pincode',
-      pattern: 'Enter valid pincode'
-    },
-    phone: {
-      required: 'Enter phone number',
-      pattern: 'Enter valid 10 digit phone number'
+    address_id: {
+      required: 'Select any address'
     },
     payment_method: {
       required: 'Select payment method'
@@ -60,15 +43,14 @@ export class Checkout implements OnInit {
     private checkoutService: CheckoutService,
     private cartService: CartService,
     private router: Router,
+    private profileService: ProfileService,
+    private auth: Auth,
+
     private cdr: ChangeDetectorRef
   ) {
     this.checkoutForm = this.fb.group({
-      address: ['', Validators.required],
-      city: ['', [Validators.required, Validators.pattern(/^[A-Za-z\s]+$/)]],
-      state: ['', [Validators.required, Validators.pattern(/^[A-Za-z\s]+$/)]],
-      pincode: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]],
+      address_id: [null, Validators.required],
       payment_method: ['', Validators.required],
-      phone: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
     });
     this.checkoutForm.valueChanges.subscribe(() => {
       this.updateFormErrors();
@@ -95,7 +77,8 @@ export class Checkout implements OnInit {
   }
 
   ngOnInit(): void {
-    this.isLoading = true;
+    this.loadAddresses();
+
     this.cartIds = this.checkoutService.getCartIds();
 
     if (this.cartIds.length === 0) {
@@ -113,15 +96,6 @@ export class Checkout implements OnInit {
         if (this.allowedPayment.length > 0) {
           this.checkoutForm.patchValue({
             payment_method: this.allowedPayment[0]
-          });
-        }
-        if (this.user?.address) {
-          this.checkoutForm.patchValue({
-            address: this.user.address?.address || '',
-            city: this.user.address?.city || '',
-            state: this.user.address?.state || '',
-            pincode: this.user.address?.pincode || '',
-            phone: this.user?.phone || '',
           });
         }
 
@@ -153,11 +127,28 @@ export class Checkout implements OnInit {
       },
     });
   }
+  loadAddresses() {
+    this.profileService.getAddresses().subscribe((res: any) => {
+
+      this.addresses = res.data;
+      console.log("address:", this.addresses);
+      
+
+      const current = this.addresses.find(a => a.is_current == 1);
+      if (current) {
+        this.checkoutForm.patchValue({
+          address_id: current.id
+        });
+      }
+
+      this.isLoading = false;
+
+      this.cdr.detectChanges();
+    });
+  }
 
   placeOrder(): void {
     this.isLoading = true;
-
-    // 1️⃣ Form Invalid
     if (this.checkoutForm.invalid) {
       this.checkoutForm.markAllAsTouched();
       this.updateFormErrors();

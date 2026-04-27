@@ -24,6 +24,8 @@ export class Orders {
     this.isLoading=true;
     this.ordersService.getMyOrders().subscribe({
       next: (res: any) => {
+        console.log('order', res.orders);
+        
         this.orders = res.orders;
         this.isLoading=false;
         this.cdr.detectChanges();
