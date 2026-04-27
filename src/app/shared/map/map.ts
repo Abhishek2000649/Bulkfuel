@@ -167,8 +167,7 @@ if (!mapInstance) return;
   mapTypeControl: false,   
   fullscreenControl: false,
   streetViewControl: false,
-   zoomControl: true,
-    gestureHandling: 'greedy'
+   zoomControl: false,
 };
 
   // =========================
