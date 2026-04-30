@@ -93,11 +93,13 @@ updateFormErrors(): void {
       });
 
       this.isLoading = false;
+      this.cdr.detectChanges();
     },
 
     error: (err: any) => {
 
       this.isLoading = false;
+      this.cdr.detectChanges();
 
       Swal.fire({
         title: err.error?.message || 'Failed to load category',
@@ -109,7 +111,7 @@ updateFormErrors(): void {
         iconColor: '#ef4444'
       });
 
-      console.error(err);
+      
     }
 
   });
@@ -125,6 +127,7 @@ updateFormErrors(): void {
     this.categoryForm.markAllAsTouched();
     this.updateFormErrors();
     this.isLoading = false;
+    this.cdr.detectChanges();
     return;
   }
 
@@ -167,7 +170,7 @@ updateFormErrors(): void {
           iconColor: '#ef4444'
         });
 
-        console.error(err);
+        
       }
 
     });

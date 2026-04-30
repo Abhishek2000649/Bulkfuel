@@ -55,6 +55,7 @@ export class OrderHistory implements OnInit {
     },
     error: (err) => {
       this.isLoading = false;
+      this.cdr.detectChanges();
 
       console.error('Error fetching orders', err);
 

@@ -22,7 +22,7 @@ export class Cart implements OnInit {
   selectedTotal = 0;
   selectAll = false;
   checkoutError = '';
-  isLoading = false;
+  isLoading:boolean = false;
   stockWarnings: Record<number, string> = {};
 
   constructor(

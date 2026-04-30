@@ -209,7 +209,7 @@ export class EditProduct {
 
       error: (err) => {
         this.isLoading = false;
-        console.error(err);
+        this.cdr.detectChanges();
       }
     });
   }
@@ -249,11 +249,12 @@ export class EditProduct {
         }
 
         this.isLoading = false;
+        this.cdr.detectChanges();
       },
 
       error: (err) => {
         this.isLoading = false;
-        console.error(err);
+        this.cdr.detectChanges();
       }
     });
   }
@@ -263,6 +264,7 @@ export class EditProduct {
 
     if (this.productForm.invalid) {
       this.isLoading = false;
+      this.cdr.detectChanges();
       this.productForm.markAllAsTouched();
       this.updateFormErrors();
 
@@ -292,7 +294,7 @@ export class EditProduct {
       })
     )
       .subscribe({
-        next: (res: any) => {   // ✅ response receive here
+        next: (res: any) => {  
 
           Swal.fire({
             title: res?.message || 'Product updated successfully.',

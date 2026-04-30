@@ -261,8 +261,9 @@ export class Profile implements OnInit {
         this.cdr.detectChanges();
       },
 
-      error: (err) => {   // 👈 err receive karna important hai
+      error: (err) => {   
         this.isLoading = false;
+        this.cdr.detectChanges();
 
         Swal.fire({
           title: err.error?.message || 'Failed to load profile',
@@ -387,6 +388,7 @@ export class Profile implements OnInit {
         next: (res) => {
           this.message = res.message;
           this.isLoading = false;
+          this.cdr.detectChanges();
 
           Swal.fire({
             title: res.message || 'Address updated successfully',
@@ -401,9 +403,8 @@ export class Profile implements OnInit {
 
         error: (err) => {
           this.isLoading = false;
+          this.cdr.detectChanges();
           this.error = err?.error?.message || 'Address update failed';
-
-          // ❌ Error Swal (Dark Red Theme)
           Swal.fire({
             title: this.error,
             icon: 'error',
@@ -442,8 +443,7 @@ export class Profile implements OnInit {
           this.message = res.message;
           this.passwordForm.reset();
           this.isLoading = false;
-
-          // ✅ Success Swal (Dark Red Theme)
+          this.cdr.detectChanges();
           Swal.fire({
             title: res.message || 'Password updated successfully',
             icon: 'success',
@@ -457,11 +457,10 @@ export class Profile implements OnInit {
 
         error: (err) => {
           this.isLoading = false;
+          this.cdr.detectChanges();
           this.error =
             err.error?.errors?.current_password?.[0] ||
             'Password update failed';
-
-          // ❌ Error Swal (Dark Red Theme)
           Swal.fire({
             title: this.error,
             icon: 'error',

@@ -24,7 +24,7 @@ export class SignUp {
   formErrors: Record<SignUpFormFields, string> = {
     name: '',
     email: '',
-     terms: '',
+    terms: '',
   };
 
   validationMessages: Record<SignUpFormFields, any> = {
@@ -37,9 +37,9 @@ export class SignUp {
       required: 'Enter email',
       email: 'Enter a valid email address',
     },
-     terms: {
-    required: 'You must accept Terms & Policy'
-  }
+    terms: {
+      required: 'You must accept Terms & Policy'
+    }
 
 
 
@@ -99,7 +99,7 @@ export class SignUp {
     const userData = {
       email: this.registerForm.value.email,
       name: this.registerForm.value.name,
-       type: 'register'
+      type: 'register'
     };
 
     this.isLoading = true;
@@ -108,6 +108,7 @@ export class SignUp {
       this.registerForm.markAllAsTouched();
       this.updateFormErrors();
       this.isLoading = false;
+      this.cdr.detectChanges();
       return;
     }
 

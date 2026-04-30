@@ -22,12 +22,14 @@ export class Orders {
   this.deliveryService.getDeliveryHistory().subscribe({
     next: (res: any) => {
       this.isLoading = false;
+      this.cdr.detectChanges();
       this.deliveries = res.orders;
       this.cdr.detectChanges();
     },
 
     error: (err) => {
       this.isLoading = false;
+      this.cdr.detectChanges();
 
       Swal.fire({
         title: err?.error?.message || 'Failed to load delivery history',

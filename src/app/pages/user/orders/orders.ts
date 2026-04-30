@@ -32,7 +32,7 @@ export class Orders {
       },
       error: (err) => {
         this.isLoading=false;
-        console.error('Error loading orders', err);
+        this.cdr.detectChanges();
       }
     });
   }

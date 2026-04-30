@@ -88,6 +88,7 @@ next: (res: any) => {
     error: (err) => {
       console.error(err);
       this.isLoading = false;
+      this.cdr.detectChanges();
        Swal.fire({
       title: err.error?.message || 'Failed to load products',
       icon: 'error',
@@ -145,6 +146,7 @@ deleteProduct(id: number) {
 
         next: () => {
           this.isLoading = false;
+          this.cdr.detectChanges();
 
           Swal.fire({
             title: 'Deleted!',
@@ -162,7 +164,7 @@ deleteProduct(id: number) {
 
         error: (err) => {
           this.isLoading = false;
-          console.error(err);
+          this.cdr.detectChanges();
 
           Swal.fire({
             title: err?.error?.message || 'Failed to delete product',

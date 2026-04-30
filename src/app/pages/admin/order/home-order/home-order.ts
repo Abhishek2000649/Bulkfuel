@@ -88,7 +88,7 @@ handleClickOutside(event: any) {
 
     error: (err) => {
       this.isLoading = false;
-      console.error(err);
+      this.cdr.detectChanges();
 
       Swal.fire({
         title: err.error?.message || 'Failed to load orders',
@@ -126,6 +126,7 @@ handleClickOutside(event: any) {
 
       next: (res:any) => {
         this.isLoading = false;
+        this.cdr.detectChanges();
 
         Swal.fire({
           title: 'Updated!',
@@ -142,7 +143,7 @@ handleClickOutside(event: any) {
 
       error: (err) => {
         this.isLoading = false;
-        console.error(err);
+        this.cdr.detectChanges();
 
         Swal.fire({
           title: err.error?.message || 'Failed to update order status',

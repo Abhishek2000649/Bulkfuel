@@ -36,6 +36,7 @@ export class Dashboard {
 
     error: (err) => {
       this.isLoading = false;
+      this.cdr.detectChanges();
 
       Swal.fire({
         title: err?.error?.message || 'Failed to load deliveries',
@@ -70,6 +71,7 @@ markDelivered(deliveryId: number) {
       this.deliveryService.markDelivered(deliveryId).subscribe({
         next: (res: any) => {
           this.isLoading = false;
+          this.cdr.detectChanges();
 
           Swal.fire({
             title: res?.message || 'Order delivered successfully',
@@ -87,6 +89,7 @@ markDelivered(deliveryId: number) {
 
         error: (err) => {
           this.isLoading = false;
+          this.cdr.detectChanges();
 
           Swal.fire({
             title: err?.error?.message || 'Failed to mark delivered',
@@ -130,6 +133,7 @@ cancelDelivery(deliveryId: number, reason: string) {
 
         next: (res: any) => {
           this.isLoading = false;
+          this.cdr.detectChanges();
 
           Swal.fire({
             title: res?.message || 'Delivery cancelled successfully',
@@ -147,6 +151,7 @@ cancelDelivery(deliveryId: number, reason: string) {
 
         error: (err) => {
           this.isLoading = false;
+          this.cdr.detectChanges();
 
           Swal.fire({
             title: err?.error?.message || 'Failed to cancel delivery',

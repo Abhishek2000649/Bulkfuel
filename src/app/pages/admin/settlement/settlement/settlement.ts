@@ -20,11 +20,11 @@ export class Settlement implements OnInit {
   agents: any[] = [];
   settlement: any = null;
   isLoading:boolean= false;
-  // ================= FORM STATE =================
+  
   selectedAgentId: number | null = null;
   settlementMode: string = '';
 
-  // ================= UI STATE =================
+  
   loading = false;
   submitting = false;
 
@@ -75,6 +75,7 @@ handleClickOutside(event: any) {
 
     error: (err) => {
       this.isLoading = false;
+      this.cdr.detectChanges();
 
       Swal.fire({
         title: err?.error?.message || 'Failed to load agents',
@@ -96,6 +97,7 @@ handleClickOutside(event: any) {
   if (!this.selectedAgentId) {
     this.resetForm();
     this.isLoading = false;
+    this.cdr.detectChanges();
     return;
   }
 
@@ -116,6 +118,7 @@ handleClickOutside(event: any) {
       error: (err) => {
         this.loading = false;
         this.isLoading = false;
+        this.cdr.detectChanges();
 
         Swal.fire({
           title: err?.error?.message || 'No pending settlement found',
@@ -144,6 +147,7 @@ handleClickOutside(event: any) {
 
   if (!this.settlement) {
     this.isLoading = false;
+    this.cdr.detectChanges();
 
     Swal.fire({
       title: 'No settlement available',
@@ -160,6 +164,7 @@ handleClickOutside(event: any) {
 
   if (!this.settlementMode) {
     this.isLoading = false;
+    this.cdr.detectChanges();
 
     Swal.fire({
       title: 'Please select settlement mode',
@@ -184,6 +189,7 @@ handleClickOutside(event: any) {
 
     next: (res: any) => {
       this.isLoading = false;
+      this.cdr.detectChanges();
 
       Swal.fire({
         title: res?.message || 'Settlement completed successfully',
@@ -201,6 +207,7 @@ handleClickOutside(event: any) {
     error: (err) => {
       this.isLoading = false;
       this.submitting = false;
+      this.cdr.detectChanges();
 
       Swal.fire({
         title: err?.error?.message || 'Failed to complete settlement',

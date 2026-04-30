@@ -84,6 +84,7 @@ export class Checkout implements OnInit {
 
     if (this.cartIds.length === 0) {
       this.isLoading = false;
+      this.cdr.detectChanges();
       this.router.navigate(['/user/cart']);
       return;
     }
@@ -106,7 +107,7 @@ export class Checkout implements OnInit {
 
       error: (err) => {
         this.isLoading = false;
-
+        this.cdr.detectChanges();
         const message =
           err?.error?.message ||
           err?.message ||
@@ -153,6 +154,7 @@ export class Checkout implements OnInit {
       this.checkoutForm.markAllAsTouched();
       this.updateFormErrors();
       this.isLoading = false;
+      this.cdr.detectChanges();
 
       return;
     }
@@ -166,6 +168,7 @@ export class Checkout implements OnInit {
 
       next: (res: any) => {
         this.isLoading = false;
+        this.cdr.detectChanges();
         this.checkoutService.clear();
         const orderId = res.data.order_id;
         const amount = res.data.amount;
@@ -193,6 +196,7 @@ export class Checkout implements OnInit {
 
       error: (err) => {
         this.isLoading = false;
+        this.cdr.detectChanges();
 
         const message =
           err?.error?.message ||
@@ -221,7 +225,7 @@ export class Checkout implements OnInit {
       .subscribe({
         next: (res: any) => {
           this.isLoading = false;
-          console.log("data2", res.data);
+          this.cdr.detectChanges();
           if (!res?.status) {
             Swal.fire({
               title: res.message,
@@ -240,6 +244,7 @@ export class Checkout implements OnInit {
 
         error: (err) => {
           this.isLoading = false;
+          this.cdr.detectChanges();
           Swal.fire({
             title: err?.error?.message || 'Something went wrong',
             icon: 'error',
@@ -255,7 +260,7 @@ export class Checkout implements OnInit {
   openRazorpay(res: any, orderId: number) {
 
     this.isLoading = false;
-    console.log("data", res.data);
+    this.cdr.detectChanges();
     let isPaymentDone = false;
     let isCancelled = false;
     const options: any = {
@@ -275,7 +280,7 @@ export class Checkout implements OnInit {
           console.log("User closed Razorpay popup");
 
           this.isLoading = false;
-          this.cdr.detectChanges(); 
+          this.cdr.detectChanges();
 
           if (!isPaymentDone && !isCancelled) {
             isCancelled = true;
@@ -299,6 +304,7 @@ export class Checkout implements OnInit {
     rzp.on('payment.failed', (response: any) => {
 
       this.isLoading = false;
+      this.cdr.detectChanges();
 
       if (!isCancelled) {
         isCancelled = true;

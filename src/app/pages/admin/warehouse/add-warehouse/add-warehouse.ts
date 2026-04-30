@@ -14,10 +14,10 @@ type warehouseFormFields = 'name' | 'address' | 'city' | 'state' | 'pincode';
   styleUrl: './add-warehouse.css',
 })
 export class AddWarehouse {
-    isLoading:boolean=false;
-   warehouseForm: FormGroup;
+  isLoading: boolean = false;
+  warehouseForm: FormGroup;
 
-   formErrors: Record<warehouseFormFields, string> = {
+  formErrors: Record<warehouseFormFields, string> = {
     name: '',
     address: '',
     city: '',
@@ -31,19 +31,19 @@ export class AddWarehouse {
     },
     address: {
       required: 'Enter address',
-      
+
     },
-    city:{
-        required: 'Enter City',
-        pattern: 'Enter valid city name'
+    city: {
+      required: 'Enter City',
+      pattern: 'Enter valid city name'
     },
-    state:{
-        required: 'Enter state',
-        pattern: 'Enter valid state name'
+    state: {
+      required: 'Enter state',
+      pattern: 'Enter valid state name'
     },
-    pincode:{
-        required: 'Enter pincode',
-        pattern: 'Enter valid pincode'
+    pincode: {
+      required: 'Enter pincode',
+      pattern: 'Enter valid pincode'
     }
   };
   constructor(
@@ -53,18 +53,18 @@ export class AddWarehouse {
     private cdr: ChangeDetectorRef,
   ) {
     this.warehouseForm = this.fb.group({
-      name: ['', [Validators.required,   Validators.pattern(/^[A-Za-z\s]+$/)]],
+      name: ['', [Validators.required, Validators.pattern(/^[A-Za-z\s]+$/)]],
       address: ['', Validators.required,],
-      city: ['', Validators.required, ],
-      state: ['', [Validators.required,   Validators.pattern(/^[A-Za-z\s]+$/)]],
-      pincode: ['', [Validators.required,   Validators.pattern(/^\d{6}$/)]],
+      city: ['', Validators.required,],
+      state: ['', [Validators.required, Validators.pattern(/^[A-Za-z\s]+$/)]],
+      pincode: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]],
     });
-        this.warehouseForm.valueChanges.subscribe(() => {
+    this.warehouseForm.valueChanges.subscribe(() => {
       this.updateFormErrors();
     });
   }
 
-   updateFormErrors(): void {
+  updateFormErrors(): void {
     (Object.keys(this.formErrors) as warehouseFormFields[]).forEach((field) => {
       const control = this.warehouseForm.get(field);
       this.formErrors[field] = '';
@@ -75,63 +75,64 @@ export class AddWarehouse {
         if (control.errors) {
           for (const errorKey of Object.keys(control.errors)) {
             this.formErrors[field] = messages[errorKey];
-            break; 
+            break;
           }
         }
       }
     });
   }
 
-onSubmit() {
-  this.isLoading = true;
+  onSubmit() {
+    this.isLoading = true;
 
-  if (this.warehouseForm.invalid) {
-    this.warehouseForm.markAllAsTouched();
-    this.updateFormErrors();
-    this.isLoading = false;
-    return;
+    if (this.warehouseForm.invalid) {
+      this.warehouseForm.markAllAsTouched();
+      this.updateFormErrors();
+      this.isLoading = false;
+      this.cdr.detectChanges();
+      return;
+    }
+
+    this.adminService.addWarehouse(this.warehouseForm.value)
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+          this.cdr.detectChanges();
+        })
+      )
+      .subscribe({
+
+        next: () => {
+
+          Swal.fire({
+            title: 'Warehouse Added Successfully!',
+            icon: 'success',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#d4af37',
+            background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+            color: '#ffffff',
+            iconColor: '#22c55e'
+          }).then(() => {
+            this.router.navigate(['/admin/warehouse']);
+          });
+
+        },
+
+        error: (err) => {
+          console.error(err);
+
+          Swal.fire({
+            title: err.error?.message || 'Failed to add warehouse',
+            icon: 'error',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#d4af37',
+            background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+            color: '#ffffff',
+            iconColor: '#ef4444'
+          });
+        },
+
+      });
   }
-
-  this.adminService.addWarehouse(this.warehouseForm.value)
-    .pipe(
-      finalize(() => {
-        this.isLoading = false;
-        this.cdr.detectChanges();
-      })
-    )
-    .subscribe({
-
-      next: () => {
-
-        Swal.fire({
-          title: 'Warehouse Added Successfully!',
-          icon: 'success',
-          confirmButtonText: 'OK',
-          confirmButtonColor: '#d4af37',
-          background: 'linear-gradient(135deg, #3b0000, #1a0000)',
-          color: '#ffffff',
-          iconColor: '#22c55e'
-        }).then(() => {
-          this.router.navigate(['/admin/warehouse']);
-        });
-
-      },
-
-      error: (err) => {
-        console.error(err);
-
-        Swal.fire({
-          title: err.error?.message || 'Failed to add warehouse',
-          icon: 'error',
-          confirmButtonText: 'OK',
-          confirmButtonColor: '#d4af37',
-          background: 'linear-gradient(135deg, #3b0000, #1a0000)',
-          color: '#ffffff',
-          iconColor: '#ef4444'
-        });
-      },
-
-    });
-}
 
 }

@@ -80,6 +80,7 @@ export class HomeStock {
       },
       error: () => {
         this.isLoading = false;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -132,7 +133,7 @@ export class HomeStock {
         next: () => {
           this.isLoading = false;
 
-          // ✅ Success Swal
+          this.cdr.detectChanges();
           Swal.fire({
             title: 'Deleted Successfully',
             icon: 'success',
@@ -147,9 +148,10 @@ export class HomeStock {
         },
         error: (err) => {
           this.isLoading = false;
+          this.cdr.detectChanges();
           this.errorMessage = err.error?.message || 'Delete failed';
 
-          // ✅ Error Swal
+          
           Swal.fire({
             title: this.errorMessage,
             icon: 'error',

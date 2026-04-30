@@ -24,7 +24,7 @@ export class Header {
   isProfileOpen = false;
   isSettingsOpen = false;
   orderCount: number = 0;
-  isLoading = false;
+  isLoading:boolean = false;
   user: any = null;
   isDropdownOpen = false;
   currentAddress:any;
@@ -114,6 +114,7 @@ this.isLoading= true;
 
     next: (res: any) => {
       this.isLoading= false;
+      this.cdr.detectChanges();
 
       if (res?.success || res?.status) {
 
@@ -148,6 +149,7 @@ this.isLoading= true;
 
     error: (err: any) => {
       this.isLoading= false;
+      this.cdr.detectChanges();
       let title = 'Error';
       
       // 🔴 Backend not running

@@ -202,7 +202,7 @@ export class Address implements OnInit {
       .subscribe({
         next: () => {
           this.isLoading = false;
-          // ✅ fresh data load
+          this.cdr.detectChanges();
           this.loadAddresses();
           const current = this.addresses.find(a => a.id === this.selectedAddressId);
 
@@ -218,6 +218,7 @@ export class Address implements OnInit {
         },
         error: () => {
           this.isLoading = false;
+          this.cdr.detectChanges();
         }
       });
   }
@@ -272,6 +273,7 @@ export class Address implements OnInit {
     ).subscribe({
       next: (res: any) => {
         this.isLoading = false;
+        this.cdr.detectChanges();
         Swal.fire({
           title: res.message || 'Address updated successfully',
           icon: 'success',
@@ -289,6 +291,7 @@ export class Address implements OnInit {
       },
       error: (err: any) => {
         this.isLoading = false;
+        this.cdr.detectChanges();
 
         const message =
           err?.error?.message ||

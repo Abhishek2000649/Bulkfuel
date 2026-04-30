@@ -36,6 +36,7 @@ export class Available {
 
     error: (err) => {
       this.isLoading = false;
+      this.cdr.detectChanges();
 
       Swal.fire({
         title: err?.error?.message || 'Failed to load orders',
@@ -56,6 +57,7 @@ export class Available {
   this.deliveryService.acceptOrder(deliveryId).subscribe({
     next: (res: any) => {
       this.isLoading = false;
+      this.cdr.detectChanges();
 
       Swal.fire({
         title: res?.message || 'Order accepted successfully',
@@ -72,6 +74,7 @@ export class Available {
 
     error: (err) => {
       this.isLoading = false;
+      this.cdr.detectChanges();
 
       Swal.fire({
         title: err?.error?.message || 'Failed to accept order',

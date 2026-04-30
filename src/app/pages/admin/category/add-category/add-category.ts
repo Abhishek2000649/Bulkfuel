@@ -78,6 +78,7 @@ export class AddCategory {
     this.categoryForm.markAllAsTouched();
     this.updateFormErrors();
     this.isLoading = false;
+    this.cdr.detectChanges();
     return;
   }
 
@@ -121,7 +122,7 @@ export class AddCategory {
           iconColor: '#ef4444'
         });
 
-        console.error(err);
+        
       }
 
     });

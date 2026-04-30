@@ -182,7 +182,7 @@ selectPaymentType(p: any) {
       },
       error: (err: any) => {
         this.isLoading = false;
-        console.error('Category Load Error:', err);
+        this.cdr.detectChanges();
 
         Swal.fire({
           title: err?.error?.message || 'Failed to load categories',
@@ -210,6 +210,7 @@ selectPaymentType(p: any) {
       this.productForm.markAllAsTouched();
       this.updateFormErrors();
       this.isLoading = false;
+      this.cdr.detectChanges();
       return;
     }
 
@@ -233,6 +234,7 @@ console.log('FormData Image:', formData.get('image'));
     this.adminService.addProduct(formData).subscribe({
       next: (res: any) => {
         this.isLoading = false;
+        this.cdr.detectChanges();
 
         Swal.fire({
           title: res?.message || 'Product added successfully',
@@ -249,7 +251,7 @@ console.log('FormData Image:', formData.get('image'));
 
       error: (err: any) => {
         this.isLoading = false;
-        console.error(err);
+        this.cdr.detectChanges();
 
         // Backend validation errors
         if (err?.error?.errors) {

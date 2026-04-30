@@ -128,7 +128,7 @@ loadWarehouses() {
 
     error: (err) => {
       this.isLoading = false;
-      console.error(err);
+      this.cdr.detectChanges();
 
       let errorMessage = err?.error?.message || 
                          'Failed to load warehouses. Please try again.';
@@ -159,7 +159,7 @@ loadWarehouses() {
 
     error: (err) => {
       this.isLoading = false;
-      console.error(err);
+      this.cdr.detectChanges();
 
    
       const errorMessage =
@@ -185,6 +185,7 @@ onSubmit() {
 
   if (this.stockForm.invalid) {
     this.isLoading = false;
+    this.cdr.detectChanges();
     this.stockForm.markAllAsTouched();
     this.updateFormErrors();
     return;

@@ -90,6 +90,7 @@ export class ForgotPassword {
       this.forgotForm.markAllAsTouched();
       this.updateFormErrors();
       this.isLoading = false;
+      this.cdr.detectChanges();
       return;
     }
 

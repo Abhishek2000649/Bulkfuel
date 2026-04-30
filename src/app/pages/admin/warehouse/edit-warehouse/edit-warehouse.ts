@@ -104,11 +104,12 @@ export class EditWarehouse {
       });
 
       this.isLoading = false;
+      this.cdr.detectChanges();
     },
 
     error: (err) => {
       this.isLoading = false;
-      console.error(err);
+      this.cdr.detectChanges();
 
       Swal.fire({
         title: err.error?.message || 'Failed to load warehouse details',
@@ -129,6 +130,7 @@ export class EditWarehouse {
 
   if (this.warehouseForm.invalid) {
     this.isLoading = false;
+    this.cdr.detectChanges();
     this.warehouseForm.markAllAsTouched();
     this.updateFormErrors();
 

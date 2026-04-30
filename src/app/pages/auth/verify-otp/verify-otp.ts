@@ -22,7 +22,7 @@ export class VerifyOtp {
   email: string = '';
   name: string = '';
   type: string = '';
-  isLoading = false;
+  isLoading: boolean = false;
   showPassword: boolean = false;
   showConfirmPassword: boolean = false;
   resendCooldown = 30;
@@ -72,9 +72,9 @@ export class VerifyOtp {
   ngOnInit() {
     const data = this.auth.getData();
     if (!data || !data.type) {
-  this.router.navigate(['/login']);
-  return;
-}
+      this.router.navigate(['/login']);
+      return;
+    }
 
     this.email = data.email;
     this.name = data.name;
@@ -82,96 +82,97 @@ export class VerifyOtp {
     this.startResendTimer();
   }
 
- resendOtp() {
+  resendOtp() {
 
-  // ✅ Basic validation
-  if (!this.email) {
-    return;
-  }
+    // ✅ Basic validation
+    if (!this.email) {
+      return;
+    }
 
-  this.isLoading = true;
+    this.isLoading = true;
 
-  let apiCall;
+    let apiCall;
 
-  // 🔥 Decide API based on flow
-  if (this.type === 'register') {
+    // 🔥 Decide API based on flow
+    if (this.type === 'register') {
 
-    apiCall = this.auth.register({
-      email: this.email,
-      name: this.name
-    });
+      apiCall = this.auth.register({
+        email: this.email,
+        name: this.name
+      });
 
-  } 
-  else if (this.type === 'forgot') {
+    }
+    else if (this.type === 'forgot') {
 
-    apiCall = this.auth.forgotPassword({
-      email: this.email
-    });
+      apiCall = this.auth.forgotPassword({
+        email: this.email
+      });
 
-  } 
-  else {
-    this.isLoading = false;
-    this.router.navigate(['/login']);
-    return;
-  }
+    }
+    else {
+      this.isLoading = false;
+      this.cdr.detectChanges();
+      this.router.navigate(['/login']);
+      return;
+    }
 
-  apiCall
-    .pipe(
-      finalize(() => {
-        this.isLoading = false;
-        this.cdr.detectChanges();
-      })
-    )
-    .subscribe({
+    apiCall
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+          this.cdr.detectChanges();
+        })
+      )
+      .subscribe({
 
-      next: (res: any) => {
+        next: (res: any) => {
 
-        if (res.status) {
+          if (res.status) {
 
-          // 🔄 Reset OTP fields
-          this.otpArray = ['', '', '', '', '', ''];
-          this.verifyForm.patchValue({ otp: '' });
+            // 🔄 Reset OTP fields
+            this.otpArray = ['', '', '', '', '', ''];
+            this.verifyForm.patchValue({ otp: '' });
 
-          // 🎯 Focus first input
-          setTimeout(() => {
-            document.getElementById('otp-0')?.focus();
-          }, 100);
+            // 🎯 Focus first input
+            setTimeout(() => {
+              document.getElementById('otp-0')?.focus();
+            }, 100);
 
-          // 🔔 Success message
+            // 🔔 Success message
+            Swal.fire({
+              title: res.message || "OTP Resent Successfully",
+              icon: 'success',
+              confirmButtonText: 'OK',
+              confirmButtonColor: '#d4af37',
+              background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+              color: '#ffffff',
+              iconColor: '#22c55e',
+            });
+
+            // 🔥 Restart timer
+            this.startResendTimer();
+          }
+
+        },
+
+        error: (err: any) => {
+
           Swal.fire({
-            title: res.message || "OTP Resent Successfully",
-            icon: 'success',
+            title: err?.error?.message || "Failed to resend OTP",
+            icon: 'error',
             confirmButtonText: 'OK',
             confirmButtonColor: '#d4af37',
             background: 'linear-gradient(135deg, #3b0000, #1a0000)',
             color: '#ffffff',
-            iconColor: '#22c55e',
+            iconColor: '#ef4444',
           });
 
-          // 🔥 Restart timer
-          this.startResendTimer();
+          console.error(err);
         }
 
-      },
+      });
 
-      error: (err: any) => {
-
-        Swal.fire({
-          title: err?.error?.message || "Failed to resend OTP",
-          icon: 'error',
-          confirmButtonText: 'OK',
-          confirmButtonColor: '#d4af37',
-          background: 'linear-gradient(135deg, #3b0000, #1a0000)',
-          color: '#ffffff',
-          iconColor: '#ef4444',
-        });
-
-        console.error(err);
-      }
-
-    });
-
-}
+  }
   startResendTimer() {
     this.canResend = false;
     this.resendCooldown = 30;
@@ -257,143 +258,147 @@ export class VerifyOtp {
   }
 
   // 🔥 SUBMIT
-submit() {
+  submit() {
 
-  this.isLoading = true;
+    this.isLoading = true;
 
-  const otp = this.otpArray.join('');
+    const otp = this.otpArray.join('');
 
-  // OTP validation
-  if (otp.length !== 6) {
-    this.formErrors.otp = 'Enter complete OTP';
-    this.isLoading = false;
-    return;
-  }
-
-  // Form validation
-  if (this.verifyForm.invalid) {
-    this.verifyForm.markAllAsTouched();
-    this.updateFormErrors();
-    this.isLoading = false;
-    return;
-  }
-
-  // Password match
-  if (this.verifyForm.value.password !== this.verifyForm.value.confirmPassword) {
-    Swal.fire("Passwords do not match");
-    this.isLoading = false;
-    return;
-  }
-
-  const payload: any = {
-    email: this.email,
-    otp: otp,
-    password: this.verifyForm.value.password
-  };
-
-  // 🔥 ADD NAME ONLY FOR REGISTER
-  if (this.type === 'register') {
-    payload.name = this.name;
-  }
-
-  // 🔥 API CALL BASED ON TYPE
-  let apiCall;
-
-  if (this.type === 'register') {
-    apiCall = this.auth.verifyOtp(payload);
-  } 
-  else if (this.type === 'forgot') {
-    apiCall = this.auth.resetPassword(payload);
-  } 
-  else {
-    this.router.navigate(['/login']);
-    this.isLoading = false;
-    return;
-  }
-
-  apiCall.pipe(
-    finalize(() => {
+    // OTP validation
+    if (otp.length !== 6) {
+      this.formErrors.otp = 'Enter complete OTP';
       this.isLoading = false;
       this.cdr.detectChanges();
-    })
-  ).subscribe({
-
-    next: (res: any) => {
-
-      // ✅ REGISTER FLOW
-      if (this.type === 'register') {
-
-        localStorage.setItem('token', res.data.token);
-        localStorage.setItem('user', JSON.stringify(res.data.user));
-
-        this.auth.setUser(res.data.user);
-
-        Swal.fire({
-          title: res.message || "Account created",
-          icon: 'success',
-          confirmButtonText: 'OK',
-          confirmButtonColor: '#d4af37',
-          background: 'linear-gradient(135deg, #3b0000, #1a0000)',
-          color: '#ffffff',
-          iconColor: '#22c55e',
-        });
-
-        this.auth.me().subscribe((res: any) => {
-          const user = res.user;
-
-          switch (user.role) {
-            case 'ADMIN':
-              this.router.navigate(['/admin/product']);
-              break;
-            case 'delivery_agent':
-              this.router.navigate(['/delivery/available']);
-              break;
-            case 'USER':
-              this.router.navigate(['/user']);
-              break;
-            default:
-              this.router.navigate(['/']);
-          }
-        });
-
-      }
-
-      // ✅ FORGOT PASSWORD FLOW
-      else if (this.type === 'forgot') {
-
-        Swal.fire({
-          title: res.message || "Password reset successfully",
-          icon: 'success',
-          confirmButtonText: 'OK',
-          confirmButtonColor: '#d4af37',
-          background: 'linear-gradient(135deg, #3b0000, #1a0000)',
-          color: '#ffffff',
-          iconColor: '#22c55e',
-        });
-
-        this.auth.clearData();
-
-        this.router.navigate(['/login']);
-      }
-
-    },
-
-    error: (err:any) => {
-
-      Swal.fire({
-        title: err?.error?.message || "Something went wrong",
-        icon: 'error',
-        confirmButtonText: 'OK',
-        confirmButtonColor: '#d4af37',
-        background: 'linear-gradient(135deg, #3b0000, #1a0000)',
-        color: '#ffffff',
-        iconColor: '#ef4444',
-      });
-
-      console.error(err);
+      return;
     }
 
-  });
+    // Form validation
+    if (this.verifyForm.invalid) {
+      this.verifyForm.markAllAsTouched();
+      this.updateFormErrors();
+      this.isLoading = false;
+      this.cdr.detectChanges();
+      return;
+    }
 
-}
+    // Password match
+    if (this.verifyForm.value.password !== this.verifyForm.value.confirmPassword) {
+      Swal.fire("Passwords do not match");
+      this.isLoading = false;
+      this.cdr.detectChanges();
+      return;
+    }
+
+    const payload: any = {
+      email: this.email,
+      otp: otp,
+      password: this.verifyForm.value.password
+    };
+
+    // 🔥 ADD NAME ONLY FOR REGISTER
+    if (this.type === 'register') {
+      payload.name = this.name;
+    }
+
+    // 🔥 API CALL BASED ON TYPE
+    let apiCall;
+
+    if (this.type === 'register') {
+      apiCall = this.auth.verifyOtp(payload);
+    }
+    else if (this.type === 'forgot') {
+      apiCall = this.auth.resetPassword(payload);
+    }
+    else {
+      this.router.navigate(['/login']);
+      this.isLoading = false;
+      this.cdr.detectChanges();
+      return;
+    }
+
+    apiCall.pipe(
+      finalize(() => {
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      })
+    ).subscribe({
+
+      next: (res: any) => {
+
+        // ✅ REGISTER FLOW
+        if (this.type === 'register') {
+
+          localStorage.setItem('token', res.data.token);
+          localStorage.setItem('user', JSON.stringify(res.data.user));
+
+          this.auth.setUser(res.data.user);
+
+          Swal.fire({
+            title: res.message || "Account created",
+            icon: 'success',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#d4af37',
+            background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+            color: '#ffffff',
+            iconColor: '#22c55e',
+          });
+
+          this.auth.me().subscribe((res: any) => {
+            const user = res.user;
+
+            switch (user.role) {
+              case 'ADMIN':
+                this.router.navigate(['/admin/product']);
+                break;
+              case 'delivery_agent':
+                this.router.navigate(['/delivery/available']);
+                break;
+              case 'USER':
+                this.router.navigate(['/user']);
+                break;
+              default:
+                this.router.navigate(['/']);
+            }
+          });
+
+        }
+
+        // ✅ FORGOT PASSWORD FLOW
+        else if (this.type === 'forgot') {
+
+          Swal.fire({
+            title: res.message || "Password reset successfully",
+            icon: 'success',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#d4af37',
+            background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+            color: '#ffffff',
+            iconColor: '#22c55e',
+          });
+
+          this.auth.clearData();
+
+          this.router.navigate(['/login']);
+        }
+
+      },
+
+      error: (err: any) => {
+
+        Swal.fire({
+          title: err?.error?.message || "Something went wrong",
+          icon: 'error',
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#d4af37',
+          background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+          color: '#ffffff',
+          iconColor: '#ef4444',
+        });
+
+        console.error(err);
+      }
+
+    });
+
+  }
 }

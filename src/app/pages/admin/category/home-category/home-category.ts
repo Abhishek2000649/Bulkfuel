@@ -16,6 +16,7 @@ export class HomeCategory implements OnInit{
    categories: any[] = [];
   successMessage = '';
   isLoading:boolean=false;
+
   constructor(private adminService: Admin,   private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
@@ -37,6 +38,7 @@ export class HomeCategory implements OnInit{
     error: (err: any) => {
 
       this.isLoading = false;
+      this.cdr.detectChanges();
       Swal.fire({
         title: err.error?.message || 'Failed to load categories',
         icon: 'error',
@@ -46,7 +48,7 @@ export class HomeCategory implements OnInit{
         color: '#ffffff',
         iconColor: '#ef4444'
       });
-      console.error(err);
+      
     }
 
   });
@@ -79,6 +81,7 @@ export class HomeCategory implements OnInit{
         next: (res: any) => {
 
           this.isLoading = false;
+          this.cdr.detectChanges();
 
           Swal.fire({
             title: res?.message || 'Category deleted successfully',
@@ -95,6 +98,7 @@ export class HomeCategory implements OnInit{
         error: (err: any) => {
 
           this.isLoading = false;
+          this.cdr.detectChanges();
 
           Swal.fire({
             title: err.error?.message || 'Failed to delete category',
@@ -106,7 +110,7 @@ export class HomeCategory implements OnInit{
             iconColor: '#ef4444'
           });
 
-          console.error(err);
+          
         }
 
       });
