@@ -3,6 +3,9 @@
   <div class="max-w-6xl mx-auto bg-white rounded-2xl shadow p-6 space-y-6">
 
     <app-spinner [isLoading]="isLoading" [loaderSize]="100"></app-spinner>
+    <button (click)="goBack()" class="flex items-center gap-2 text-gray-500 text-sm hover:text-red-600">
+      ← Back
+    </button>
 
     <!-- HEADER -->
     <div class="flex items-center gap-4">

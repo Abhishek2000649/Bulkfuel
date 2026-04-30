@@ -9,6 +9,7 @@ import { finalize } from 'rxjs';
 import { Map } from '../../../shared/map/map';
 import { Location } from '../../../core/services/location/location';
 import { Auth } from '../../../core/services/Auth/authservice/auth';
+import { Location as NgLocation } from '@angular/common';
 
 type addressFormFields =
   | 'address'
@@ -49,7 +50,7 @@ export class Address implements OnInit {
     area: '',
     landmark: '',
   };
-  
+
 
   currentAddress: string = '';
 
@@ -89,10 +90,10 @@ export class Address implements OnInit {
 
   getLocationFromMap() {
     this.mapComponent.getCurrentLocation();
-     window.scrollBy({
-    top: 500,
-    behavior: 'smooth'
-  });
+    window.scrollBy({
+      top: 500,
+      behavior: 'smooth'
+    });
   }
 
   constructor(
@@ -102,6 +103,7 @@ export class Address implements OnInit {
     private locationService: Location,
     private cdr: ChangeDetectorRef,
     private auth: Auth,
+    private ngLocation: NgLocation
   ) {
     // SAME FORM VALIDATION
     this.addressForm = this.fb.group({
@@ -135,6 +137,10 @@ export class Address implements OnInit {
     this.loadAddresses();
     this.loadProfile();
     this.listenLocation();
+  }
+
+  goBack(): void {
+    this.ngLocation.back();
   }
 
 
@@ -274,11 +280,12 @@ export class Address implements OnInit {
           background: 'linear-gradient(135deg, #3b0000, #1a0000)',
           color: '#ffffff',
           iconColor: '#22c55e'
-        })
-        this.loadAddresses();
+        }).then(() => {
 
-        // optional
-        this.addressForm.reset();
+          this.loadAddresses();
+          this.addressForm.reset();
+          this.ngLocation.back();
+        });
       },
       error: (err: any) => {
         this.isLoading = false;

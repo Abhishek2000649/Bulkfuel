@@ -56,40 +56,43 @@
             <div class="flex-1 overflow-y-auto hide-scrollbar space-y-3 pr-1">
 
               <label *ngFor="let addr of addresses" (click)="checkoutForm.patchValue({ address_id: addr.id })"
-                class="block border rounded-xl p-3 cursor-pointer" [ngClass]="{
-    'border-2 border-red-400 bg-red-50':
-    addr.id === checkoutForm.get('address_id')?.value
-  }">
+                class="border-2 p-4 rounded-xl cursor-pointer flex items-start gap-3 transition-all"
+                [class.border-red-600]="checkoutForm.get('address_id')?.value === addr.id"
+                [class.bg-red-50]="checkoutForm.get('address_id')?.value === addr.id">
 
-                <div class="flex justify-between items-start">
+                <!-- RADIO -->
+                <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center mt-1"
+                  [class.border-red-600]="checkoutForm.get('address_id')?.value === addr.id"
+                  [class.border-gray-300]="checkoutForm.get('address_id')?.value !== addr.id">
 
-                  <!-- LEFT -->
-                  <div class="flex gap-3 items-start">
-
-                    <input type="radio" formControlName="address_id" [value]="addr.id" class="hidden" />
-
-                    <div class="flex-1">
-                      <p class="font-semibold">
-                        {{ addr.address_type || 'Address' }}
-
-                        <span *ngIf="addr.is_default" class="text-xs bg-red-500 text-white px-2 py-0.5 rounded ml-1">
-                          Default
-                        </span>
-                      </p>
-
-                      <p class="text-sm text-gray-600">
-                        {{ addr.address }}
-                      </p>
-
-                      <span *ngIf="addr.is_current" class="text-green-500 text-xs">
-                        Current Location
-                      </span>
-                    </div>
-
+                  <div *ngIf="checkoutForm.get('address_id')?.value === addr.id"
+                    class="w-2.5 h-2.5 bg-red-600 rounded-full">
                   </div>
+                </div>
 
+                <!-- CONTENT -->
+                <div class="flex-1">
+
+                  <p class="font-semibold">
+                    {{ addr.address_type || 'Address' }}
+
+                    <span *ngIf="addr.is_default" class="text-xs bg-red-500 text-white px-2 py-0.5 rounded ml-1">
+                      Default
+                    </span>
+                  </p>
+
+                  <p class="text-sm text-gray-600">
+                    {{ addr.address }}
+                  </p>
+
+                  <span *ngIf="addr.is_current" class="text-green-500 text-xs">
+                    Current Location
+                  </span>
 
                 </div>
+
+                <!-- HIDDEN RADIO -->
+                <input type="radio" formControlName="address_id" [value]="addr.id" class="hidden" />
 
               </label>
               <p *ngIf="formErrors.address_id" class="text-red-500 text-xs mt-2">
@@ -175,7 +178,8 @@
               <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
             </svg>
 
-            Place Order
+            <span *ngIf="!isLoading">Place Order</span>
+            <span *ngIf="isLoading">Processing...</span>
           </button>
 
         </form>

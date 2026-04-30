@@ -79,6 +79,7 @@ export class Checkout implements OnInit {
   ngOnInit(): void {
     this.loadAddresses();
 
+
     this.cartIds = this.checkoutService.getCartIds();
 
     if (this.cartIds.length === 0) {
@@ -131,8 +132,7 @@ export class Checkout implements OnInit {
     this.profileService.getAddresses().subscribe((res: any) => {
 
       this.addresses = res.data;
-      console.log("address:", this.addresses);
-      
+
 
       const current = this.addresses.find(a => a.is_current == 1);
       if (current) {
@@ -163,22 +163,31 @@ export class Checkout implements OnInit {
     };
 
     this.checkoutService.placeOrder(payload).subscribe({
-      next: () => {
+
+      next: (res: any) => {
         this.isLoading = false;
         this.checkoutService.clear();
+        const orderId = res.data.order_id;
+        const amount = res.data.amount;
+        const paymentMethod = res.data.payment_method;
+
+        if (paymentMethod === 'online') {
+          this.createRazorpayOrder(orderId);
+        } else {
+          Swal.fire({
+            title: 'Order placed successfully',
+            icon: 'success',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#d4af37',
+            background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+            color: '#ffffff',
+            iconColor: '#22c55e'
+          }).then(() => {
+            this.router.navigate(['/user/orders']);
+          });
+        }
 
 
-        Swal.fire({
-          title: 'Order placed successfully',
-          icon: 'success',
-          confirmButtonText: 'OK',
-          confirmButtonColor: '#d4af37',
-          background: 'linear-gradient(135deg, #3b0000, #1a0000)',
-          color: '#ffffff',
-          iconColor: '#22c55e'
-        }).then(() => {
-          this.router.navigate(['/user/orders']);
-        });
       },
 
 
@@ -203,6 +212,149 @@ export class Checkout implements OnInit {
 
         console.error(err);
       }
+    });
+  }
+
+  createRazorpayOrder(orderId: number) {
+    this.isLoading = true;
+    this.checkoutService.createRazorpayOrder(orderId)
+      .subscribe({
+        next: (res: any) => {
+          this.isLoading = false;
+          console.log("data2", res.data);
+          if (!res?.status) {
+            Swal.fire({
+              title: res.message,
+              icon: 'error',
+              confirmButtonText: 'OK',
+              confirmButtonColor: '#d4af37',
+              background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+              color: '#ffffff',
+              iconColor: '#ef4444'
+            });
+            return;
+          }
+
+          this.openRazorpay(res, orderId);
+        },
+
+        error: (err) => {
+          this.isLoading = false;
+          Swal.fire({
+            title: err?.error?.message || 'Something went wrong',
+            icon: 'error',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#d4af37',
+            background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+            color: '#ffffff',
+            iconColor: '#ef4444'
+          });
+        }
+      });
+  }
+  openRazorpay(res: any, orderId: number) {
+
+    this.isLoading = false;
+    console.log("data", res.data);
+    let isPaymentDone = false;
+    let isCancelled = false;
+    const options: any = {
+
+      key: res.data.key,
+      amount: Number(res.data.amount),
+      currency: 'INR',
+      order_id: res.data.razorpay_order_id,
+
+      handler: (response: any) => {
+        console.log("PAYMENT RESPONSE:", response);
+        isPaymentDone = true;
+        this.verifyPayment(response);
+      },
+      modal: {
+        ondismiss: () => {
+          console.log("User closed Razorpay popup");
+
+          this.isLoading = false;
+          this.cdr.detectChanges(); 
+
+          if (!isPaymentDone && !isCancelled) {
+            isCancelled = true;
+            this.checkoutService.cancelOrder(orderId).subscribe();
+          }
+        }
+      },
+
+      prefill: {
+        name: this.user?.name,
+        email: this.user?.email
+      },
+
+      theme: {
+        color: '#DC2626'
+      }
+    };
+
+    const rzp = new (window as any).Razorpay(options);
+    rzp.open();
+    rzp.on('payment.failed', (response: any) => {
+
+      this.isLoading = false;
+
+      if (!isCancelled) {
+        isCancelled = true;
+        this.checkoutService.cancelOrder(orderId).subscribe();
+      }
+      Swal.fire({
+        title: response.error.description,
+        icon: 'error',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#d4af37',
+        background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+        color: '#ffffff',
+        iconColor: '#ef4444'
+      });
+    });
+
+
+  }
+  verifyPayment(response: any) {
+
+    const payload = {
+      razorpay_order_id: response.razorpay_order_id,
+      razorpay_payment_id: response.razorpay_payment_id,
+      razorpay_signature: response.razorpay_signature
+    };
+
+    this.checkoutService.verifyPayment(payload).subscribe({
+      next: () => {
+        this.successFlow();
+      },
+      error: (err) => {
+        Swal.fire({
+          title: err?.error?.message || 'Payment verification failed',
+          icon: 'error',
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#d4af37',
+          background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+          color: '#ffffff',
+          iconColor: '#ef4444'
+        });
+      }
+    });
+  }
+  successFlow() {
+    this.checkoutService.clear();
+
+    Swal.fire({
+      title: 'Order placed successfully',
+      icon: 'success',
+      confirmButtonText: 'OK',
+      confirmButtonColor: '#d4af37',
+      background: 'linear-gradient(135deg, #3b0000, #1a0000)',
+      color: '#ffffff',
+      iconColor: '#22c55e'
+    }).then(() => {
+      this.router.navigate(['/user/orders']);
     });
   }
 
